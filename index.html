@@ -1454,11 +1454,17 @@
   .pop-footer {
     flex-shrink: 0;
     padding: 12px 14px;
-    background: var(--bg-deep);
+    background: rgba(251, 246, 233, 0.04);
     border-top: 1px solid var(--line);
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+  }
+  .pop-link {
+    color: var(--coral) !important;
+    text-decoration: underline;
+    text-decoration-color: rgba(233, 141, 88, 0.4);
+    text-underline-offset: 2px;
   }
   .pop-btn {
     flex: 1;
@@ -2829,14 +2835,20 @@ function renderStayPopup(stay, kmlItem, letter) {
 
   const details = [];
   if (stay) {
-    if (stay.checkin)      details.push(['Check-in',  stay.checkin]);
-    if (stay.checkout)     details.push(['Check-out', stay.checkout]);
-    if (stay.confirmation) details.push(['Référence', stay.confirmation]);
-    if (stay.phone)        details.push(['Téléphone', stay.phone]);
-    if (stay.address)      details.push(['Adresse',   stay.address, true]); // full-width
+    if (stay.checkin)      details.push({ k: 'Check-in',  v: escapeHtml(stay.checkin) });
+    if (stay.checkout)     details.push({ k: 'Check-out', v: escapeHtml(stay.checkout) });
+    if (stay.confirmation) details.push({ k: 'Référence', v: escapeHtml(stay.confirmation) });
+    if (stay.phone) {
+      const tel = stay.phone.replace(/\s/g, '');
+      details.push({
+        k: 'Téléphone',
+        v: `<a class="pop-link" href="tel:${escapeHtml(tel)}">${escapeHtml(stay.phone)}</a>`,
+      });
+    }
+    if (stay.address) details.push({ k: 'Adresse', v: escapeHtml(stay.address), full: true });
   }
-  const detailsHtml = details.map(([k, v, full]) =>
-    `<div class="pop-detail${full ? ' pop-detail--full' : ''}"><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`
+  const detailsHtml = details.map(d =>
+    `<div class="pop-detail${d.full ? ' pop-detail--full' : ''}"><dt>${d.k}</dt><dd>${d.v}</dd></div>`
   ).join('');
 
   const notesHtml = stay && stay.notes ? `<p class="pop-notes">${escapeHtml(stay.notes)}</p>` : '';
