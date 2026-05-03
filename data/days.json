@@ -1,0 +1,555 @@
+{
+  "trip": {
+    "title": "Slovénie",
+    "subtitle": "18 jours · juillet 2026",
+    "startDate": "2026-07-07",
+    "endDate": "2026-07-24",
+    "travelers": "2 adultes + 1 ado",
+    "totalKm": 2962,
+    "origin": { "name": "Toulouse", "coords": [43.6043, 1.4429] }
+  },
+  "legs": {
+    "approach": "Vers la mer",
+    "italy": "Italie",
+    "slovenia": "Slovénie",
+    "return": "Retour"
+  },
+  "days": [
+    {
+      "n": 1,
+      "date": "2026-07-07",
+      "weekday": "Mardi",
+      "title": "Toulouse → Nice",
+      "subtitle": "Soirée avec le fils",
+      "leg": "approach",
+      "photo": "j01-nice",
+      "drive": { "km": 564, "hours": "5h55", "from": "Toulouse", "to": "Nice" },
+      "stay": "nice",
+      "intro": "Départ matinal de Toulouse. Étape simple à Nice : pas de visite, vous connaissez la ville. L'objectif est de profiter de la fin de journée pour un moment baignade et un dîner avec votre fils.",
+      "schedule": [
+        {
+          "time": "Fin d'après-midi",
+          "title": "Baignade Côte d'Azur",
+          "desc": "Plage publique au choix selon votre humeur du moment et la circulation : Villefranche-sur-Mer, Cap d'Ail, ou simplement les plages de Nice. Juste une pause rafraîchissante après la route."
+        },
+        {
+          "time": "Soirée",
+          "title": "Dîner avec le fils",
+          "desc": "Le moment important de cette étape niçoise. Restaurant au choix selon ses suggestions. Nuit à Nice, départ tôt le lendemain pour Venise."
+        }
+      ],
+      "tips": [
+        "Partir avant 7h le lendemain matin pour traverser la Côte d'Azur et la Ligurie sans embouteillages."
+      ]
+    },
+    {
+      "n": 2,
+      "date": "2026-07-08",
+      "weekday": "Mercredi",
+      "title": "Nice → Venise",
+      "subtitle": "Long trajet d'autoroute",
+      "leg": "italy",
+      "photo": "j02-venise-arrivee",
+      "drive": { "km": 570, "hours": "6h15", "from": "Nice", "to": "Venise (Mestre)" },
+      "stay": "venise",
+      "intro": "Long trajet par la Riviera italienne, Gênes, puis l'A4 jusqu'à Venise. Choisir un hôtel à Mestre (terre ferme, parking facile) plutôt que sur l'île — vous serez à 10 min de Venise en train.",
+      "schedule": [
+        {
+          "time": "Fin d'après-midi",
+          "title": "Première balade Cannaregio",
+          "desc": "Le quartier le plus calme et le plus authentique de Venise. Fondamenta degli Ormesini, ghetto historique, bacari (bars à vin) typiques pour grignoter quelques cicchetti avant le dîner."
+        }
+      ],
+      "tips": [
+        "Garer la voiture au Tronchetto ou à Mestre, jamais à Piazzale Roma (très cher)",
+        "Acheter un pass vaporetto 48h dès l'arrivée pour bouger librement les deux jours"
+      ]
+    },
+    {
+      "n": 3,
+      "date": "2026-07-09",
+      "weekday": "Jeudi",
+      "title": "Venise · Grand Canal et San Marco",
+      "subtitle": "Sans voiture · Vaporetto",
+      "leg": "italy",
+      "photo": "j03-venise-canal",
+      "drive": null,
+      "stay": "venise",
+      "intro": "Premier vrai jour de Venise. La clé : se lever tôt pour profiter du Grand Canal avant la chaleur et l'affluence touristique.",
+      "schedule": [
+        {
+          "time": "Tôt le matin",
+          "title": "Rialto et Grand Canal",
+          "desc": "Pont du Rialto à 7h30 (presque vide), marché aux poissons en activité. Vaporetto Ligne 1 sur le Grand Canal pour la traversée la plus belle au monde, jusqu'à San Marco."
+        },
+        {
+          "time": "Matin",
+          "title": "Place Saint-Marc et Basilique",
+          "desc": "Basilique San Marco (entrée gratuite mais file d'attente, ouvre vers 9h30), Palais des Doges en option. Pause café au Florian ou au Quadri si le budget permet."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Dorsoduro et Castello",
+          "desc": "Dorsoduro pour l'art (collection Peggy Guggenheim, Galleries de l'Académie). Castello pour s'éloigner des foules et trouver les vraies trattorias où mangent les Vénitiens. Église San Zaccaria, jardins de la Biennale."
+        },
+        {
+          "time": "Soirée",
+          "title": "Dernière soirée vénitienne",
+          "desc": "Cicchetti dans un bacaro de Cannaregio (Al Timon, La Cantina). Coucher de soleil depuis le pont de l'Académie ou les Zattere. Demain matin, départ tôt pour la côte slovène."
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "date": "2026-07-10",
+      "weekday": "Vendredi",
+      "title": "Venise → Piran",
+      "subtitle": "Côte adriatique slovène",
+      "leg": "slovenia",
+      "photo": "j04-piran",
+      "drive": { "km": 202, "hours": "2h30", "from": "Venise", "to": "Piran" },
+      "stay": "piran",
+      "intro": "Trajet court et fluide jusqu'à la côte adriatique slovène. 2 nuits à Piran.",
+      "schedule": [
+        {
+          "time": "Début d'après-midi",
+          "title": "Arrivée à Piran",
+          "desc": "Installation à l'Airbnb chez Tanja, Ulica Svobode 71. Charme médiéval garanti."
+        },
+        {
+          "time": "Fin d'après-midi",
+          "title": "Coucher de soleil à Piran",
+          "desc": "Place Tartini, montée à l'église Saint-Georges pour le panorama, baignade depuis les rochers de Punta. Le coucher de soleil sur l'Adriatique est mémorable depuis le campanile."
+        }
+      ],
+      "tips": [
+        "Acheter la vignette autoroutière slovène (~16€/semaine) en station-service italienne avant la frontière"
+      ]
+    },
+    {
+      "n": 5,
+      "date": "2026-07-11",
+      "weekday": "Samedi",
+      "title": "Vélo Parenzana",
+      "subtitle": "Aller simple Koper → Piran",
+      "leg": "slovenia",
+      "photo": "j05-parenzana",
+      "drive": null,
+      "stay": "piran",
+      "intro": "Journée vélo sur la Parenzana, ancienne voie ferrée. Astuce : louer en zéro logistique avec shuttle — un loueur de Portorož vient livrer les VAE à votre hôtel le matin, vous shuttle vers Koper, et vous rejoignez Piran à vélo en sens descendant.",
+      "schedule": [
+        {
+          "time": "9h",
+          "title": "Livraison des vélos + shuttle",
+          "desc": "Le loueur vient à votre hôtel avec les VAE. Court briefing puis navette jusqu'au point de départ à Koper (15 min)."
+        },
+        {
+          "time": "Journée",
+          "title": "Parenzana : Koper → Izola → Strunjan → Piran",
+          "desc": "~25 km à votre rythme, 4 à 6h avec pauses. Tronçon Koper-Izola plat. Petite côte douce après Izola, puis tunnel rafraîchissant. Descente vers Strunjan, dernier petit raidillon vers Portorož puis longe la mer jusqu'à Piran."
+        },
+        {
+          "time": "Pauses",
+          "title": "Criques et glaces",
+          "desc": "Plage de Bele Skale à Strunjan (eau turquoise au pied des falaises blanches), pause glace à Izola, Moon Bay pour la baignade."
+        }
+      ],
+      "tips": [
+        "VAE vivement recommandé pour les petites côtes : 35-45€/pers en VAE livré",
+        "Loueurs : E-Bike Istria (ebikeistria.eu), KoperTours (kopertours.eu)"
+      ]
+    },
+    {
+      "n": 6,
+      "date": "2026-07-12",
+      "weekday": "Dimanche",
+      "title": "Marais salants + Karst",
+      "subtitle": "Piran → Postojna",
+      "leg": "slovenia",
+      "photo": "j06-predjama",
+      "drive": { "km": 73, "hours": "1h", "from": "Piran", "to": "Postojna" },
+      "stay": "postojna",
+      "intro": "Demi-journée tranquille pour conclure l'étape côtière, puis bascule vers le plateau du Karst en début d'après-midi. Court trajet de 1h pour rejoindre Predjama.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Salines de Sečovlje",
+          "desc": "Balade dans les marais salants, les plus anciens d'Europe encore exploités selon des méthodes traditionnelles. Lecture des paysages, observation des oiseaux. Musée du sel à l'entrée. Compter 1h30-2h. Apporter chapeau et eau."
+        },
+        {
+          "time": "Déjeuner (option)",
+          "title": "Pause spa rapide à Lepa Vida",
+          "desc": "Si l'envie est là et que le spa est ouvert, possibilité d'un bain de saumure d'1h30 (réservation lepavida.si) avant la route."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Route Piran → Predjama (1h)",
+          "desc": "Petite route à travers les collines slovènes, agréable et fluide. Charger la voiture après le déjeuner et basculer vers le Karst. Arrivée à Predjama vers 15h-16h."
+        },
+        {
+          "time": "Fin d'après-midi",
+          "title": "Château de Predjama",
+          "desc": "Forteresse construite dans une falaise rocheuse, à 123 m de haut. Audioguide en français. Histoire d'Erasmus de Predjama. Ouvert 9h-19h en juillet. Arriver en fin d'après-midi évite la grosse affluence."
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "date": "2026-07-13",
+      "weekday": "Lundi",
+      "title": "Škocjan → Ljubljana",
+      "subtitle": "Karst → capitale",
+      "leg": "slovenia",
+      "photo": "j07-skocjan",
+      "drive": { "km": 53, "hours": "45 min", "from": "Postojna", "to": "Ljubljana" },
+      "stay": "ljubljana",
+      "intro": "Matin consacré à Škocjan, puis route très courte vers Ljubljana. 2 nuits sur place.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Grottes de Škocjan (UNESCO)",
+          "desc": "L'un des plus grands canyons souterrains au monde, plus impressionnant que Postojna. Visite guidée obligatoire de 2h, environ 500 marches. Ponts vertigineux. Tickets à réserver en ligne sur park-skocjanske-jame.si."
+        },
+        {
+          "time": "Début d'après-midi",
+          "title": "Route et installation",
+          "desc": "53 km d'autoroute. Arrivée à l'Airbnb chez Živa, Trubarjeva cesta 41. Boîte à clé sécurisée."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Centre historique",
+          "desc": "Triple Pont de Plečnik, Place Prešeren, marché central couvert (essayer un burek). Ville à taille humaine, entièrement piétonne."
+        },
+        {
+          "time": "Soirée",
+          "title": "Château et coucher de soleil",
+          "desc": "Funiculaire vers le château pour le coucher de soleil. Vue 360° sur la ville et les Alpes Juliennes. Dîner aux Žibert ou Gostilna na Gradu (dans le château)."
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "date": "2026-07-14",
+      "weekday": "Mardi",
+      "title": "Ljubljana · Paddle Ljubljanica",
+      "subtitle": "Sans voiture",
+      "leg": "slovenia",
+      "photo": "j08-ljubljana",
+      "drive": null,
+      "stay": "ljubljana",
+      "intro": "Une journée pour s'imprégner de l'esprit Ljubljana — verte, paisible, jeune.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Café et marché de Plečnik",
+          "desc": "Petit-déjeuner sur les quais (Cacao, Le Petit Café). Marché central couvert avec ses arcades signées Plečnik. Mardi : Open Kitchen, marché de street food très animé."
+        },
+        {
+          "time": "Après-midi",
+          "title": "SUP/paddle sur la Ljubljanica",
+          "desc": "Sortie encadrée de 1h30, départ depuis Špica. Glisser sous les ponts de Plečnik, voir la ville depuis l'eau. ~25€/pers, opérateurs : SUP Slovenia, Visitljubljana."
+        },
+        {
+          "time": "Soirée",
+          "title": "Quartier Metelkova ou Špica",
+          "desc": "Metelkova : ancien quartier militaire reconverti en zone autonome culturelle. Špica : terrasses sur la rivière, plus tranquille."
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "date": "2026-07-15",
+      "weekday": "Mercredi",
+      "title": "Ljubljana → Bled",
+      "subtitle": "Alpes Juliennes",
+      "leg": "slovenia",
+      "photo": "j09-bled",
+      "drive": { "km": 55, "hours": "50 min", "from": "Ljubljana", "to": "Bled" },
+      "stay": "bled",
+      "intro": "Trajet très court vers les Alpes Juliennes. 4 nuits à Bled comme camp de base unique pour rayonner sur toute la région du Triglav.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Installation à Bled",
+          "desc": "Hôtels recommandés : Vila Bled (ancienne résidence de Tito), Ribno Alpine Hotel (chalet écologique au calme), Hotel Park (central, terrasse mythique pour la kremšnita)."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Tour du lac et baignade",
+          "desc": "Tour du lac à pied (6 km, 2h tranquille). Baignade depuis les plages publiques (Grajsko Kopališče côté château). Eau à 22-24°C en juillet."
+        },
+        {
+          "time": "Fin d'après-midi",
+          "title": "Points de vue photo",
+          "desc": "Mala Osojnica (le spot Instagram, 30 min de montée raide mais panorama imprenable), ou Ojstrica (plus court, 20 min). Coucher de soleil magique."
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "date": "2026-07-16",
+      "weekday": "Jeudi",
+      "title": "Vintgar et Bled",
+      "subtitle": "Gorges + lac",
+      "leg": "slovenia",
+      "photo": "j10-vintgar",
+      "drive": null,
+      "stay": "bled",
+      "intro": "L'incontournable de la Slovénie. La clé absolue : Vintgar tôt le matin pour éviter la foule, lac de Bled l'après-midi.",
+      "schedule": [
+        {
+          "time": "8h impératif",
+          "title": "Gorges de Vintgar",
+          "desc": "Passerelles en bois suspendues au-dessus de l'eau émeraude. 1h30 de visite. Billet en ligne obligatoire sur vintgar.si avec créneau précis. Casque fourni à l'entrée. Éviter absolument 10h-13h."
+        },
+        {
+          "time": "Déjeuner",
+          "title": "Pause kremšnita",
+          "desc": "Hotel Park, terrasse face au lac. Le vrai gâteau de Bled, recette protégée depuis 1953 : couches alternées de pâte feuilletée, crème vanille, chantilly. Indispensable."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Île et château de Bled",
+          "desc": "Traversée en pletna jusqu'à l'île, 99 marches jusqu'à l'église, sonner la cloche des vœux. Puis montée au château perché du XIIe siècle pour la vue carte postale."
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "date": "2026-07-17",
+      "weekday": "Vendredi",
+      "title": "Excursion à Bohinj",
+      "subtitle": "Lac sauvage",
+      "leg": "slovenia",
+      "photo": "j11-bohinj",
+      "drive": { "km": 25, "hours": "30 min A/R", "from": "Bled", "to": "Bohinj A/R" },
+      "stay": "bled",
+      "intro": "Aller-retour à la journée vers Bohinj — plus grand, plus sauvage, beaucoup moins fréquenté que Bled. On rentre dormir à Bled le soir.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Route et arrivée au lac",
+          "desc": "30 min de route depuis Bled par la route panoramique qui longe la Sava Bohinjka. Arrivée à Ribčev Laz : église Saint-Jean-Baptiste, pont de pierre médiéval, vue sur le Triglav."
+        },
+        {
+          "time": "Journée",
+          "title": "Lac et baignade",
+          "desc": "Eaux limpides à 18-20°C en juillet. Locations de paddle et bateaux électriques à Ribčev Laz. Tour partiel du lac à pied. Pique-nique au bord de l'eau ou déjeuner au Restaurant Triglav à Stara Fužina."
+        },
+        {
+          "time": "Fin d'après-midi",
+          "title": "Église Saint-Thomas",
+          "desc": "Sur le chemin du retour, petite église perchée au-dessus du lac. L'un des plus beaux spots photo au coucher du soleil. Accès parking + 30 min de marche facile."
+        },
+        {
+          "time": "Soirée",
+          "title": "Retour à Bled",
+          "desc": "Dîner sur place ou en ville (Vila Prešeren pour la vue lac, Pizzeria Rustika pour du simple et bon)."
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "date": "2026-07-18",
+      "weekday": "Samedi",
+      "title": "Planina Zajamniki",
+      "subtitle": "Randonnée Pokljuka",
+      "leg": "slovenia",
+      "photo": "j12-mostnica",
+      "drive": null,
+      "stay": "bled",
+      "intro": "Randonnée familiale au cœur du plateau de Pokljuka. Planina Zajamniki est un alpage classique avec ses chalets en bois alignés face aux montagnes.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Randonnée Planina Zajamniki",
+          "desc": "Départ depuis Rudno Polje. Boucle ou aller-retour facile à moduler (2 à 4h). Niveau facile, dénivelé doux. Vues panoramiques sur la chaîne du Triglav. Pique-nique sur place ou simple café à l'alpage."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Repos et baignade",
+          "desc": "Retour au lac pour une baignade. Option : Gorges de la Mostnica au départ de Stara Fužina (3h, eau turquoise, marmites de géants) si vous avez de l'énergie."
+        }
+      ],
+      "tips": [
+        "Truite de Bohinj grillée à la sauge au Gostilna Mihovc à Stara Fužina"
+      ]
+    },
+    {
+      "n": 13,
+      "date": "2026-07-19",
+      "weekday": "Dimanche",
+      "title": "Bled → Tolmin via Vršič",
+      "subtitle": "Col mythique des Alpes",
+      "leg": "slovenia",
+      "photo": "j13-vrsic",
+      "drive": { "km": 110, "hours": "2h30", "from": "Bled", "to": "Tolmin" },
+      "stay": "tolmin",
+      "intro": "Une des plus belles routes des Alpes. Le col du Vršič culmine à 1 611 m après 50 lacets numérotés sur la rampe nord, puis bascule vers la vallée émeraude de la Soča. 2 nuits à Tolmin.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Lac de Jasna et col du Vršič",
+          "desc": "Pause au lac de Jasna à Kranjska Gora (lac alpin émeraude, statue du chamois Zlatorog). Montée du col : pause obligatoire à la chapelle russe (construite par des prisonniers russes en 1916) et au monument Julius Kugy."
+        },
+        {
+          "time": "Fin d'après-midi",
+          "title": "Arrivée à Tolmin",
+          "desc": "Installation. Tolmin est la base sud de la vallée de la Soča, plus calme que Bovec."
+        },
+        {
+          "time": "Soirée (option)",
+          "title": "Première baignade dans la Soča",
+          "desc": "Au pont de Napoleon à Kobarid, accès direct à la rivière depuis la rive. Eau fraîche (12-14°C même en été) mais clarté et couleur incomparables."
+        }
+      ]
+    },
+    {
+      "n": 14,
+      "date": "2026-07-20",
+      "weekday": "Lundi",
+      "title": "Rafting + Tolmin",
+      "subtitle": "Sports d'eau et gorges",
+      "leg": "slovenia",
+      "photo": "j14-rafting",
+      "drive": null,
+      "stay": "tolmin",
+      "intro": "Premier vrai jour sportif dans la Soča le matin, puis visite des spectaculaires gorges de Tolmin l'après-midi.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Rafting demi-journée",
+          "desc": "Section Bovec-Trnovo, niveau 2-3, accessible à partir de 12 ans. Combinaison, casque, gilet et guide fournis. Environ 50€/pers, durée 2h sur l'eau. À réserver à l'avance."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Gorges de Tolmin",
+          "desc": "Plus calmes que Vintgar, plus sauvages. Pont du Diable suspendu au-dessus du gouffre, « tête d'ours » en pierre coincée entre les parois, sources thermales tièdes. Boucle de 1h30. Tarifs et infos : dolina-soce.com."
+        }
+      ],
+      "tips": [
+        "Bovec Sport Center : +386 31 263 632 · bovec-sc.si",
+        "Soča Rafting : soca-rafting.si"
+      ]
+    },
+    {
+      "n": 15,
+      "date": "2026-07-21",
+      "weekday": "Mardi",
+      "title": "Cascade Kozjak + Zelenci",
+      "subtitle": "Tolmin → Zelenci",
+      "leg": "slovenia",
+      "photo": "j15-canyoning",
+      "drive": { "km": 75, "hours": "1h30", "from": "Tolmin", "to": "Zelenci" },
+      "stay": "zelenci",
+      "intro": "Matin nature avec la cascade Kozjak puis baignade éventuelle, puis route en début d'après-midi vers la réserve de Zelenci, près de Kranjska Gora.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Cascade Kozjak (Kobarid)",
+          "desc": "Une cathédrale d'eau cachée dans une grotte naturelle. 1h aller-retour de marche facile depuis le pont Napoleon. 5€/adulte. Apporter de bonnes chaussures (passages humides)."
+        },
+        {
+          "time": "Fin de matinée",
+          "title": "Baignade rivière (option)",
+          "desc": "Spots secrets le long de la route Bovec-Kobarid. Plages naturelles de galets, eau émeraude. Suivre les voitures locales — elles savent où s'arrêter."
+        },
+        {
+          "time": "Après-midi",
+          "title": "Route vers Zelenci",
+          "desc": "Repassage du col du Vršič dans l'autre sens, paysages magnifiques. Arrivée à la réserve naturelle de Zelenci, source de la rivière Sava Dolinka. Sources d'eau émeraude, passerelles en bois, oiseaux."
+        }
+      ]
+    },
+    {
+      "n": 16,
+      "date": "2026-07-22",
+      "weekday": "Mercredi",
+      "title": "Zelenci → Laigueglia",
+      "subtitle": "Bascule vers la Riviera ligure",
+      "leg": "return",
+      "photo": "j16-laigueglia",
+      "drive": { "km": 660, "hours": "7h30", "from": "Zelenci", "to": "Laigueglia" },
+      "stay": "laigueglia",
+      "intro": "Longue étape de retour vers la Riviera ligure. Petit village de pêcheurs aux maisons rose pâle et lilas, dominé par l'église baroque San Matteo. Bien moins touristique que les Cinque Terre.",
+      "schedule": [
+        {
+          "time": "Départ matinal",
+          "title": "Route Zelenci → Laigueglia",
+          "desc": "Partir tôt (7h-8h) pour éviter la chaleur et les bouchons d'été en sortant de Trieste et en traversant la Ligurie. A2 slovène, A4 italienne, A12 ligure le long de la mer après Gênes. Pauses régulières."
+        },
+        {
+          "time": "Fin d'après-midi",
+          "title": "Arrivée à Laigueglia",
+          "desc": "Installation. Hôtels recommandés : Hotel Windsor (boutique design), Hotel Splendid Mare (charme historique, ancien monastère, plage privée), Hotel Villa Giulia (familial)."
+        },
+        {
+          "time": "Soirée",
+          "title": "Apéritif et dîner ligure",
+          "desc": "Promenade dans le « budello », ruelle commerçante typique. Apéro sur la place face à l'église San Matteo. Dîner spécialités ligures : trofie au pesto, focaccia, fritto misto, vin Pigato."
+        }
+      ]
+    },
+    {
+      "n": 17,
+      "date": "2026-07-23",
+      "weekday": "Jeudi",
+      "title": "Détente à Laigueglia",
+      "subtitle": "Plage et villages",
+      "leg": "return",
+      "photo": "j17-ligurie",
+      "drive": null,
+      "stay": "laigueglia",
+      "intro": "Vraie journée de pause après seize jours de circuit. Plage, baignade, balades douces aux alentours.",
+      "schedule": [
+        {
+          "time": "Matin",
+          "title": "Plage et farniente",
+          "desc": "Plage de Laigueglia ou Baia del Sole, fond sablonneux peu profond, idéal pour la baignade. Bagni St. Tropez, Bagni Capo Mele : transats à la journée."
+        },
+        {
+          "time": "Après-midi (option 1)",
+          "title": "Colla Micheri",
+          "desc": "Petit village médiéval perché à 2 km au-dessus de Laigueglia, accessible à pied par un sentier (45 min de montée à l'ombre des oliviers). Thor Heyerdahl (Kon-Tiki) y a vécu ses dernières années."
+        },
+        {
+          "time": "Après-midi (option 2)",
+          "title": "Cervo (un des plus beaux villages d'Italie)",
+          "desc": "À 10 min en voiture vers le sud. Bourg médiéval suspendu au-dessus de la mer, ruelles pavées, église baroque San Giovanni Battista. Compte parmi les Borghi più belli d'Italia."
+        },
+        {
+          "time": "Soir",
+          "title": "Dernier dîner italien",
+          "desc": "Aperitivo avec spritz, antipasti de la Riviera (anchois marinés, focaccia di Recco, légumes farcis), trofie al pesto ou poisson grillé, vin Pigato ou Vermentino frais."
+        }
+      ]
+    },
+    {
+      "n": 18,
+      "date": "2026-07-24",
+      "weekday": "Vendredi",
+      "title": "Laigueglia → Toulouse",
+      "subtitle": "Retour à la maison",
+      "leg": "return",
+      "photo": "j18-retour",
+      "drive": { "km": 673, "hours": "7h05", "from": "Laigueglia", "to": "Toulouse" },
+      "stay": null,
+      "intro": "Dernière étape de retour, raisonnable en distance. Traversée en 7h via la Riviera française, l'A8 et l'A9.",
+      "schedule": [
+        {
+          "time": "Matinée tardive (option)",
+          "title": "Dernière baignade ou marché matinal",
+          "desc": "Réveil tranquille, dernier petit-déjeuner italien, dernière baignade. Marché du vendredi à Laigueglia ou Alassio voisine pour ramener huile d'olive Taggiasche, focaccia, vin."
+        },
+        {
+          "time": "Départ 11h-12h",
+          "title": "Route vers Toulouse",
+          "desc": "A10/A8 par la Côte d'Azur, A8 puis A9 (Languedoc), A61 vers Toulouse. Compter 7h05 sans gros embouteillages. Pause déjeuner sur l'A8 vers Aix-en-Provence (~3h30 de route depuis Laigueglia), arrivée Toulouse en début de soirée."
+        }
+      ],
+      "tips": [
+        "Anticiper en partant tôt (8h-9h) si chaleur forte. Traversée du Var et des Bouches-du-Rhône peut être chargée le vendredi en juillet."
+      ]
+    }
+  ]
+}

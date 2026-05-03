@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a3a44">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Slovénie">
+<title>Slovénie 2026</title>
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlNsb3bDqW5pZSAyMDI2IiwKICAic2hvcnRfbmFtZSI6ICJTbG92w6luaWUiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzBhM2E0NCIsCiAgInRoZW1lX2NvbG9yIjogIiMwYTNhNDQiLAogICJpY29ucyI6IFt7ICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9JyUyMmh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyUyMiB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHJlY3Qgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnIGZpbGw9JyUyMzBhM2E0NCcvPjx0ZXh0IHg9JzUwJyB5PSc2MicgZm9udC1zaXplPSc1MCcgdGV4dC1hbmNob3I9J21pZGRsZScgZmlsbD0nJTIzZTk4ZDU4Jz7wn46SPC90ZXh0Pjwvc3ZnPiIsICJzaXplcyI6ICIxOTJ4MTkyIiwgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIgfV0KfQ==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* =========================================================
+     RESET
+     ========================================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  img, picture { display: block; max-width: 100%; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  a { color: inherit; text-decoration: none; }
+  ol, ul { list-style: none; }
+
+  /* =========================================================
+     PALETTE & TOKENS — Adriatique au crépuscule
+     ========================================================= */
+  :root {
+    --bg: #0a3a44;
+    --bg-deep: #062229;
+    --bg-soft: #124852;
+
+    --ink: #fbf6e9;
+    --ink-soft: rgba(251, 246, 233, 0.78);
+    --ink-faint: rgba(251, 246, 233, 0.52);
+    --ink-mute: rgba(251, 246, 233, 0.32);
+
+    --coral: #e98d58;
+    --sand: #d4a574;
+    --teal-light: #6cb6c4;
+    --olive: #7a9657;
+
+    --line: rgba(251, 246, 233, 0.10);
+    --line-strong: rgba(251, 246, 233, 0.20);
+
+    --fz-display: clamp(40px, 11vw, 64px);
+    --fz-h1: clamp(28px, 7vw, 38px);
+    --fz-h2: clamp(20px, 5vw, 24px);
+    --fz-h3: 17px;
+    --fz-body: 16px;
+    --fz-small: 13px;
+    --fz-micro: 11px;
+
+    --gap-xs: 6px;
+    --gap-sm: 12px;
+    --gap-md: 20px;
+    --gap-lg: 32px;
+    --gap-xl: 56px;
+
+    --pad-x: 22px;
+    --max-w: 540px;
+
+    --ease: cubic-bezier(.2, .65, .2, 1);
+  }
+
+  /* =========================================================
+     BASE TYPO
+     ========================================================= */
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: var(--fz-body);
+    line-height: 1.55;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: env(safe-area-inset-bottom);
+    -webkit-font-smoothing: antialiased;
+  }
+  .display, h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 500; letter-spacing: -0.015em; }
+  .italic { font-style: italic; }
+
+  /* =========================================================
+     APP SHELL
+     ========================================================= */
+  #app {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* Page fade transition */
+  .page { animation: page-in 380ms var(--ease) both; }
+  @keyframes page-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =========================================================
+     DAY VIEW — IMMERSIVE
+     ========================================================= */
+  .day { padding-bottom: 110px; }
+
+  /* HERO --------------------------------------------------- */
+  .day__hero {
+    position: relative;
+    height: 78vh;
+    min-height: 520px;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg-deep);
+  }
+  .day__photo,
+  .day__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .day__photo img {
+    animation: hero-zoom 14s var(--ease) both;
+  }
+  @keyframes hero-zoom {
+    from { transform: scale(1.06); }
+    to   { transform: scale(1); }
+  }
+  .day__hero::before,
+  .day__hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .day__hero::before {
+    top: 0;
+    height: 35%;
+    background: linear-gradient(180deg, rgba(6, 34, 41, 0.65) 0%, rgba(6, 34, 41, 0) 100%);
+  }
+  .day__hero::after {
+    bottom: 0;
+    height: 75%;
+    background: linear-gradient(180deg,
+      rgba(10, 58, 68, 0) 0%,
+      rgba(10, 58, 68, 0.35) 30%,
+      rgba(10, 58, 68, 0.85) 70%,
+      var(--bg) 100%);
+  }
+
+  /* HERO TOP BAR (back + day index) */
+  .day__topbar {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 14px);
+    left: 0;
+    right: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--pad-x);
+  }
+  .day__back,
+  .day__counter {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.85;
+    padding: 8px 0;
+  }
+  .day__back { display: inline-flex; align-items: center; gap: 8px; }
+  .day__back::before { content: '←'; font-size: 14px; letter-spacing: 0; }
+
+  /* HERO TEXT (bottom of hero) */
+  .day__hero-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 0 var(--pad-x) 38px;
+  }
+  .day__leg {
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .day__leg::after {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--coral);
+    vertical-align: middle;
+    margin-left: 10px;
+    transform: translateY(-2px);
+  }
+  .day__title {
+    font-size: var(--fz-display);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.02;
+    color: var(--ink);
+    margin-bottom: 14px;
+    text-wrap: balance;
+  }
+  .day__date {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-small);
+    color: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+  .day__date strong { color: var(--ink); font-weight: 500; }
+
+  /* BODY --------------------------------------------------- */
+  .day__body {
+    position: relative;
+    z-index: 2;
+    padding: 0 var(--pad-x);
+    margin-top: -8px;
+  }
+  .day__body > section + section { margin-top: var(--gap-xl); }
+
+  .section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 20px;
+  }
+
+  /* INTRO -------------------------------------------------- */
+  .day__intro {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--ink);
+    padding: 4px 0 0;
+    text-wrap: pretty;
+  }
+  .day__intro::first-letter {
+    font-size: 1.4em;
+    line-height: 1;
+  }
+
+  /* DRIVE -------------------------------------------------- */
+  .drive {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 14px;
+  }
+  .drive__city {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .drive__city--to { text-align: right; }
+  .drive__arrow {
+    color: var(--coral);
+    font-size: 14px;
+    letter-spacing: 0.2em;
+  }
+  .drive__stats {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-top: 6px;
+  }
+
+  /* SCHEDULE ----------------------------------------------- */
+  .schedule { display: flex; flex-direction: column; gap: var(--gap-lg); }
+  .schedule__item {
+    position: relative;
+    padding-left: 0;
+  }
+  .schedule__time {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 10px;
+  }
+  .schedule__title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .schedule__desc {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  /* STAY CARD ---------------------------------------------- */
+  .stay {
+    position: relative;
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    padding: 22px;
+    background: rgba(251, 246, 233, 0.03);
+  }
+  .stay__status {
+    display: inline-block;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .stay--confirmed .stay__status { color: var(--olive); }
+  .stay--tbd       .stay__status { color: var(--coral); }
+  .stay__name {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  .stay__city {
+    font-size: var(--fz-small);
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+  .stay__meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 18px;
+    margin: 14px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .stay__meta dt {
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 2px;
+  }
+  .stay__meta dd { font-size: 14px; color: var(--ink-soft); }
+  .stay__notes {
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-style: italic;
+    line-height: 1.55;
+  }
+  .stay__actions {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink);
+    transition: background 200ms var(--ease), border-color 200ms var(--ease);
+  }
+  .action:active { background: rgba(251, 246, 233, 0.08); border-color: var(--coral); }
+  .action__icon { font-size: 14px; }
+
+  /* TIPS --------------------------------------------------- */
+  .tips { display: flex; flex-direction: column; gap: 12px; }
+  .tips li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .tips li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 12px;
+    height: 1px;
+    background: var(--coral);
+  }
+
+  /* DAY NAV (bottom fixed) --------------------------------- */
+  .day-nav {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    width: calc(100% - 28px);
+    max-width: calc(var(--max-w) - 28px);
+    z-index: 50;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    background: rgba(6, 34, 41, 0.78);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 6px;
+    gap: 4px;
+  }
+  .day-nav button,
+  .day-nav a {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 12px 14px;
+    border-radius: 999px;
+    text-align: center;
+    transition: background 200ms var(--ease);
+  }
+  .day-nav button:disabled { color: var(--ink-mute); cursor: default; }
+  .day-nav button:not(:disabled):active,
+  .day-nav a:active { background: rgba(251, 246, 233, 0.08); }
+  .day-nav__home { display: inline-flex; align-items: center; justify-content: center; }
+  .day-nav__prev { text-align: left; padding-left: 18px; }
+  .day-nav__next { text-align: right; padding-right: 18px; }
+
+  /* =========================================================
+     COVER — immersive
+     ========================================================= */
+  .cover {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  .cover__photo,
+  .cover__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cover__photo img { animation: hero-zoom 22s var(--ease) both; }
+
+  /* Gradient allégé : juste assez pour la lisibilité, sans écraser la photo */
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse 80% 60% at 30% 55%, rgba(233, 141, 88, 0.18) 0%, transparent 60%),
+      linear-gradient(180deg,
+        rgba(6, 34, 41, 0.30) 0%,
+        rgba(6, 34, 41, 0.05) 22%,
+        rgba(6, 34, 41, 0.05) 50%,
+        rgba(6, 34, 41, 0.55) 92%,
+        rgba(6, 34, 41, 0.75) 100%);
+  }
+
+  .cover__top,
+  .cover__main,
+  .cover__bottom { position: relative; z-index: 2; }
+
+  .cover__top {
+    padding: calc(env(safe-area-inset-top, 0px) + 22px) var(--pad-x) 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    font-weight: 600;
+    text-shadow: 0 1px 12px rgba(6, 34, 41, 0.5);
+  }
+  .cover__countdown {
+    color: var(--sand);
+    background: rgba(6, 34, 41, 0.35);
+    padding: 6px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  /* Texte au tiers supérieur — la photo respire en dessous */
+  .cover__main {
+    align-self: start;
+    padding: 14vh var(--pad-x) 0;
+    text-shadow: 0 2px 24px rgba(6, 34, 41, 0.45);
+  }
+  .cover__kicker {
+    font-size: var(--fz-micro);
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 22px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cover__kicker::before,
+  .cover__kicker::after {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: var(--sand);
+  }
+  .cover__title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(76px, 23vw, 138px);
+    font-style: italic;
+    font-weight: 500;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin-bottom: 24px;
+    color: var(--ink);
+  }
+  .cover__subtitle {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .cover__meta {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-small);
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    opacity: 0.92;
+  }
+
+  .cover__bottom {
+    padding: 28px var(--pad-x) calc(env(safe-area-inset-bottom, 0px) + 30px);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  .cover__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 26px;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-small);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--coral);
+    box-shadow: 0 8px 28px rgba(233, 141, 88, 0.35), 0 1px 0 rgba(255, 255, 255, 0.15) inset;
+    transition: transform 180ms var(--ease), box-shadow 180ms var(--ease);
+  }
+  .cover__cta::after {
+    content: '→';
+    font-size: 18px;
+    letter-spacing: 0;
+    transition: transform 220ms var(--ease);
+  }
+  .cover__cta:active {
+    transform: scale(0.98);
+    box-shadow: 0 4px 18px rgba(233, 141, 88, 0.40);
+  }
+  .cover__cta:hover::after { transform: translateX(3px); }
+
+  .cover__links {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .cover__links a {
+    color: var(--ink);
+    opacity: 0.8;
+    padding: 6px 2px;
+    border-bottom: 1px solid transparent;
+    transition: opacity 200ms var(--ease), border-color 200ms var(--ease);
+  }
+  .cover__links a:active {
+    opacity: 1;
+    border-bottom-color: var(--sand);
+  }
+
+  /* Staggered fade-in */
+  .stagger > * {
+    opacity: 0;
+    animation: stagger-in 700ms var(--ease) forwards;
+  }
+  .stagger > *:nth-child(1) { animation-delay: 250ms; }
+  .stagger > *:nth-child(2) { animation-delay: 400ms; }
+  .stagger > *:nth-child(3) { animation-delay: 550ms; }
+  .stagger > *:nth-child(4) { animation-delay: 700ms; }
+  .stagger > *:nth-child(5) { animation-delay: 850ms; }
+  @keyframes stagger-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =========================================================
+     TIMELINE — éditoriale
+     ========================================================= */
+  .timeline {
+    padding: calc(env(safe-area-inset-top, 0px) + 28px) 0 110px;
+  }
+  .timeline__head {
+    padding: 0 var(--pad-x) 8px;
+  }
+  .timeline__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+    padding: 8px 0;
+  }
+  .timeline__back::before { content: '←'; letter-spacing: 0; }
+  .timeline__kicker {
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .timeline__title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(44px, 12vw, 64px);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    margin-bottom: 18px;
+  }
+  .timeline__title em {
+    font-style: italic;
+    color: var(--sand);
+  }
+  .timeline__lead {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  .timeline__leg {
+    padding: 38px var(--pad-x) 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--sand);
+    letter-spacing: 0.02em;
+  }
+  .timeline__leg::before,
+  .timeline__leg::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line-strong);
+  }
+
+  .timeline__day {
+    display: block;
+    margin-bottom: 36px;
+    color: var(--ink);
+  }
+  .timeline__photo {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--bg-deep);
+  }
+  .timeline__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 800ms var(--ease);
+  }
+  .timeline__day:active .timeline__photo img { transform: scale(1.03); }
+  .timeline__photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(6, 34, 41, 0.30) 0%, transparent 35%, transparent 70%, rgba(6, 34, 41, 0.45) 100%);
+  }
+  .timeline__num {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: rgba(6, 34, 41, 0.40);
+    padding: 7px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .timeline__caption {
+    padding: 16px var(--pad-x) 0;
+  }
+  .timeline__date {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .timeline__day-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 8px;
+    text-wrap: balance;
+  }
+  .timeline__sub {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .timeline__sub-text {
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    flex: 1;
+    min-width: 0;
+  }
+  .timeline__drive {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .timeline__drive--rest { color: var(--olive); }
+
+  /* =========================================================
+     STAYS — éditoriale
+     ========================================================= */
+  .stays {
+    padding: calc(env(safe-area-inset-top, 0px) + 28px) 0 110px;
+  }
+  .stays__head {
+    padding: 0 var(--pad-x) 8px;
+  }
+
+  .stays__summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin: 28px var(--pad-x) 0;
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .stays__summary > div {
+    padding: 16px 8px;
+    text-align: center;
+    border-right: 1px solid var(--line);
+  }
+  .stays__summary > div:last-child { border-right: 0; }
+  .stays__summary dt {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .stays__summary dd {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stays__summary dd small {
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-left: 2px;
+    font-style: italic;
+  }
+
+  .stays__list {
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+    margin-top: 36px;
+  }
+
+  /* STAY CARD (page hébergements) -------------------------- */
+  .stay-card {
+    color: var(--ink);
+  }
+  .stay-card__photo {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg-deep);
+  }
+  .stay-card__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 800ms var(--ease);
+  }
+  a.stay-card__photo:active img { transform: scale(1.03); }
+  .stay-card__photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(6,34,41,0.30) 0%, transparent 35%, transparent 65%, rgba(6,34,41,0.55) 100%);
+  }
+  .stay-card__nights {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink);
+    background: rgba(6, 34, 41, 0.40);
+    padding: 6px 12px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .stay-card__status {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    z-index: 1;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 7px 13px;
+    border-radius: 999px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .stay-card--confirmed .stay-card__status {
+    color: #fbf6e9;
+    background: rgba(122, 150, 87, 0.85);
+  }
+  .stay-card--tbd .stay-card__status {
+    color: var(--bg-deep);
+    background: rgba(233, 141, 88, 0.92);
+  }
+
+  .stay-card__body {
+    padding: 18px var(--pad-x) 0;
+  }
+  .stay-card__city {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .stay-card__name {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 6px;
+    text-wrap: balance;
+  }
+  .stay-card__dates {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+
+  .stay-card__meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 18px;
+    margin: 18px 0 0;
+    padding: 18px 0 0;
+    border-top: 1px solid var(--line);
+  }
+  .stay-card__meta dt {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 3px;
+    font-weight: 500;
+  }
+  .stay-card__meta dd {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  .stay-card__price {
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--ink-faint);
+    line-height: 1.5;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+  }
+  .stay-card__price strong {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .stay-card__price-paid { color: var(--olive); }
+  .stay-card__price-due  { color: var(--coral); }
+
+  .stay-card__notes {
+    margin-top: 14px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  .stay-card__actions {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* =========================================================
+     LOADER & STATUS
+     ========================================================= */
+  .loader {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    color: var(--ink-faint);
+    font-size: var(--fz-small);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .fb-status {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 18px);
+    right: 18px;
+    z-index: 100;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-mute);
+    transition: background 400ms var(--ease), box-shadow 400ms var(--ease);
+    pointer-events: none;
+  }
+  .fb-status.is-ok    { background: var(--olive); box-shadow: 0 0 8px rgba(122, 150, 87, 0.5); }
+  .fb-status.is-error { background: var(--coral); }
+
+  /* Hide focus outlines for mouse, keep for keyboard */
+  :focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<main id="app" aria-live="polite">
+  <div class="loader">Chargement…</div>
+</main>
+
+<div id="fb-status" class="fb-status" aria-hidden="true"></div>
+
+<script type="module">
+// =========================================================
+// FIREBASE (ping seul pour l'instant — données = JSON local)
+// =========================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getFirestore, doc, setDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBnI7hdhZd7yKCxen-c6GBfRu1Mn7iuClk",
+  authDomain: "voyage-slovenie-2026.firebaseapp.com",
+  projectId: "voyage-slovenie-2026",
+  storageBucket: "voyage-slovenie-2026.firebasestorage.app",
+  messagingSenderId: "411413122851",
+  appId: "1:411413122851:web:014f6ab7758b3a90aec696"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getFirestore(fbApp);
+const fbStatusEl = document.getElementById('fb-status');
+
+async function fbPing() {
+  try {
+    await setDoc(doc(db, "ping", "client"), { at: serverTimestamp(), ua: navigator.userAgent.slice(0, 80) });
+    fbStatusEl.classList.remove('is-error');
+    fbStatusEl.classList.add('is-ok');
+  } catch (e) {
+    console.warn('Firebase ping failed', e);
+    fbStatusEl.classList.add('is-error');
+  }
+}
+
+// =========================================================
+// DATA
+// =========================================================
+const STATE = {
+  trip: null,
+  legs: null,
+  days: [],
+  staysById: {},
+};
+
+// Map stay → photo key (la plus représentative de la ville, pour TBD ou fallback)
+const STAY_PHOTO = {
+  nice:       'j01-nice',
+  venise:     'j02-venise-arrivee',
+  piran:      'j04-piran',
+  postojna:   'j06-predjama',
+  ljubljana:  'j08-ljubljana',
+  bled:       'j09-bled',
+  tolmin:     'j14-rafting',
+  zelenci:    'j15-canyoning',
+  laigueglia: 'j16-laigueglia',
+};
+
+// Hébergements avec une vraie photo de l'annonce (photos/stay-<id>-*.jpg)
+const STAYS_WITH_REAL_PHOTO = new Set(['venise', 'piran', 'postojna', 'ljubljana']);
+
+async function loadData() {
+  const [days, stays] = await Promise.all([
+    fetch('data/days.json').then(r => r.json()),
+    fetch('data/stays.json').then(r => r.json()),
+  ]);
+  STATE.trip = days.trip;
+  STATE.legs = days.legs;
+  STATE.days = days.days;
+  STATE.staysById = Object.fromEntries(stays.stays.map(s => [s.id, s]));
+}
+
+// =========================================================
+// HELPERS
+// =========================================================
+const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+
+function formatDate(iso) {
+  const d = new Date(iso + 'T00:00:00');
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+}
+
+function formatLongDate(iso, weekday) {
+  return `${weekday} ${formatDate(iso)}`;
+}
+
+function daysUntil(iso) {
+  const target = new Date(iso + 'T00:00:00');
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return Math.round((target - now) / 86400000);
+}
+
+function formatRange(arrIso, depIso) {
+  const a = new Date(arrIso + 'T00:00:00');
+  const b = new Date(depIso + 'T00:00:00');
+  if (a.getMonth() === b.getMonth()) {
+    return `${a.getDate()} → ${b.getDate()} ${MONTHS[a.getMonth()]}`;
+  }
+  return `${a.getDate()} ${MONTHS[a.getMonth()]} → ${b.getDate()} ${MONTHS[b.getMonth()]}`;
+}
+
+function formatDueDate(iso) {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso || '';
+  const d = new Date(iso + 'T00:00:00');
+  return `le ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+}
+
+function mapsLink(coords, label = '') {
+  if (!coords) return null;
+  const [lat, lng] = coords;
+  const q = label ? encodeURIComponent(label) : `${lat},${lng}`;
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${q}`;
+}
+
+function telLink(phone) {
+  return phone ? `tel:${phone.replace(/\s/g, '')}` : null;
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function photoSrc(key, kind = 'hero') {
+  return `photos/${key}-${kind}.jpg`;
+}
+
+// =========================================================
+// ROUTER
+// =========================================================
+const ROUTES = [
+  { match: /^#?\/?$/,                 render: renderCover },
+  { match: /^#?\/timeline\/?$/,       render: renderTimeline },
+  { match: /^#?\/hebergements\/?$/,   render: renderStays },
+  { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
+];
+
+function route() {
+  const hash = location.hash || '#/';
+  for (const r of ROUTES) {
+    const m = hash.match(r.match);
+    if (m) { r.render(m); return; }
+  }
+  // 404 → cover
+  location.hash = '#/';
+}
+
+window.addEventListener('hashchange', route);
+
+// =========================================================
+// VUE JOUR (immersive — focus principal v2)
+// =========================================================
+function renderDay(n) {
+  const day = STATE.days.find(d => d.n === n);
+  if (!day) { location.hash = '#/timeline'; return; }
+
+  const stay = day.stay ? STATE.staysById[day.stay] : null;
+  const legLabel = STATE.legs[day.leg] ?? '';
+  const photoKey = day.photo;
+
+  // Sections optionnelles
+  const driveHtml = day.drive ? `
+    <section class="drive" aria-label="Trajet du jour">
+      <span class="drive__city">${escapeHtml(day.drive.from)}</span>
+      <span class="drive__arrow">→</span>
+      <span class="drive__city drive__city--to">${escapeHtml(day.drive.to)}</span>
+      <span class="drive__stats">${escapeHtml(day.drive.km)} km · ${escapeHtml(day.drive.hours)}</span>
+    </section>` : '';
+
+  const scheduleHtml = (day.schedule || []).map(item => `
+    <li class="schedule__item">
+      <span class="schedule__time">${escapeHtml(item.time)}</span>
+      <h3 class="schedule__title">${escapeHtml(item.title)}</h3>
+      <p class="schedule__desc">${escapeHtml(item.desc)}</p>
+    </li>
+  `).join('');
+
+  const tipsHtml = day.tips && day.tips.length ? `
+    <section class="day__tips">
+      <h2 class="section-title">À retenir</h2>
+      <ul class="tips">${day.tips.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>
+    </section>` : '';
+
+  const stayHtml = stay ? renderStayCard(stay) : '';
+
+  // Navigation
+  const prev = day.n > 1 ? `<a class="day-nav__prev" href="#/jour/${day.n - 1}">← Jour ${day.n - 1}</a>`
+                         : `<button class="day-nav__prev" disabled>—</button>`;
+  const next = day.n < STATE.days.length ? `<a class="day-nav__next" href="#/jour/${day.n + 1}">Jour ${day.n + 1} →</a>`
+                                         : `<button class="day-nav__next" disabled>—</button>`;
+
+  const html = `
+    <article class="page day" data-day="${day.n}">
+      <header class="day__hero">
+        <picture class="day__photo">
+          <source media="(min-width: 768px)" srcset="${photoSrc(photoKey, 'hero')}">
+          <img src="${photoSrc(photoKey, 'mobile')}" alt="" loading="eager" decoding="async">
+        </picture>
+        <div class="day__topbar">
+          <a class="day__back" href="#/timeline">Itinéraire</a>
+          <span class="day__counter">Jour ${day.n} / ${STATE.days.length}</span>
+        </div>
+        <div class="day__hero-text">
+          ${legLabel ? `<div class="day__leg">${escapeHtml(legLabel)}</div>` : ''}
+          <h1 class="day__title">${escapeHtml(day.title)}</h1>
+          <p class="day__date">
+            <strong>${escapeHtml(formatLongDate(day.date, day.weekday))}</strong>
+            ${day.subtitle ? ` · ${escapeHtml(day.subtitle)}` : ''}
+          </p>
+        </div>
+      </header>
+
+      <div class="day__body">
+        ${day.intro ? `<section class="day__intro">${escapeHtml(day.intro)}</section>` : ''}
+        ${driveHtml}
+        ${scheduleHtml ? `
+          <section class="day__schedule">
+            <h2 class="section-title">Programme</h2>
+            <ol class="schedule">${scheduleHtml}</ol>
+          </section>` : ''}
+        ${stayHtml}
+        ${tipsHtml}
+      </div>
+
+      <nav class="day-nav" aria-label="Navigation entre jours">
+        ${prev}
+        <a class="day-nav__home" href="#/timeline" aria-label="Voir l'itinéraire">●●●</a>
+        ${next}
+      </nav>
+    </article>
+  `;
+
+  mount(html);
+  attachSwipe(day.n);
+  window.scrollTo(0, 0);
+  preloadNeighborPhotos(day.n);
+}
+
+function preloadNeighborPhotos(n) {
+  const isWide = window.matchMedia('(min-width: 768px)').matches;
+  const kind = isWide ? 'hero' : 'mobile';
+  for (const offset of [-1, 1]) {
+    const d = STATE.days.find(x => x.n === n + offset);
+    if (!d) continue;
+    const img = new Image();
+    img.src = photoSrc(d.photo, kind);
+  }
+}
+
+function renderStayCard(stay) {
+  const isConfirmed = stay.status === 'confirmed';
+  const statusLabel = isConfirmed ? 'Réservé' : 'À réserver';
+  const cls = isConfirmed ? 'stay--confirmed' : 'stay--tbd';
+
+  const actions = [];
+  if (stay.coords) {
+    const url = `https://www.google.com/maps/search/?api=1&query=${stay.coords[0]},${stay.coords[1]}`;
+    actions.push(`<a class="action" href="${url}" target="_blank" rel="noopener"><span class="action__icon">📍</span>Itinéraire</a>`);
+  }
+  if (stay.phone) {
+    actions.push(`<a class="action" href="${telLink(stay.phone)}"><span class="action__icon">📞</span>Appeler</a>`);
+  }
+  if (stay.website) {
+    actions.push(`<a class="action" href="${escapeHtml(stay.website)}" target="_blank" rel="noopener"><span class="action__icon">↗</span>Site</a>`);
+  }
+  if (stay.email) {
+    actions.push(`<a class="action" href="mailto:${escapeHtml(stay.email)}"><span class="action__icon">✉</span>Email</a>`);
+  }
+
+  const meta = [];
+  if (stay.checkin)  meta.push(['Check-in',  stay.checkin]);
+  if (stay.checkout) meta.push(['Check-out', stay.checkout]);
+  if (isConfirmed && stay.host) meta.push(['Hôte', stay.host]);
+  if (isConfirmed && stay.confirmation) meta.push(['Réf.', stay.confirmation]);
+
+  return `
+    <section class="day__stay">
+      <h2 class="section-title">Nuit à ${escapeHtml(stay.city)}</h2>
+      <div class="stay ${cls}">
+        <span class="stay__status">${statusLabel}</span>
+        ${stay.name
+          ? `<h3 class="stay__name">${escapeHtml(stay.name)}</h3>
+             ${stay.address ? `<p class="stay__city">${escapeHtml(stay.address)}</p>` : `<p class="stay__city">${escapeHtml(stay.city)}</p>`}`
+          : `<h3 class="stay__name">${escapeHtml(stay.city)}</h3>
+             <p class="stay__city">Hébergement à finaliser</p>`
+        }
+        ${meta.length ? `<dl class="stay__meta">${meta.map(([k,v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
+        ${stay.notes ? `<p class="stay__notes">${escapeHtml(stay.notes)}</p>` : ''}
+        ${actions.length ? `<div class="stay__actions">${actions.join('')}</div>` : ''}
+      </div>
+    </section>
+  `;
+}
+
+// =========================================================
+// SWIPE entre jours
+// =========================================================
+function attachSwipe(currentN) {
+  const container = document.getElementById('app');
+  let startX = 0, startY = 0, tracking = false, locked = null;
+  const THRESHOLD = 60;
+  const VERTICAL_LOCK = 12;
+
+  function onStart(e) {
+    const t = e.touches ? e.touches[0] : e;
+    startX = t.clientX;
+    startY = t.clientY;
+    tracking = true;
+    locked = null;
+  }
+  function onMove(e) {
+    if (!tracking) return;
+    const t = e.touches ? e.touches[0] : e;
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+    if (locked === null) {
+      if (Math.abs(dy) > VERTICAL_LOCK) locked = 'v';
+      else if (Math.abs(dx) > VERTICAL_LOCK) locked = 'h';
+    }
+  }
+  function onEnd(e) {
+    if (!tracking) return;
+    tracking = false;
+    const t = (e.changedTouches ? e.changedTouches[0] : e);
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+    if (locked !== 'h') return;
+    if (Math.abs(dx) < THRESHOLD || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0 && currentN < STATE.days.length) location.hash = `#/jour/${currentN + 1}`;
+    if (dx > 0 && currentN > 1)                 location.hash = `#/jour/${currentN - 1}`;
+  }
+
+  container.addEventListener('touchstart', onStart, { passive: true });
+  container.addEventListener('touchmove',  onMove,  { passive: true });
+  container.addEventListener('touchend',   onEnd,   { passive: true });
+
+  // Clavier (desktop)
+  function onKey(e) {
+    if (e.key === 'ArrowRight' && currentN < STATE.days.length) location.hash = `#/jour/${currentN + 1}`;
+    if (e.key === 'ArrowLeft'  && currentN > 1)                 location.hash = `#/jour/${currentN - 1}`;
+  }
+  document.addEventListener('keydown', onKey, { once: true });
+}
+
+// =========================================================
+// STUBS — Cover, Timeline, Hébergements (à refaire après validation jour)
+// =========================================================
+function renderCover() {
+  const dLeft = daysUntil(STATE.trip.startDate);
+  let countdown;
+  if (dLeft > 1)       countdown = `J−${dLeft}`;
+  else if (dLeft === 1) countdown = 'Demain';
+  else if (dLeft === 0) countdown = 'Aujourd\'hui';
+  else if (dLeft >= -17) countdown = `Jour ${1 - dLeft} / 18`;
+  else                  countdown = 'Souvenirs';
+
+  mount(`
+    <section class="page cover">
+      <picture class="cover__photo">
+        <source media="(min-width: 768px)" srcset="${photoSrc('cover', 'hero')}">
+        <img src="${photoSrc('cover', 'mobile')}" alt="" loading="eager" decoding="async">
+      </picture>
+
+      <div class="cover__top">
+        <span>Été 2026</span>
+        <span class="cover__countdown">${countdown}</span>
+      </div>
+
+      <div class="cover__main stagger">
+        <div class="cover__kicker">Voyage en famille</div>
+        <h1 class="cover__title">${escapeHtml(STATE.trip.title)}</h1>
+        <p class="cover__subtitle">${escapeHtml(STATE.trip.subtitle)}</p>
+        <p class="cover__meta">${escapeHtml(STATE.trip.travelers)} · ${STATE.trip.totalKm.toLocaleString('fr-FR')} km</p>
+      </div>
+
+      <div class="cover__bottom stagger">
+        <a class="cover__cta" href="#/jour/1">Commencer le voyage</a>
+        <nav class="cover__links">
+          <a href="#/timeline">Itinéraire</a>
+          <a href="#/hebergements">Hébergements</a>
+        </nav>
+      </div>
+    </section>
+  `);
+  window.scrollTo(0, 0);
+}
+
+function renderTimeline() {
+  // Group days by leg
+  const groups = [];
+  let current = null;
+  for (const d of STATE.days) {
+    if (!current || current.leg !== d.leg) {
+      current = { leg: d.leg, days: [] };
+      groups.push(current);
+    }
+    current.days.push(d);
+  }
+
+  const groupsHtml = groups.map(g => {
+    const legLabel = STATE.legs[g.leg] || '';
+    const range = g.days.length === 1
+      ? `Jour ${g.days[0].n}`
+      : `Jours ${g.days[0].n}–${g.days[g.days.length - 1].n}`;
+    return `
+      <div class="timeline__leg">
+        <span>${escapeHtml(legLabel)} · ${range}</span>
+      </div>
+      ${g.days.map(renderTimelineDay).join('')}
+    `;
+  }).join('');
+
+  mount(`
+    <section class="page timeline">
+      <header class="timeline__head">
+        <a class="timeline__back" href="#/">Retour</a>
+        <div class="timeline__kicker">L'itinéraire</div>
+        <h1 class="timeline__title">18 jours,<br><em>4 chapitres</em></h1>
+        <p class="timeline__lead">Du 7 au 24 juillet 2026<br>${STATE.trip.totalKm.toLocaleString('fr-FR')} km · ${STATE.days.length} étapes</p>
+      </header>
+      ${groupsHtml}
+    </section>
+  `);
+  window.scrollTo(0, 0);
+}
+
+function renderTimelineDay(d) {
+  const driveLabel = d.drive
+    ? `<span class="timeline__drive">${d.drive.km} km · ${escapeHtml(d.drive.hours)}</span>`
+    : `<span class="timeline__drive timeline__drive--rest">Sur place</span>`;
+  return `
+    <a class="timeline__day" href="#/jour/${d.n}">
+      <figure class="timeline__photo">
+        <img src="${photoSrc(d.photo, 'mobile')}" alt="" loading="lazy" decoding="async">
+        <span class="timeline__num">Jour ${String(d.n).padStart(2, '0')}</span>
+      </figure>
+      <div class="timeline__caption">
+        <div class="timeline__date">${escapeHtml(d.weekday)} ${formatDate(d.date)}</div>
+        <h2 class="timeline__day-title">${escapeHtml(d.title)}</h2>
+        <div class="timeline__sub">
+          <span class="timeline__sub-text">${escapeHtml(d.subtitle || '')}</span>
+          ${driveLabel}
+        </div>
+      </div>
+    </a>
+  `;
+}
+
+function renderStays() {
+  const stays = Object.values(STATE.staysById);
+  const totalNights = stays.reduce((s, x) => s + (x.nights || 0), 0);
+  let confirmed = 0, paid = 0, toPay = 0;
+  for (const s of stays) {
+    if (s.status === 'confirmed') confirmed++;
+    if (s.paymentBreakdown) {
+      paid  += s.paymentBreakdown.paid      || 0;
+      toPay += s.paymentBreakdown.remaining || 0;
+    }
+  }
+
+  const cards = stays.map(renderStayPageCard).join('');
+
+  mount(`
+    <section class="page stays">
+      <header class="stays__head">
+        <a class="timeline__back" href="#/">Retour</a>
+        <div class="timeline__kicker">Les hébergements</div>
+        <h1 class="timeline__title">${totalNights} nuits,<br><em>${stays.length} étapes</em></h1>
+      </header>
+
+      <dl class="stays__summary">
+        <div>
+          <dt>Réservés</dt>
+          <dd>${confirmed}<small>/${stays.length}</small></dd>
+        </div>
+        <div>
+          <dt>Payé</dt>
+          <dd>${Math.round(paid)}<small> €</small></dd>
+        </div>
+        <div>
+          <dt>À régler</dt>
+          <dd>${Math.round(toPay)}<small> €</small></dd>
+        </div>
+      </dl>
+
+      <div class="stays__list">${cards}</div>
+    </section>
+  `);
+  window.scrollTo(0, 0);
+}
+
+function renderStayPageCard(stay) {
+  const isConfirmed = stay.status === 'confirmed';
+  const cls = isConfirmed ? 'stay-card--confirmed' : 'stay-card--tbd';
+  const dayN = dayForStay(stay.id);
+  const nightsLabel = `${stay.nights} nuit${stay.nights > 1 ? 's' : ''}`;
+  const statusLabel = isConfirmed ? 'Réservé' : 'À réserver';
+
+  // Confirmés → photo de l'annonce (stay-<id>-...)
+  // TBD → photo contextuelle de la ville (STAY_PHOTO mapping)
+  let mobileSrc, heroSrc;
+  if (isConfirmed && STAYS_WITH_REAL_PHOTO.has(stay.id)) {
+    mobileSrc = `photos/stay-${stay.id}-mobile.jpg`;
+    heroSrc   = `photos/stay-${stay.id}-hero.jpg`;
+  } else {
+    const photoKey = STAY_PHOTO[stay.id];
+    mobileSrc = photoKey ? photoSrc(photoKey, 'mobile') : null;
+    heroSrc   = photoKey ? photoSrc(photoKey, 'hero')   : null;
+  }
+
+  const photoHtml = mobileSrc ? `
+    <a class="stay-card__photo" href="#/jour/${dayN}" aria-label="Voir le jour ${dayN}">
+      <picture>
+        <source media="(min-width: 768px)" srcset="${heroSrc}">
+        <img src="${mobileSrc}" alt="" loading="lazy" decoding="async">
+      </picture>
+      <span class="stay-card__nights">${nightsLabel}</span>
+      <span class="stay-card__status">${statusLabel}</span>
+    </a>` : '';
+
+  const head = `
+    <header class="stay-card__head">
+      <div class="stay-card__city">${escapeHtml(stay.city)} · ${escapeHtml(stay.country)}</div>
+      <h2 class="stay-card__name">${escapeHtml(stay.name || 'À réserver')}</h2>
+      <p class="stay-card__dates">${formatRange(stay.arrival, stay.departure)}</p>
+    </header>
+  `;
+
+  let metaHtml = '';
+  if (isConfirmed) {
+    const meta = [];
+    if (stay.checkin)      meta.push(['Check-in',  stay.checkin]);
+    if (stay.checkout)     meta.push(['Check-out', stay.checkout]);
+    if (stay.host)         meta.push(['Hôte',      stay.host]);
+    if (stay.bookedBy && !stay.host) meta.push(['Réservé par', stay.bookedBy]);
+    if (stay.confirmation) meta.push(['Référence', stay.confirmation]);
+    if (stay.address && !stay.host) meta.push(['Adresse', stay.address]);
+    if (meta.length) {
+      metaHtml = `<dl class="stay-card__meta">${
+        meta.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')
+      }</dl>`;
+    }
+  }
+
+  let priceHtml = '';
+  if (isConfirmed && stay.price) {
+    const pb = stay.paymentBreakdown || {};
+    const parts = [];
+    if (pb.paid > 0) {
+      parts.push(`<span class="stay-card__price-paid">${Math.round(pb.paid)} € payé</span>`);
+    }
+    if (pb.remaining > 0) {
+      const due = pb.remainingDue;
+      const dueLabel = due === 'sur place' ? 'sur place'
+        : (due && /^\d{4}-\d{2}-\d{2}$/.test(due) ? formatDueDate(due) : (due || 'à payer'));
+      parts.push(`<span class="stay-card__price-due">${Math.round(pb.remaining)} € ${escapeHtml(dueLabel)}</span>`);
+    }
+    if (pb.extras) parts.push(`<span>${escapeHtml(pb.extras)}</span>`);
+    priceHtml = `
+      <p class="stay-card__price">
+        <strong>${Math.round(stay.price)} €</strong>
+        ${parts.join(' · ')}
+      </p>`;
+  }
+
+  const notesHtml = stay.notes
+    ? `<p class="stay-card__notes">${escapeHtml(stay.notes)}</p>`
+    : '';
+
+  const actions = [];
+  if (stay.coords) {
+    const url = `https://www.google.com/maps/search/?api=1&query=${stay.coords[0]},${stay.coords[1]}`;
+    actions.push(`<a class="action" href="${url}" target="_blank" rel="noopener"><span class="action__icon">📍</span>Itinéraire</a>`);
+  }
+  if (stay.phone) {
+    actions.push(`<a class="action" href="${telLink(stay.phone)}"><span class="action__icon">📞</span>Appeler</a>`);
+  }
+  if (stay.website) {
+    actions.push(`<a class="action" href="${escapeHtml(stay.website)}" target="_blank" rel="noopener"><span class="action__icon">↗</span>Site</a>`);
+  }
+  if (stay.email) {
+    actions.push(`<a class="action" href="mailto:${escapeHtml(stay.email)}"><span class="action__icon">✉</span>Email</a>`);
+  }
+  const actionsHtml = actions.length
+    ? `<div class="stay-card__actions">${actions.join('')}</div>`
+    : '';
+
+  return `
+    <article class="stay-card ${cls}">
+      ${photoHtml}
+      <div class="stay-card__body">
+        ${head}
+        ${metaHtml}
+        ${priceHtml}
+        ${notesHtml}
+        ${actionsHtml}
+      </div>
+    </article>
+  `;
+}
+
+function dayForStay(stayId) {
+  const d = STATE.days.find(d => d.stay === stayId);
+  return d ? d.n : 1;
+}
+
+// =========================================================
+// MOUNT
+// =========================================================
+function mount(html) {
+  const app = document.getElementById('app');
+  app.innerHTML = html;
+}
+
+// =========================================================
+// BOOT
+// =========================================================
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+(async function boot() {
+  try {
+    await loadData();
+    route();
+    fbPing();
+  } catch (e) {
+    console.error(e);
+    document.getElementById('app').innerHTML = `
+      <div class="loader" style="color:var(--coral); flex-direction:column; gap:12px;">
+        <div>Erreur de chargement</div>
+        <div style="font-size:11px; opacity:0.6;">${escapeHtml(e.message)}</div>
+      </div>`;
+  }
+})();
+
+// Service Worker — cache offline pour usage en voyage
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
