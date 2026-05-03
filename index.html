@@ -892,9 +892,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 800ms var(--ease);
   }
-  a.stay-card__photo:active img { transform: scale(1.03); }
   .stay-card__photo::after {
     content: '';
     position: absolute;
@@ -941,24 +939,6 @@
   .stay-card--tbd .stay-card__status {
     color: var(--bg-deep);
     background: rgba(233, 141, 88, 0.92);
-  }
-  .stay-card__open {
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    z-index: 1;
-    width: 32px;
-    height: 32px;
-    display: grid;
-    place-items: center;
-    border-radius: 999px;
-    color: var(--ink);
-    background: rgba(6, 34, 41, 0.45);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
   }
 
   .stay-card__body {
@@ -1598,25 +1578,15 @@ function renderStayPageCard(stay) {
     heroSrc   = photoKey ? photoSrc(photoKey, 'hero')   : null;
   }
 
-  // Si une annonce externe existe, la photo l'ouvre directement
-  // (Airbnb sur iOS bascule vers l'app native via Universal Links).
-  // Sinon, fallback : la photo mène au jour correspondant.
-  const photoHref = stay.listing ? stay.listing.url : `#/jour/${dayN}`;
-  const photoTarget = stay.listing ? ' target="_blank" rel="noopener"' : '';
-  const photoLabel = stay.listing
-    ? `Ouvrir l'annonce ${stay.listing.type}`
-    : `Voir le jour ${dayN}`;
-
   const photoHtml = mobileSrc ? `
-    <a class="stay-card__photo" href="${escapeHtml(photoHref)}"${photoTarget} aria-label="${photoLabel}">
+    <figure class="stay-card__photo">
       <picture>
         <source media="(min-width: 768px)" srcset="${heroSrc}">
         <img src="${mobileSrc}" alt="" loading="lazy" decoding="async">
       </picture>
       <span class="stay-card__nights">${nightsLabel}</span>
       <span class="stay-card__status">${statusLabel}</span>
-      ${stay.listing ? `<span class="stay-card__open" aria-hidden="true">↗</span>` : ''}
-    </a>` : '';
+    </figure>` : '';
 
   const head = `
     <header class="stay-card__head">
