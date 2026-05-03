@@ -1032,6 +1032,156 @@
   }
 
   /* =========================================================
+     TODOS — actions partagées
+     ========================================================= */
+  .todos {
+    padding: calc(env(safe-area-inset-top, 0px) + 28px) 0 110px;
+  }
+  .todos__head { padding: 0 var(--pad-x) 8px; }
+
+  .todos__add {
+    margin: 24px var(--pad-x) 28px;
+    display: flex;
+    gap: 8px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 4px 4px 4px 18px;
+    background: rgba(251, 246, 233, 0.04);
+    transition: border-color 200ms var(--ease);
+  }
+  .todos__add:focus-within { border-color: var(--coral); }
+  .todos__add input {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: 0;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 10px 0;
+  }
+  .todos__add input::placeholder { color: var(--ink-mute); }
+  .todos__add input:focus { outline: none; }
+  .todos__add button {
+    border-radius: 999px;
+    background: var(--coral);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0 18px;
+    transition: opacity 200ms var(--ease), transform 180ms var(--ease);
+  }
+  .todos__add button:active { transform: scale(0.97); opacity: 0.9; }
+
+  .todos__list { padding: 0 var(--pad-x); }
+  .todos__loader,
+  .todos__empty {
+    padding: 30px 0;
+    text-align: center;
+    color: var(--ink-faint);
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+  }
+
+  .todos__group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .todos__group--done { opacity: 0.65; }
+
+  .todos__done {
+    margin-top: 36px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .todos__done summary {
+    cursor: pointer;
+    list-style: none;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 8px 0;
+    font-weight: 600;
+  }
+  .todos__done summary::-webkit-details-marker { display: none; }
+  .todos__done summary::before {
+    content: '▸';
+    display: inline-block;
+    margin-right: 8px;
+    transition: transform 200ms var(--ease);
+    letter-spacing: 0;
+    font-size: 12px;
+  }
+  .todos__done[open] summary::before { transform: rotate(90deg); }
+
+  .todo {
+    display: flex;
+    align-items: stretch;
+    gap: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .todo__toggle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 4px;
+    text-align: left;
+    color: var(--ink);
+    transition: opacity 200ms var(--ease);
+  }
+  .todo__check {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-faint);
+    display: grid;
+    place-items: center;
+    color: var(--bg-deep);
+    background: transparent;
+    font-size: 12px;
+    font-weight: 700;
+    transition: background 180ms var(--ease), border-color 180ms var(--ease);
+  }
+  .todo--done .todo__check {
+    background: var(--olive);
+    border-color: var(--olive);
+    color: var(--ink);
+  }
+  .todo__title {
+    font-size: 15px;
+    line-height: 1.4;
+    flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+  }
+  .todo--done .todo__title {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    text-decoration-color: var(--ink-mute);
+  }
+  .todo__delete {
+    width: 36px;
+    color: var(--ink-mute);
+    font-size: 22px;
+    line-height: 1;
+    transition: color 200ms var(--ease), background 200ms var(--ease);
+    border-radius: 4px;
+  }
+  .todo__delete:active {
+    color: var(--coral);
+    background: rgba(233, 141, 88, 0.08);
+  }
+
+  /* =========================================================
      LOADER & STATUS
      ========================================================= */
   .loader {
@@ -1076,8 +1226,11 @@
 // FIREBASE (ping seul pour l'instant — données = JSON local)
 // =========================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, doc, setDoc, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import {
+  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  doc, setDoc, addDoc, updateDoc, deleteDoc, collection, query, orderBy,
+  onSnapshot, serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBnI7hdhZd7yKCxen-c6GBfRu1Mn7iuClk",
@@ -1089,7 +1242,9 @@ const firebaseConfig = {
 };
 
 const fbApp = initializeApp(firebaseConfig);
-const db = getFirestore(fbApp);
+const db = initializeFirestore(fbApp, {
+  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+});
 const fbStatusEl = document.getElementById('fb-status');
 
 async function fbPing() {
@@ -1202,8 +1357,14 @@ const ROUTES = [
   { match: /^#?\/?$/,                 render: renderCover },
   { match: /^#?\/timeline\/?$/,       render: renderTimeline },
   { match: /^#?\/hebergements\/?$/,   render: renderStays },
+  { match: /^#?\/a-faire\/?$/,        render: renderTodos },
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
 ];
+
+// État du listener Firestore actions (pour le détacher quand on quitte la page)
+let TODOS_UNSUB = null;
+function detachTodos() { if (TODOS_UNSUB) { TODOS_UNSUB(); TODOS_UNSUB = null; } }
+window.addEventListener('hashchange', detachTodos);
 
 function route() {
   const hash = location.hash || '#/';
@@ -1448,6 +1609,7 @@ function renderCover() {
         <nav class="cover__links">
           <a href="#/timeline">Itinéraire</a>
           <a href="#/hebergements">Hébergements</a>
+          <a href="#/a-faire">À faire</a>
         </nav>
       </div>
     </section>
@@ -1677,6 +1839,130 @@ function renderStayPageCard(stay) {
 function dayForStay(stayId) {
   const d = STATE.days.find(d => d.stay === stayId);
   return d ? d.n : 1;
+}
+
+// =========================================================
+// PAGE À FAIRE — actions partagées Firestore
+// =========================================================
+function renderTodos() {
+  mount(`
+    <section class="page todos">
+      <header class="todos__head">
+        <a class="timeline__back" href="#/">Retour</a>
+        <div class="timeline__kicker">Préparatifs &amp; voyage</div>
+        <h1 class="timeline__title">À faire,<br><em id="todos-counter">…</em></h1>
+        <p class="timeline__lead">Liste partagée entre les téléphones.<br>Synchronisée Firestore, dispo offline.</p>
+      </header>
+
+      <form class="todos__add" id="todos-add" autocomplete="off">
+        <input id="todos-input" type="text" placeholder="Nouvelle action…" maxlength="140" required>
+        <button type="submit" aria-label="Ajouter">Ajouter</button>
+      </form>
+
+      <div id="todos-list" class="todos__list" aria-live="polite">
+        <div class="todos__loader">Chargement…</div>
+      </div>
+    </section>
+  `);
+  window.scrollTo(0, 0);
+
+  const form  = document.getElementById('todos-add');
+  const input = document.getElementById('todos-input');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = input.value.trim();
+    if (!title) return;
+    input.value = '';
+    input.disabled = true;
+    try {
+      await addDoc(collection(db, 'actions'), {
+        title,
+        status: 'open',
+        createdAt: serverTimestamp(),
+        doneAt: null,
+      });
+    } catch (err) {
+      console.error(err);
+      input.value = title;
+      flashError(err.message);
+    } finally {
+      input.disabled = false;
+      input.focus();
+    }
+  });
+
+  detachTodos();
+  const q = query(collection(db, 'actions'), orderBy('createdAt', 'asc'));
+  TODOS_UNSUB = onSnapshot(q,
+    (snap) => paintTodos(snap.docs.map(d => ({ id: d.id, ...d.data() }))),
+    (err)  => { console.error(err); flashError('Sync impossible : ' + err.code); }
+  );
+}
+
+function paintTodos(items) {
+  const open = items.filter(i => i.status !== 'done');
+  const done = items.filter(i => i.status === 'done');
+  document.getElementById('todos-counter').textContent =
+    open.length === 0
+      ? (done.length ? `tout est fait` : `aucune pour l'instant`)
+      : `${open.length} ouverte${open.length > 1 ? 's' : ''}`;
+
+  const listEl = document.getElementById('todos-list');
+  listEl.innerHTML = `
+    ${open.length ? `
+      <ul class="todos__group">
+        ${open.map(renderTodoRow).join('')}
+      </ul>` : `<p class="todos__empty">Rien à faire pour le moment.</p>`}
+
+    ${done.length ? `
+      <details class="todos__done">
+        <summary>${done.length} faite${done.length > 1 ? 's' : ''}</summary>
+        <ul class="todos__group todos__group--done">
+          ${done.map(renderTodoRow).join('')}
+        </ul>
+      </details>` : ''}
+  `;
+
+  listEl.querySelectorAll('[data-act="toggle"]').forEach(b =>
+    b.addEventListener('click', () => toggleTodo(b.dataset.id, b.dataset.status))
+  );
+  listEl.querySelectorAll('[data-act="delete"]').forEach(b =>
+    b.addEventListener('click', (e) => { e.stopPropagation(); deleteTodo(b.dataset.id); })
+  );
+}
+
+function renderTodoRow(item) {
+  const isDone = item.status === 'done';
+  return `
+    <li class="todo ${isDone ? 'todo--done' : ''}">
+      <button class="todo__toggle" data-act="toggle" data-id="${item.id}" data-status="${item.status}" aria-label="${isDone ? 'Marquer à faire' : 'Marquer fait'}">
+        <span class="todo__check">${isDone ? '✓' : ''}</span>
+        <span class="todo__title">${escapeHtml(item.title)}</span>
+      </button>
+      <button class="todo__delete" data-act="delete" data-id="${item.id}" aria-label="Supprimer">×</button>
+    </li>
+  `;
+}
+
+async function toggleTodo(id, currentStatus) {
+  try {
+    await updateDoc(doc(db, 'actions', id), {
+      status: currentStatus === 'open' ? 'done' : 'open',
+      doneAt: currentStatus === 'open' ? serverTimestamp() : null,
+    });
+  } catch (err) { console.error(err); flashError(err.message); }
+}
+
+async function deleteTodo(id) {
+  if (!confirm('Supprimer cette action ?')) return;
+  try { await deleteDoc(doc(db, 'actions', id)); }
+  catch (err) { console.error(err); flashError(err.message); }
+}
+
+function flashError(msg) {
+  fbStatusEl.classList.add('is-error');
+  fbStatusEl.title = msg;
+  setTimeout(() => { fbStatusEl.classList.remove('is-error'); fbStatusEl.title = ''; }, 4000);
 }
 
 // =========================================================
