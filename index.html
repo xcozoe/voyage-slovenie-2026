@@ -1970,20 +1970,16 @@ function paintTodos(items) {
       : `${open.length} ouverte${open.length > 1 ? 's' : ''}`;
 
   const listEl = document.getElementById('todos-list');
-  listEl.innerHTML = `
-    ${open.length ? `
+  if (!open.length && !done.length) {
+    listEl.innerHTML = `<p class="todos__empty">Rien à faire pour le moment.</p>`;
+  } else {
+    listEl.innerHTML = `
       <ul class="todos__group">
         ${open.map(renderTodoRow).join('')}
-      </ul>` : `<p class="todos__empty">Rien à faire pour le moment.</p>`}
-
-    ${done.length ? `
-      <details class="todos__done"${done.some(d => d.id === EDITING_ID) ? ' open' : ''}>
-        <summary>${done.length} faite${done.length > 1 ? 's' : ''}</summary>
-        <ul class="todos__group todos__group--done">
-          ${done.map(renderTodoRow).join('')}
-        </ul>
-      </details>` : ''}
-  `;
+        ${done.map(renderTodoRow).join('')}
+      </ul>
+    `;
+  }
 
   // Toggle (case ronde uniquement)
   listEl.querySelectorAll('[data-act="toggle"]').forEach(b =>
