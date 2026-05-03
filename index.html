@@ -1244,6 +1244,7 @@
     touch-action: pan-y;       /* permet scroll vertical en attendant le long-press */
     user-select: none;
     -webkit-user-select: none;
+    -webkit-touch-callout: none; /* désactive le menu/preview iOS au long-press */
   }
   body.is-dragging-todo {
     cursor: grabbing;
@@ -2151,11 +2152,13 @@ function attachReorder(listEl) {
 function onRowPointerDown(e, row) {
   if (DRAG) return;
   if (e.pointerType === 'mouse' && e.button !== 0) return;
-  // Ne pas déclencher sur les boutons internes (toggle, edit)
-  if (e.target.closest('button, input, form')) return;
+  // Ne pas déclencher si on tape précisément la case ronde (toggle done)
+  // ou un input / bouton du mode édition. Mais autoriser sur le titre (qui
+  // occupe tout l'espace restant — sinon le drag ne se déclenche jamais).
+  if (e.target.closest('.todo__check-btn, .todo__edit-btn, input, form')) return;
 
   const startX = e.clientX, startY = e.clientY;
-  let pressTimer = setTimeout(() => activateDrag(row, startY), LONG_PRESS_MS);
+  const pressTimer = setTimeout(() => activateDrag(row, startY), LONG_PRESS_MS);
 
   const cleanup = () => {
     clearTimeout(pressTimer);
@@ -2179,6 +2182,15 @@ function activateDrag(row, startY) {
   if (navigator.vibrate) navigator.vibrate(18);
   document.body.classList.add('is-dragging-todo');
   row.classList.add('is-dragging');
+
+  // Empêche le click qui suit le pointerup de déclencher l'édition
+  const suppressClick = (ev) => {
+    ev.stopPropagation();
+    ev.preventDefault();
+    document.removeEventListener('click', suppressClick, true);
+  };
+  document.addEventListener('click', suppressClick, true);
+  setTimeout(() => document.removeEventListener('click', suppressClick, true), 1000);
 
   const ul = row.parentNode;
   const openRows = [...ul.querySelectorAll('.todo:not(.todo--done):not(.todo--editing)')];
