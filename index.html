@@ -104,7 +104,7 @@
   /* =========================================================
      DAY VIEW — IMMERSIVE
      ========================================================= */
-  .day { padding-bottom: 110px; }
+  .day { padding-bottom: 56px; }
 
   /* HERO --------------------------------------------------- */
   .day__hero {
@@ -552,46 +552,6 @@
     height: 1px;
     background: var(--coral);
   }
-
-  /* DAY NAV (bottom fixed) --------------------------------- */
-  .day-nav {
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
-    width: calc(100% - 28px);
-    max-width: calc(var(--max-w) - 28px);
-    z-index: 50;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: stretch;
-    background: rgba(6, 34, 41, 0.78);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 6px;
-    gap: 4px;
-  }
-  .day-nav button,
-  .day-nav a {
-    font-family: 'Inter', sans-serif;
-    font-size: var(--fz-micro);
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink);
-    padding: 12px 14px;
-    border-radius: 999px;
-    text-align: center;
-    transition: background 200ms var(--ease);
-  }
-  .day-nav button:disabled { color: var(--ink-mute); cursor: default; }
-  .day-nav button:not(:disabled):active,
-  .day-nav a:active { background: rgba(251, 246, 233, 0.08); }
-  .day-nav__home { display: inline-flex; align-items: center; justify-content: center; }
-  .day-nav__prev { text-align: left; padding-left: 18px; }
-  .day-nav__next { text-align: right; padding-right: 18px; }
 
   /* =========================================================
      COVER — immersive
@@ -1950,12 +1910,6 @@ function renderDay(n) {
 
   const stayHtml = stay ? renderStayCard(stay) : '';
 
-  // Navigation
-  const prev = day.n > 1 ? `<a class="day-nav__prev" href="#/jour/${day.n - 1}">← Jour ${day.n - 1}</a>`
-                         : `<button class="day-nav__prev" disabled>—</button>`;
-  const next = day.n < STATE.days.length ? `<a class="day-nav__next" href="#/jour/${day.n + 1}">Jour ${day.n + 1} →</a>`
-                                         : `<button class="day-nav__next" disabled>—</button>`;
-
   const html = `
     <article class="page day" data-day="${day.n}">
       <header class="day__hero">
@@ -1990,11 +1944,6 @@ function renderDay(n) {
         ${notesHtml}
       </div>
 
-      <nav class="day-nav" aria-label="Navigation entre jours">
-        ${prev}
-        <a class="day-nav__home" href="#/timeline" aria-label="Voir l'itinéraire">●●●</a>
-        ${next}
-      </nav>
     </article>
   `;
 

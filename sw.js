@@ -3,7 +3,7 @@
 // - Cache-first pour assets stables (photos, polices) → instantané + offline
 // - Bypass Firebase (Firestore en réseau direct)
 
-const CACHE = 'voyage-slovenie-v23';
+const CACHE = 'voyage-slovenie-v24';
 const SHELL = [
   './',
   './index.html',
