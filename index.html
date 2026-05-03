@@ -1321,50 +1321,161 @@
 
   /* Tweaks Leaflet pour s'intégrer au thème sombre */
   .leaflet-container { background: var(--bg-deep); }
+
+  /* Popups premium — header, body scrollable, footer sticky */
   .leaflet-popup-content-wrapper {
-    border-radius: 6px;
+    padding: 0;
+    border-radius: 10px;
     background: #fbf6e9;
     color: #062229;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
   }
   .leaflet-popup-content {
-    margin: 14px 16px;
+    margin: 0 !important;
+    width: auto !important;
     font-size: 13px;
     line-height: 1.5;
-    max-height: 280px;
-    overflow-y: auto;
   }
-  .leaflet-popup-content b {
-    display: block;
+  .leaflet-popup-tip { background: #fbf6e9; }
+  .leaflet-popup-close-button {
+    color: #062229 !important;
+    opacity: 0.55;
+    z-index: 5;
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 22px !important;
+    padding: 0 !important;
+    top: 6px !important;
+    right: 6px !important;
+  }
+  .leaflet-popup-close-button:hover { opacity: 1; }
+
+  .pop-card {
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    max-width: 80vw;
+    max-height: 60vh;
+    max-height: 60dvh;
+  }
+  .pop-card--compact { width: 240px; }
+
+  .pop-header {
+    flex-shrink: 0;
+    padding: 18px 18px 14px;
+    background: linear-gradient(180deg, #f5e9d2 0%, #fbf6e9 100%);
+    border-bottom: 1px solid rgba(6, 34, 41, 0.08);
+  }
+  .pop-stage {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: #c46a35;
+    margin-bottom: 8px;
+  }
+  .pop-name {
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-size: 16px;
-    margin-bottom: 8px;
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 1.15;
     color: #062229;
+    margin: 0 0 4px;
+    text-wrap: balance;
   }
-  .leaflet-popup-content a { color: #c46a35; text-decoration: underline; }
-  .leaflet-popup-tip { background: #fbf6e9; }
+  .pop-name--small { font-size: 17px; }
+  .pop-city {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #62737a;
+    font-weight: 600;
+  }
 
-  /* Bouton « Y aller » dans les popups Leaflet */
-  .popup-actions {
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(6, 34, 41, 0.10);
+  .pop-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 18px 16px;
+    -webkit-overflow-scrolling: touch;
   }
-  .popup-btn {
+  .pop-card--compact .pop-body { padding: 16px 18px 14px; }
+
+  .pop-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    margin: 0;
+  }
+  .pop-detail { margin: 0; min-width: 0; }
+  .pop-detail--full { grid-column: 1 / -1; }
+  .pop-detail dt {
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: #8d9e9e;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .pop-detail dd {
+    font-size: 12.5px;
+    color: #062229;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .pop-notes {
+    margin-top: 14px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #2a4148;
+  }
+  .pop-card--compact .pop-notes { margin-top: 8px; }
+
+  .pop-footer {
+    flex-shrink: 0;
+    padding: 12px 14px;
+    background: #f0e3c8;
+    border-top: 1px solid rgba(6, 34, 41, 0.10);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .pop-btn {
+    flex: 1;
     display: inline-flex !important;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    padding: 9px 16px;
-    background: #c46a35;
-    color: #fbf6e9 !important;
-    text-decoration: none !important;
+    padding: 11px 14px;
     border-radius: 999px;
     font-family: 'Inter', sans-serif;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
+    text-decoration: none !important;
+    white-space: nowrap;
+    min-width: 0;
+    transition: opacity 180ms var(--ease);
+  }
+  .pop-btn:active { opacity: 0.85; }
+  .pop-btn--primary {
+    background: #c46a35;
+    color: #fbf6e9 !important;
+    box-shadow: 0 2px 8px rgba(196, 106, 53, 0.35);
+  }
+  .pop-btn--secondary {
+    background: transparent;
+    color: #c46a35 !important;
+    border: 1px solid rgba(196, 106, 53, 0.45);
   }
   .leaflet-control-attribution {
     background: rgba(6, 34, 41, 0.7) !important;
@@ -2527,7 +2638,8 @@ async function loadKmlFeatures() {
       const line  = pm.querySelector('LineString > coordinates');
       if (point) {
         const [lng, lat] = point.textContent.trim().split(',').map(parseFloat);
-        const item = { name, description, styleUrl, lat, lng };
+        const stayId = pm.querySelector('ExtendedData Data[name="stayId"] value')?.textContent?.trim() || null;
+        const item = { name, description, styleUrl, lat, lng, stayId };
         if (isStays) features.stays.push(item);
         else if (isPois) features.pois.push(item);
       } else if (line && isRoutes) {
@@ -2568,11 +2680,8 @@ async function renderMap() {
     }).addTo(map);
 
     const all = L.featureGroup().addTo(map);
-    const goBtn = (lat, lng) =>
-      `<div class="popup-actions"><a class="popup-btn" href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" rel="noopener">📍 Y aller</a></div>`;
 
     // Routes en premier (pour qu'elles soient sous les marqueurs)
-    // Sand pour ne pas concurrencer le code couleur stays/POIs
     features.routes.forEach(r => {
       L.polyline(r.coords, {
         color: '#d4a574', weight: 4, opacity: 0.85, lineJoin: 'round'
@@ -2584,7 +2693,7 @@ async function renderMap() {
       L.circleMarker([p.lat, p.lng], {
         radius: 7, color: '#fbf6e9', weight: 1.5,
         fillColor: '#e98d58', fillOpacity: 0.92,
-      }).bindPopup(`<b>${escapeHtml(p.name)}</b><br>${escapeHtml(p.description)}${goBtn(p.lat, p.lng)}`).addTo(all);
+      }).bindPopup(renderPoiPopup(p), { maxWidth: 300, minWidth: 240, className: 'pop' }).addTo(all);
     });
 
     // Hébergements en vert avec lettre d'étape (A, B, C, … chronologique)
@@ -2599,8 +2708,9 @@ async function renderMap() {
         iconAnchor: [16, 16],
         popupAnchor: [0, -14],
       });
+      const stayData = s.stayId ? STATE.staysById[s.stayId] : null;
       L.marker([s.lat, s.lng], { icon })
-        .bindPopup(`<b>Étape ${letter} — ${escapeHtml(s.name)}</b><br>${s.description}${goBtn(s.lat, s.lng)}`, { maxWidth: 300 })
+        .bindPopup(renderStayPopup(stayData, s, letter), { maxWidth: 320, minWidth: 280, className: 'pop' })
         .addTo(all);
     });
 
@@ -2664,6 +2774,73 @@ async function renderMap() {
   }
 }
 
+
+// --- Popup helpers (design premium) ---
+function dirUrl(lat, lng) {
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+}
+
+function renderStayPopup(stay, kmlItem, letter) {
+  const lat = kmlItem.lat, lng = kmlItem.lng;
+  const name = (stay && stay.name) || kmlItem.name.split('—').slice(1).join('—').trim() || kmlItem.name;
+  const city = (stay && stay.city) || kmlItem.name.split('—')[0].trim();
+
+  const details = [];
+  if (stay) {
+    if (stay.arrival && stay.departure) {
+      details.push(['Dates', `${formatRange(stay.arrival, stay.departure)} · ${stay.nights} nuit${stay.nights > 1 ? 's' : ''}`]);
+    }
+    if (stay.checkin)  details.push(['Check-in',  stay.checkin]);
+    if (stay.checkout) details.push(['Check-out', stay.checkout]);
+    if (stay.host)     details.push(['Hôte', stay.host]);
+    if (stay.confirmation) details.push(['Référence', stay.confirmation]);
+    if (stay.address)  details.push(['Adresse', stay.address, true]); // full-width
+  }
+  const detailsHtml = details.map(([k, v, full]) =>
+    `<div class="pop-detail${full ? ' pop-detail--full' : ''}"><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`
+  ).join('');
+
+  const notesHtml = stay && stay.notes ? `<p class="pop-notes">${escapeHtml(stay.notes)}</p>` : '';
+
+  let listingBtn = '';
+  if (stay && stay.listing && stay.listing.url) {
+    const labels = { airbnb: 'Voir sur Airbnb', booking: 'Voir sur Booking', website: 'Site officiel' };
+    const label = labels[stay.listing.type] || 'Voir l\'annonce';
+    listingBtn = `<a class="pop-btn pop-btn--secondary" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">↗ ${label}</a>`;
+  }
+
+  return `
+    <div class="pop-card">
+      <header class="pop-header">
+        <div class="pop-stage">Étape ${letter}</div>
+        <h2 class="pop-name">${escapeHtml(name)}</h2>
+        <div class="pop-city">${escapeHtml(city)}</div>
+      </header>
+      <div class="pop-body">
+        ${detailsHtml ? `<dl class="pop-details">${detailsHtml}</dl>` : ''}
+        ${notesHtml}
+      </div>
+      <footer class="pop-footer">
+        <a class="pop-btn pop-btn--primary" href="${dirUrl(lat, lng)}" target="_blank" rel="noopener">📍 Y aller</a>
+        ${listingBtn}
+      </footer>
+    </div>
+  `;
+}
+
+function renderPoiPopup(p) {
+  return `
+    <div class="pop-card pop-card--compact">
+      <div class="pop-body">
+        <h2 class="pop-name pop-name--small">${escapeHtml(p.name)}</h2>
+        ${p.description ? `<p class="pop-notes">${escapeHtml(p.description)}</p>` : ''}
+      </div>
+      <footer class="pop-footer">
+        <a class="pop-btn pop-btn--primary" href="${dirUrl(p.lat, p.lng)}" target="_blank" rel="noopener">📍 Y aller</a>
+      </footer>
+    </div>
+  `;
+}
 
 // =========================================================
 // PAGE ACTIVITÉS — programme du voyage par jour

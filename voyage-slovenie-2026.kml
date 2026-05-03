@@ -11,54 +11,63 @@
 <Placemark>
   <name>Nice — À réserver</name>
   <description><![CDATA[<b>1 nuit</b> · 7 juillet → 8 juillet<br>Statut : ⏳ À réserver<br><i>Étape simple : pas de visite, baignade rapide + dîner avec Corentin. Départ tôt le lendemain pour éviter les bouchons Côte d&#x27;Azur/Ligurie.</i>]]></description>
+  <ExtendedData><Data name="stayId"><value>nice</value></Data></ExtendedData>
   <styleUrl>#tbd</styleUrl>
   <Point><coordinates>7.2839,43.6968,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Venise — Palazzo Odoni</name>
   <description><![CDATA[<b>2 nuits</b> · 8 juillet → 10 juillet<br>Statut : ✅ Réservé<br>Type : Hotel<br>Adresse : Santa Croce 151, Fondamenta Minotto, 30135 Venezia<br>Téléphone : +39 041 2759454<br>Référence : <code>MP79873933M-1</code><br>Check-in : à partir de 14h00 (arrivée prévue ~16h)<br>Check-out : avant 10h30<br><b>Prix : 516 €</b><br>Reste : 516 € — sur place<br><a href='https://palazzoodoni.com' target='_blank'>↗ Voir sur Site officiel</a>]]></description>
+  <ExtendedData><Data name="stayId"><value>venise</value></Data></ExtendedData>
   <styleUrl>#confirmed</styleUrl>
   <Point><coordinates>12.3196,45.4376,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Piran — Mora Cantada Apartma za 4</name>
   <description><![CDATA[<b>2 nuits</b> · 10 juillet → 12 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Ulica Svobode 71, 6330 Piran-Pirano, Slovénie<br>Téléphone : +386 30 357 081<br>Hôte : Tanja<br>Référence : <code>HMJCHFSF48</code><br>Check-in : après 17h00<br>Check-out : avant 10h00<br><b>Prix : 344 €</b><br>Payé : 172 €<br>Reste : 172 € — 2026-06-25<br><a href='https://www.airbnb.fr/rooms/925230185667649945' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <ExtendedData><Data name="stayId"><value>piran</value></Data></ExtendedData>
   <styleUrl>#confirmed</styleUrl>
   <Point><coordinates>13.5683,45.5286,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Postojna — Spacious apartment in nature with Sauna</name>
   <description><![CDATA[<b>1 nuit</b> · 12 juillet → 13 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Bukovje, 6230 Postojna, Slovénie<br>Téléphone : +386 41 928 306<br>Hôte : Tamara<br>Référence : <code>HM2MRZRPRY</code><br>Check-in : après 16h00<br>Check-out : avant 10h00<br><b>Prix : 228 €</b><br>Payé : 131 €<br>Reste : 98 € — 2026-06-27<br><i>Sauna sur place. Pas adapté aux enfants en bas âge mais OK pour ado.</i><br><a href='https://www.airbnb.fr/rooms/51762261' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <ExtendedData><Data name="stayId"><value>postojna</value></Data></ExtendedData>
   <styleUrl>#confirmed</styleUrl>
   <Point><coordinates>14.2031,45.7758,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Ljubljana — « Unique » Apartment in the Heart of Ljubljana</name>
   <description><![CDATA[<b>2 nuits</b> · 13 juillet → 15 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Trubarjeva cesta 41, 1000 Ljubljana, Slovénie<br>Téléphone : +386 51 669 846<br>Hôte : Živa<br>Référence : <code>HMW335MTKT</code><br>Check-in : après 15h00 (arrivée autonome avec boîte à clé sécurisée)<br>Check-out : avant 10h00<br><b>Prix : 327 €</b><br>Payé : 327 €<br><a href='https://www.airbnb.fr/rooms/1199822276290029517' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <ExtendedData><Data name="stayId"><value>ljubljana</value></Data></ExtendedData>
   <styleUrl>#confirmed</styleUrl>
   <Point><coordinates>14.5074,46.0508,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Bled — Appartment Pri Nacu</name>
   <description><![CDATA[<b>4 nuits</b> · 15 juillet → 19 juillet<br>Statut : ✅ Réservé<br>Type : Booking<br>Adresse : 17a Blejska cesta, 4260 Bled, Slovénie<br>Téléphone : +386 40 286 375<br>Référence : <code>5367868264</code><br>Check-in : 14h00 – 20h00<br>Check-out : 07h00 – 11h00<br><b>Prix : 921 €</b><br>Reste : 883 € — Booking débitera automatiquement<br><i>Camp de base unique pour rayonner sur Bohinj, Vintgar, Pokljuka.</i><br><a href='https://www.booking.com/hotel/si/appartment-pri-nacu.fr.html' target='_blank'>↗ Voir sur Booking</a>]]></description>
+  <ExtendedData><Data name="stayId"><value>bled</value></Data></ExtendedData>
   <styleUrl>#confirmed</styleUrl>
   <Point><coordinates>14.0938,46.3636,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Tolmin — New Boutique Ap. Irena (House Gabrijela Mrak)</name>
   <description><![CDATA[<b>2 nuits</b> · 19 juillet → 21 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Rutarjeva ulica 3, 5220 Tolmin, Slovénie<br>Téléphone : +49 174 1730406<br>Hôte : Bogo<br>Référence : <code>HMHFHA5QS2</code><br>Check-in : après 15h00 (boîte à clé sécurisée)<br>Check-out : avant 11h00<br><b>Prix : 400 €</b><br>Payé : 400 €<br><i>Vallée de la Soča (côté sud, plus calme que Bovec). Accès rafting Bovec-Trnovo, gorges de Tolmin, cascade Kozjak.</i><br><a href='https://www.airbnb.fr/rooms/1216791485484385694' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <ExtendedData><Data name="stayId"><value>tolmin</value></Data></ExtendedData>
   <styleUrl>#confirmed</styleUrl>
   <Point><coordinates>13.734,46.1837,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Kranjska Gora — Ramada Hotel &amp; Suites Kranjska Gora</name>
   <description><![CDATA[<b>1 nuit</b> · 21 juillet → 22 juillet<br>Statut : ✅ Réservé<br>Type : Booking<br>Adresse : Borovška Cesta 93, 4280 Kranjska Gora, Slovénie<br>Téléphone : +386 4 588 44 77<br>Référence : <code>6068726521</code><br>Check-in : 14h00 – 21h00<br>Check-out : 06h00 – 11h00<br><b>Prix : 156 €</b><br>Reste : 156 € — Booking débitera automatiquement<br><i>À 5 min de la réserve naturelle de Zelenci (source Sava Dolinka). 1 seule nuit avant la longue route vers Laigueglia.</i><br><a href='https://www.booking.com/hotel/si/ramada-hotel-and-suites-kranjska-gora.fr.html' target='_blank'>↗ Voir sur Booking</a>]]></description>
+  <ExtendedData><Data name="stayId"><value>zelenci</value></Data></ExtendedData>
   <styleUrl>#confirmed</styleUrl>
   <Point><coordinates>13.7344,46.4885,0</coordinates></Point>
 </Placemark>
 <Placemark>
   <name>Laigueglia — À réserver</name>
   <description><![CDATA[<b>2 nuits</b> · 22 juillet → 24 juillet<br>Statut : ⏳ À réserver<br><i>Riviera ligure authentique, plage de sable 3 km. Hôtels recommandés : Hotel Windsor (boutique design), Hotel Splendid Mare (charme historique, ancien monastère), Hotel Villa Giulia (familial).</i>]]></description>
+  <ExtendedData><Data name="stayId"><value>laigueglia</value></Data></ExtendedData>
   <styleUrl>#tbd</styleUrl>
   <Point><coordinates>8.1631,43.975,0</coordinates></Point>
 </Placemark>

@@ -123,11 +123,17 @@ def stay_description(s):
         parts.append(f"<a href='{html.escape(url)}' target='_blank'>↗ Voir sur {type_label}</a>")
     return "<br>".join(parts)
 
-def placemark(name, description, style_url, lat, lng):
+def placemark(name, description, style_url, lat, lng, extra_data=None):
+    extra_xml = ''
+    if extra_data:
+        extra_xml = '\n  <ExtendedData>'
+        for k, v in extra_data.items():
+            extra_xml += f'<Data name="{html.escape(str(k))}"><value>{html.escape(str(v))}</value></Data>'
+        extra_xml += '</ExtendedData>'
     return (
         '<Placemark>\n'
         f'  <name>{html.escape(name)}</name>\n'
-        f'  <description><![CDATA[{description}]]></description>\n'
+        f'  <description><![CDATA[{description}]]></description>{extra_xml}\n'
         f'  <styleUrl>{style_url}</styleUrl>\n'
         f'  <Point><coordinates>{coord(lat, lng)}</coordinates></Point>\n'
         '</Placemark>'
@@ -217,7 +223,7 @@ def generate():
         style = '#confirmed' if s['status'] == 'confirmed' else '#tbd'
         title = s.get('name') or 'À réserver'
         full_name = f"{s['city']} — {title}"
-        out.append(placemark(full_name, stay_description(s), style, lat, lng))
+        out.append(placemark(full_name, stay_description(s), style, lat, lng, {'stayId': s['id']}))
     out.append('</Folder>')
 
     # === Folder 2 : Sites & activités ===
