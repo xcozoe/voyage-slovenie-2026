@@ -1223,6 +1223,28 @@
     text-transform: uppercase;
     font-style: italic;
   }
+  /* Marqueur étape avec lettre — stays */
+  .stay-pin { background: transparent; border: none; }
+  .stay-pin__inner {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fbf6e9;
+    background: #7a9657;
+    border: 2px solid #fbf6e9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+  .stay-pin__inner.is-tbd {
+    border-style: dashed;
+    opacity: 0.92;
+  }
+
   /* Tweaks Leaflet pour s'intégrer au thème sombre */
   .leaflet-container { background: var(--bg-deep); }
   .leaflet-popup-content-wrapper {
@@ -2295,32 +2317,55 @@ async function renderMap() {
     const all = L.featureGroup().addTo(map);
 
     // Routes en premier (pour qu'elles soient sous les marqueurs)
+    // Sand pour ne pas concurrencer le code couleur stays/POIs
     features.routes.forEach(r => {
       L.polyline(r.coords, {
-        color: '#e98d58', weight: 4, opacity: 0.78, lineJoin: 'round'
+        color: '#d4a574', weight: 4, opacity: 0.85, lineJoin: 'round'
       }).bindPopup(`<b>${escapeHtml(r.name)}</b><br>${r.description || ''}`).addTo(all);
     });
 
-    // POIs (sand)
+    // POIs en orange (centres d'intérêt)
     features.pois.forEach(p => {
       L.circleMarker([p.lat, p.lng], {
-        radius: 6, color: '#fbf6e9', weight: 1.5,
-        fillColor: '#d4a574', fillOpacity: 0.92,
+        radius: 7, color: '#fbf6e9', weight: 1.5,
+        fillColor: '#e98d58', fillOpacity: 0.92,
       }).bindPopup(`<b>${escapeHtml(p.name)}</b><br>${escapeHtml(p.description)}`).addTo(all);
     });
 
-    // Hébergements (vert si confirmé, corail si TBD)
-    features.stays.forEach(s => {
+    // Hébergements en vert avec lettre d'étape (A, B, C, … chronologique)
+    const STAGE_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    features.stays.forEach((s, i) => {
+      const letter = STAGE_LETTERS[i] || '?';
       const isConfirmed = s.styleUrl.includes('confirmed');
-      L.circleMarker([s.lat, s.lng], {
-        radius: 10, color: '#fbf6e9', weight: 2,
-        fillColor: isConfirmed ? '#7a9657' : '#e98d58', fillOpacity: 0.96,
-      }).bindPopup(`<b>${escapeHtml(s.name)}</b><br>${s.description}`, { maxWidth: 300 }).addTo(all);
+      const icon = L.divIcon({
+        className: 'stay-pin',
+        html: `<div class="stay-pin__inner ${isConfirmed ? 'is-confirmed' : 'is-tbd'}">${letter}</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        popupAnchor: [0, -14],
+      });
+      L.marker([s.lat, s.lng], { icon })
+        .bindPopup(`<b>Étape ${letter} — ${escapeHtml(s.name)}</b><br>${s.description}`, { maxWidth: 300 })
+        .addTo(all);
     });
 
     if (all.getLayers().length) {
       map.fitBounds(all.getBounds(), { padding: [40, 40] });
     }
+
+    // Recalcul des dimensions Leaflet quand le conteneur change de taille
+    // (rotation portrait/landscape, changement de viewport)
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(() => map.invalidateSize());
+      ro.observe(mapEl);
+      const cleanup = () => {
+        ro.disconnect();
+        window.removeEventListener('hashchange', cleanup);
+      };
+      window.addEventListener('hashchange', cleanup);
+    }
+    const onOrient = () => setTimeout(() => map.invalidateSize(), 200);
+    window.addEventListener('orientationchange', onOrient);
   } catch (err) {
     console.error(err);
     const mapEl = document.getElementById('leaflet-map');
