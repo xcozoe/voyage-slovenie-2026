@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+<name>Slovénie 2026 — Voyage</name>
+<description>Road-trip 7-24 juillet 2026 · 2 adultes + 1 ado · 2 962 km · 3 pays</description>
+<Style id="confirmed"><IconStyle><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/ms/icons/green-dot.png</href></Icon></IconStyle></Style>
+<Style id="tbd"><IconStyle><scale>1.1</scale><Icon><href>http://maps.google.com/mapfiles/ms/icons/orange-dot.png</href></Icon></IconStyle></Style>
+<Style id="poi"><IconStyle><scale>0.95</scale><Icon><href>http://maps.google.com/mapfiles/ms/icons/yellow-dot.png</href></Icon></IconStyle></Style>
+<Style id="route"><LineStyle><color>ff588de9</color><width>4</width></LineStyle></Style>
+<Folder><name>Hébergements (9 étapes · 17 nuits)</name>
+<Placemark>
+  <name>Nice — À réserver</name>
+  <description><![CDATA[<b>1 nuit</b> · 7 juillet → 8 juillet<br>Statut : ⏳ À réserver<br><i>Étape simple : pas de visite, baignade rapide + dîner avec le fils. Départ tôt le lendemain pour éviter les bouchons Côte d&#x27;Azur/Ligurie.</i>]]></description>
+  <styleUrl>#tbd</styleUrl>
+  <Point><coordinates>7.2839,43.6968,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Venise — Palazzo Odoni</name>
+  <description><![CDATA[<b>2 nuits</b> · 8 juillet → 10 juillet<br>Statut : ✅ Réservé<br>Type : Hotel<br>Adresse : Santa Croce 151, Fondamenta Minotto, 30135 Venezia<br>Téléphone : +39 041 2759454<br>Référence : <code>MP79873933M-1</code><br>Check-in : à partir de 14h00 (arrivée prévue ~16h)<br>Check-out : avant 10h30<br><b>Prix : 516 €</b><br>Reste : 516 € — sur place<br><a href='https://palazzoodoni.com' target='_blank'>↗ Voir sur Site officiel</a>]]></description>
+  <styleUrl>#confirmed</styleUrl>
+  <Point><coordinates>12.3196,45.4376,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Piran — Mora Cantada Apartma za 4</name>
+  <description><![CDATA[<b>2 nuits</b> · 10 juillet → 12 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Ulica Svobode 71, 6330 Piran-Pirano, Slovénie<br>Téléphone : +386 30 357 081<br>Hôte : Tanja<br>Référence : <code>HMJCHFSF48</code><br>Check-in : après 17h00<br>Check-out : avant 10h00<br><b>Prix : 344 €</b><br>Payé : 172 €<br>Reste : 172 € — 2026-06-25<br><a href='https://www.airbnb.fr/rooms/925230185667649945' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <styleUrl>#confirmed</styleUrl>
+  <Point><coordinates>13.5683,45.5286,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Postojna — Spacious apartment in nature with Sauna</name>
+  <description><![CDATA[<b>1 nuit</b> · 12 juillet → 13 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Bukovje, 6230 Postojna, Slovénie<br>Téléphone : +386 41 928 306<br>Hôte : Tamara<br>Référence : <code>HM2MRZRPRY</code><br>Check-in : après 16h00<br>Check-out : avant 10h00<br><b>Prix : 228 €</b><br>Payé : 131 €<br>Reste : 98 € — 2026-06-27<br><i>Sauna sur place. Pas adapté aux enfants en bas âge mais OK pour ado.</i><br><a href='https://www.airbnb.fr/rooms/51762261' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <styleUrl>#confirmed</styleUrl>
+  <Point><coordinates>14.2031,45.7758,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Ljubljana — « Unique » Apartment in the Heart of Ljubljana</name>
+  <description><![CDATA[<b>2 nuits</b> · 13 juillet → 15 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Trubarjeva cesta 41, 1000 Ljubljana, Slovénie<br>Téléphone : +386 51 669 846<br>Hôte : Živa<br>Référence : <code>HMW335MTKT</code><br>Check-in : après 15h00 (arrivée autonome avec boîte à clé sécurisée)<br>Check-out : avant 10h00<br><b>Prix : 327 €</b><br>Payé : 327 €<br><a href='https://www.airbnb.fr/rooms/1199822276290029517' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <styleUrl>#confirmed</styleUrl>
+  <Point><coordinates>14.5074,46.0508,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Bled — Appartment Pri Nacu</name>
+  <description><![CDATA[<b>4 nuits</b> · 15 juillet → 19 juillet<br>Statut : ✅ Réservé<br>Type : Booking<br>Adresse : 17a Blejska cesta, 4260 Bled, Slovénie<br>Téléphone : +386 40 286 375<br>Référence : <code>5367868264</code><br>Check-in : 14h00 – 20h00<br>Check-out : 07h00 – 11h00<br><b>Prix : 921 €</b><br>Reste : 883 € — Booking débitera automatiquement<br><i>Camp de base unique pour rayonner sur Bohinj, Vintgar, Pokljuka.</i><br><a href='https://www.booking.com/hotel/si/appartment-pri-nacu.fr.html' target='_blank'>↗ Voir sur Booking</a>]]></description>
+  <styleUrl>#confirmed</styleUrl>
+  <Point><coordinates>14.0938,46.3636,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Tolmin — New Boutique Ap. Irena (House Gabrijela Mrak)</name>
+  <description><![CDATA[<b>2 nuits</b> · 19 juillet → 21 juillet<br>Statut : ✅ Réservé<br>Type : Airbnb<br>Adresse : Rutarjeva ulica 3, 5220 Tolmin, Slovénie<br>Téléphone : +49 174 1730406<br>Hôte : Bogo<br>Référence : <code>HMHFHA5QS2</code><br>Check-in : après 15h00 (boîte à clé sécurisée)<br>Check-out : avant 11h00<br><b>Prix : 400 €</b><br>Payé : 400 €<br><i>Vallée de la Soča (côté sud, plus calme que Bovec). Accès rafting Bovec-Trnovo, gorges de Tolmin, cascade Kozjak.</i><br><a href='https://www.airbnb.fr/rooms/1216791485484385694' target='_blank'>↗ Voir sur Airbnb</a>]]></description>
+  <styleUrl>#confirmed</styleUrl>
+  <Point><coordinates>13.734,46.1837,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Kranjska Gora — Ramada Hotel &amp; Suites Kranjska Gora</name>
+  <description><![CDATA[<b>1 nuit</b> · 21 juillet → 22 juillet<br>Statut : ✅ Réservé<br>Type : Booking<br>Adresse : Borovška Cesta 93, 4280 Kranjska Gora, Slovénie<br>Téléphone : +386 4 588 44 77<br>Référence : <code>6068726521</code><br>Check-in : 14h00 – 21h00<br>Check-out : 06h00 – 11h00<br><b>Prix : 156 €</b><br>Reste : 156 € — Booking débitera automatiquement<br><i>À 5 min de la réserve naturelle de Zelenci (source Sava Dolinka). 1 seule nuit avant la longue route vers Laigueglia.</i><br><a href='https://www.booking.com/hotel/si/ramada-hotel-and-suites-kranjska-gora.fr.html' target='_blank'>↗ Voir sur Booking</a>]]></description>
+  <styleUrl>#confirmed</styleUrl>
+  <Point><coordinates>13.7344,46.4885,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Laigueglia — À réserver</name>
+  <description><![CDATA[<b>2 nuits</b> · 22 juillet → 24 juillet<br>Statut : ⏳ À réserver<br><i>Riviera ligure authentique, plage de sable 3 km. Hôtels recommandés : Hotel Windsor (boutique design), Hotel Splendid Mare (charme historique, ancien monastère), Hotel Villa Giulia (familial).</i>]]></description>
+  <styleUrl>#tbd</styleUrl>
+  <Point><coordinates>8.1631,43.975,0</coordinates></Point>
+</Placemark>
+</Folder>
+<Folder><name>Sites &amp; activités</name>
+<Placemark>
+  <name>Promenade des Anglais</name>
+  <description><![CDATA[Nice — soirée J1]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>7.2655,43.6961,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Pont du Rialto</name>
+  <description><![CDATA[Venise — Grand Canal J3]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>12.3358,45.438,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Place Saint-Marc</name>
+  <description><![CDATA[Basilique San Marco — J3 matin]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>12.3389,45.4341,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Place Tartini (Piran)</name>
+  <description><![CDATA[Centre médiéval — J4 fin d&#x27;après-midi]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.5688,45.5283,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Vélo Parenzana — Strunjan</name>
+  <description><![CDATA[Plage Bele Skale — J5]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.6006,45.53,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Salines de Sečovlje</name>
+  <description><![CDATA[Marais salants — J6 matin]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.6056,45.4914,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Château de Predjama</name>
+  <description><![CDATA[Forteresse troglodyte — J6 fin d&#x27;après-midi]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>14.1981,45.8156,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Grottes de Škocjan</name>
+  <description><![CDATA[UNESCO, canyon souterrain — J7 matin]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.9919,45.6633,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Triple Pont (Plečnik)</name>
+  <description><![CDATA[Centre historique — J7 &amp; J8]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>14.506,46.0518,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Château de Ljubljana</name>
+  <description><![CDATA[Funiculaire au coucher — J7 soir]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>14.5085,46.0488,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Île de Bled (église)</name>
+  <description><![CDATA[Pletna + 99 marches — J10]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>14.0928,46.3625,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Château de Bled</name>
+  <description><![CDATA[XIIᵉ s, vue carte postale — J10]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>14.1064,46.37,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Gorges de Vintgar</name>
+  <description><![CDATA[Passerelles bois — J10 8h impératif]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>14.0817,46.4006,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Lac de Bohinj</name>
+  <description><![CDATA[Sauvage, baignade — J11]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.8644,46.2792,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Église Saint-Thomas (Bohinj)</name>
+  <description><![CDATA[Spot photo coucher de soleil — J11]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.8253,46.2839,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Gorges de la Mostnica</name>
+  <description><![CDATA[Marmites de géants — J12 option]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.9011,46.2933,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Planina Zajamniki (Pokljuka)</name>
+  <description><![CDATA[Randonnée alpage — J12]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.9486,46.3286,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Lac de Jasna (Kranjska Gora)</name>
+  <description><![CDATA[Statue Zlatorog — J13]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.7656,46.4842,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Col du Vršič</name>
+  <description><![CDATA[1611m, 50 lacets — J13]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.7411,46.4317,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Gorges de Tolmin</name>
+  <description><![CDATA[Pont du Diable — J14 après-midi]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.7344,46.1944,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Cascade Kozjak (Kobarid)</name>
+  <description><![CDATA[Cathédrale d&#x27;eau — J15 matin]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.5801,46.2562,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Réserve de Zelenci</name>
+  <description><![CDATA[Source Sava Dolinka — J15 fin d&#x27;après-midi]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>13.7253,46.4922,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Cervo</name>
+  <description><![CDATA[Un des plus beaux villages d&#x27;Italie — J17 option]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>8.1117,43.9275,0</coordinates></Point>
+</Placemark>
+<Placemark>
+  <name>Colla Micheri</name>
+  <description><![CDATA[Village médiéval, Thor Heyerdahl — J17 option]]></description>
+  <styleUrl>#poi</styleUrl>
+  <Point><coordinates>8.1481,43.9728,0</coordinates></Point>
+</Placemark>
+</Folder>
+<Folder><name>Itinéraire routier (8 trajets)</name>
+<Placemark>
+  <name>J1 · Toulouse → Nice</name>
+  <description><![CDATA[564 km · 5h55<br>Toulouse → Nice]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>1.4429,43.6043,0 7.2839,43.6968,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J2 · Nice → Venise (Mestre)</name>
+  <description><![CDATA[570 km · 6h15<br>Nice → Venise]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>7.2839,43.6968,0 12.3196,45.4376,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J4 · Venise → Piran</name>
+  <description><![CDATA[202 km · 2h30<br>Venise → Piran]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>12.3196,45.4376,0 13.5683,45.5286,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J6 · Piran → Postojna</name>
+  <description><![CDATA[73 km · 1h<br>Marais salants + Karst]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>13.5683,45.5286,0 14.2031,45.7758,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J7 · Postojna → Ljubljana</name>
+  <description><![CDATA[53 km · 45 min<br>Škocjan → Ljubljana]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>14.2031,45.7758,0 14.5074,46.0508,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J9 · Ljubljana → Bled</name>
+  <description><![CDATA[55 km · 50 min<br>Ljubljana → Bled]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>14.5074,46.0508,0 14.0938,46.3636,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J11 · Bled → Bohinj A/R</name>
+  <description><![CDATA[25 km · 30 min A/R<br>Excursion à Bohinj]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>14.0938,46.3636,0 13.8644,46.2792,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J13 · Bled → Tolmin</name>
+  <description><![CDATA[110 km · 2h30<br>Bled → Tolmin via Vršič]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>14.0938,46.3636,0 13.734,46.1837,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J15 · Tolmin → Zelenci</name>
+  <description><![CDATA[75 km · 1h30<br>Cascade Kozjak + Zelenci]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>13.734,46.1837,0 13.7344,46.4885,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J16 · Zelenci → Laigueglia</name>
+  <description><![CDATA[660 km · 7h30<br>Zelenci → Laigueglia]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>13.7344,46.4885,0 8.1631,43.975,0</coordinates></LineString>
+</Placemark>
+<Placemark>
+  <name>J18 · Laigueglia → Toulouse</name>
+  <description><![CDATA[673 km · 7h05<br>Laigueglia → Toulouse]]></description>
+  <styleUrl>#route</styleUrl>
+  <LineString><tessellate>1</tessellate><coordinates>8.1631,43.975,0 1.4429,43.6043,0</coordinates></LineString>
+</Placemark>
+</Folder>
+</Document>
+</kml>
