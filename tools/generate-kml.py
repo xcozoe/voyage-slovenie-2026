@@ -9,6 +9,8 @@ Usage : python3 tools/generate-kml.py
 
 import json
 import html
+import subprocess
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
@@ -142,6 +144,54 @@ def linestring(name, description, style_url, points):
         '</Placemark>'
     )
 
+# --- Routage OSRM (cache local pour éviter de re-fetcher à chaque exécution) ---
+ROUTE_CACHE_FILE = Path(__file__).parent / 'route-cache.json'
+try:
+    ROUTE_CACHE = json.loads(ROUTE_CACHE_FILE.read_text(encoding='utf-8'))
+except (FileNotFoundError, json.JSONDecodeError):
+    ROUTE_CACHE = {}
+
+def osrm_route(from_coord, to_coord):
+    """
+    Récupère la polyline routière entre deux points via OSRM public.
+    Retourne une liste de (lat, lng). En cas d'erreur : ligne droite.
+    """
+    lat1, lng1 = from_coord
+    lat2, lng2 = to_coord
+    cache_key = f"{lat1:.4f},{lng1:.4f}|{lat2:.4f},{lng2:.4f}"
+    if cache_key in ROUTE_CACHE:
+        return [tuple(p) for p in ROUTE_CACHE[cache_key]]
+    url = (
+        f"https://router.project-osrm.org/route/v1/driving/"
+        f"{lng1},{lat1};{lng2},{lat2}"
+        f"?overview=simplified&geometries=geojson"
+    )
+    # urllib échoue en SSL handshake sur Python 3.9 système macOS — on délègue à curl
+    try:
+        result = subprocess.run(
+            ['curl', '-sL', '--max-time', '25', url],
+            capture_output=True, text=True, timeout=30
+        )
+        if result.returncode != 0:
+            print(f"    ! curl exit {result.returncode}: {result.stderr[:120]}")
+        else:
+            data = json.loads(result.stdout)
+            if data.get('code') == 'Ok' and data.get('routes'):
+                geom = [(c[1], c[0]) for c in data['routes'][0]['geometry']['coordinates']]
+                ROUTE_CACHE[cache_key] = geom
+                return geom
+            print(f"    ! OSRM réponse non OK : {data.get('code')}")
+    except (subprocess.SubprocessError, json.JSONDecodeError) as e:
+        print(f"    ! Erreur OSRM : {e}")
+    # Fallback : ligne droite
+    return [from_coord, to_coord]
+
+def save_route_cache():
+    ROUTE_CACHE_FILE.write_text(
+        json.dumps(ROUTE_CACHE, separators=(',', ':')),
+        encoding='utf-8'
+    )
+
 def generate():
     out = ['<?xml version="1.0" encoding="UTF-8"?>']
     out.append('<kml xmlns="http://www.opengis.net/kml/2.2">')
@@ -174,8 +224,9 @@ def generate():
         out.append(placemark(name, html.escape(desc), '#poi', lat, lng))
     out.append('</Folder>')
 
-    # === Folder 3 : Itinéraire routier ===
-    out.append('<Folder><name>Itinéraire routier (8 trajets)</name>')
+    # === Folder 3 : Itinéraire routier (vraies routes via OSRM) ===
+    print("Récupération des routes via OSRM (cache local)...")
+    out.append('<Folder><name>Itinéraire routier (vraies routes)</name>')
     for d in DAYS['days']:
         drive = d.get('drive')
         if not drive:
@@ -183,12 +234,19 @@ def generate():
         from_c = CITIES.get(drive['from'])
         to_c   = CITIES.get(drive['to'])
         if not from_c or not to_c:
-            print(f"Warning: ville inconnue dans {drive}")
+            print(f"  Warning: ville inconnue dans {drive}")
             continue
         leg_name = f"J{d['n']} · {drive['from']} → {drive['to']}"
         leg_desc = f"{drive['km']} km · {drive['hours']}<br>{html.escape(d['title'])}"
-        out.append(linestring(leg_name, leg_desc, '#route', [from_c, to_c]))
+        polyline = osrm_route(from_c, to_c)
+        if len(polyline) > 2:
+            print(f"  ✓ J{d['n']} {drive['from']} → {drive['to']} ({len(polyline)} points)")
+        else:
+            print(f"  ⚠ J{d['n']} {drive['from']} → {drive['to']} (ligne droite — OSRM indispo)")
+        out.append(linestring(leg_name, leg_desc, '#route', polyline))
+        time.sleep(0.6)  # politesse OSRM (pas plus d'1 req/s)
     out.append('</Folder>')
+    save_route_cache()
 
     out.append('</Document>')
     out.append('</kml>')
