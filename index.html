@@ -944,13 +944,26 @@
   .timeline__drive--rest { color: var(--olive); }
 
   /* =========================================================
-     STAYS — éditoriale
+     STAYS — éditoriale, plein écran avec scroll-snap
      ========================================================= */
   .stays {
-    padding: calc(env(safe-area-inset-top, 0px) + 28px) 0 110px;
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .stays::-webkit-scrollbar { display: none; }
+
   .stays__head {
-    padding: 0 var(--pad-x) 8px;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100dvh;
+    padding: calc(env(safe-area-inset-top, 0px) + 28px) var(--pad-x) 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .stays__summary {
@@ -994,26 +1007,28 @@
   .stays__list {
     display: flex;
     flex-direction: column;
-    gap: 44px;
-    margin-top: 36px;
   }
 
-  /* STAY CARD (page hébergements) -------------------------- */
+  /* STAY CARD (page hébergements) — pleine viewport avec snap */
   .stay-card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
     color: var(--ink);
-    scroll-margin-top: 20px;
     transition: outline-color 600ms var(--ease);
     outline: 2px solid transparent;
-    outline-offset: 4px;
+    outline-offset: -8px;
   }
-  .stay-card--focused {
-    outline-color: var(--coral);
-  }
+  .stay-card--focused { outline-color: var(--coral); }
+
   .stay-card__photo {
     display: block;
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 10;
+    flex: 0 0 48%;
+    min-height: 0;
     overflow: hidden;
     background: var(--bg-deep);
   }
@@ -1071,7 +1086,11 @@
   }
 
   .stay-card__body {
-    padding: 18px var(--pad-x) 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 18px var(--pad-x) 28px;
+    min-height: 0;
   }
   .stay-card__city {
     font-family: 'Inter', sans-serif;
@@ -1106,6 +1125,13 @@
     margin: 18px 0 0;
     padding: 18px 0 0;
     border-top: 1px solid var(--line);
+  }
+  .stay-card__meta-full { grid-column: 1 / -1; }
+  .stay-card__link {
+    color: var(--coral);
+    text-decoration: underline;
+    text-decoration-color: rgba(233, 141, 88, 0.4);
+    text-underline-offset: 2px;
   }
   .stay-card__meta dt {
     font-family: 'Inter', sans-serif;
@@ -2413,22 +2439,23 @@ function renderStays(match) {
       <div class="stays__list">${cards}</div>
     </section>
   `);
+  // Scroll dans le conteneur interne .stays (snap-container)
+  const scrollToCard = () => {
+    const el = document.getElementById('stay-card-' + focusId);
+    const container = document.querySelector('.stays');
+    if (!el || !container) return;
+    container.scrollTo({ top: el.offsetTop, behavior: 'auto' });
+    el.classList.add('stay-card--focused');
+    setTimeout(() => el.classList.remove('stay-card--focused'), 1800);
+  };
   if (focusId) {
-    // window.scrollTo(offsetTop) plus fiable que scrollIntoView selon
-    // les contextes Safari iOS / popup-fermeture
-    const scrollToCard = () => {
-      const el = document.getElementById('stay-card-' + focusId);
-      if (!el) return;
-      const top = el.getBoundingClientRect().top + window.scrollY - 16;
-      console.log('[stays] scroll to', focusId, 'top=', top);
-      window.scrollTo({ top, behavior: 'auto' });
-      el.classList.add('stay-card--focused');
-      setTimeout(() => el.classList.remove('stay-card--focused'), 1800);
-    };
     requestAnimationFrame(() => requestAnimationFrame(scrollToCard));
     setTimeout(scrollToCard, 600);
   } else {
-    window.scrollTo(0, 0);
+    requestAnimationFrame(() => {
+      const c = document.querySelector('.stays');
+      if (c) c.scrollTo({ top: 0, behavior: 'auto' });
+    });
   }
 }
 
@@ -2472,15 +2499,19 @@ function renderStayPageCard(stay) {
   let metaHtml = '';
   if (isConfirmed) {
     const meta = [];
-    if (stay.checkin)      meta.push(['Check-in',  stay.checkin]);
-    if (stay.checkout)     meta.push(['Check-out', stay.checkout]);
-    if (stay.host)         meta.push(['Hôte',      stay.host]);
-    if (stay.bookedBy && !stay.host) meta.push(['Réservé par', stay.bookedBy]);
-    if (stay.confirmation) meta.push(['Référence', stay.confirmation]);
-    if (stay.address && !stay.host) meta.push(['Adresse', stay.address]);
+    if (stay.checkin)      meta.push({ k: 'Check-in',  v: escapeHtml(stay.checkin) });
+    if (stay.checkout)     meta.push({ k: 'Check-out', v: escapeHtml(stay.checkout) });
+    if (stay.host)         meta.push({ k: 'Hôte',      v: escapeHtml(stay.host) });
+    if (stay.bookedBy && !stay.host) meta.push({ k: 'Réservé par', v: escapeHtml(stay.bookedBy) });
+    if (stay.confirmation) meta.push({ k: 'Référence', v: escapeHtml(stay.confirmation) });
+    if (stay.phone) {
+      const tel = stay.phone.replace(/\s/g, '');
+      meta.push({ k: 'Téléphone', v: `<a class="stay-card__link" href="tel:${escapeHtml(tel)}">${escapeHtml(stay.phone)}</a>` });
+    }
+    if (stay.address) meta.push({ k: 'Adresse', v: escapeHtml(stay.address), full: true });
     if (meta.length) {
       metaHtml = `<dl class="stay-card__meta">${
-        meta.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')
+        meta.map(d => `<div${d.full ? ' class="stay-card__meta-full"' : ''}><dt>${d.k}</dt><dd>${d.v}</dd></div>`).join('')
       }</dl>`;
     }
   }
