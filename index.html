@@ -416,6 +416,124 @@
     color: var(--ink);
   }
 
+  /* NOTES (par jour) --------------------------------------- */
+  .notes {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .notes__loader,
+  .notes__empty {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--ink-faint);
+    font-size: 14px;
+    padding: 4px 0;
+  }
+  .note {
+    background: rgba(212, 165, 116, 0.08);
+    border-left: 2px solid var(--sand);
+    padding: 14px 16px;
+    border-radius: 0 4px 4px 0;
+  }
+  .note__text {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .note__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(251, 246, 233, 0.08);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .note__edit {
+    color: var(--ink-faint);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    transition: background 200ms var(--ease), color 200ms var(--ease);
+  }
+  .note__edit:active { background: rgba(251, 246, 233, 0.08); color: var(--ink); }
+
+  .note--editing {
+    background: rgba(251, 246, 233, 0.04);
+    border-left: 2px solid var(--coral);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .note__textarea {
+    width: 100%;
+    resize: none;
+    background: rgba(251, 246, 233, 0.06);
+    border: 1px solid var(--line-strong);
+    border-radius: 4px;
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 12px;
+    min-height: 100px;
+    overflow: hidden;
+  }
+  .note__textarea:focus { outline: none; border-color: var(--coral); }
+  .note__edit-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .note__btn {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    transition: background 180ms var(--ease);
+  }
+  .note__btn:active { background: rgba(251, 246, 233, 0.08); }
+  .note__btn--save {
+    background: var(--coral);
+    border-color: var(--coral);
+    color: var(--ink);
+  }
+  .note__btn--danger {
+    color: var(--coral);
+    border-color: rgba(233, 141, 88, 0.4);
+  }
+  .note-add {
+    align-self: flex-start;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--coral);
+    padding: 10px 0;
+  }
+
   /* TIPS --------------------------------------------------- */
   .tips { display: flex; flex-direction: column; gap: 12px; }
   .tips li {
@@ -1748,6 +1866,34 @@ function updateActionsBadge() {
   });
 }
 
+// Subscription Firestore notes — affichées sur les fiches journalières
+let NOTES_UNSUB = null;
+let NOTES_BY_DAY = {};
+let NOTE_EDITING_ID = null;
+
+function startNotesSubscription() {
+  if (NOTES_UNSUB) return;
+  NOTES_UNSUB = onSnapshot(collection(db, 'notes'),
+    (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort((a, b) => {
+        const am = a.createdAt?.toMillis?.() ?? 0;
+        const bm = b.createdAt?.toMillis?.() ?? 0;
+        return am - bm;
+      });
+      NOTES_BY_DAY = {};
+      for (const n of items) {
+        const k = n.dayN;
+        if (k == null) continue;
+        (NOTES_BY_DAY[k] ||= []).push(n);
+      }
+      const m = location.hash.match(/^#?\/jour\/(\d+)/);
+      if (m) paintNotes(parseInt(m[1], 10));
+    },
+    (err) => { console.error(err); flashError('Sync notes : ' + err.code); }
+  );
+}
+
 function route() {
   const hash = location.hash || '#/';
   for (const r of ROUTES) {
@@ -1794,6 +1940,14 @@ function renderDay(n) {
       <ul class="tips">${day.tips.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>
     </section>` : '';
 
+  const notesHtml = `
+    <section class="day__notes">
+      <h2 class="section-title">Notes</h2>
+      <div class="notes" data-day="${day.n}">
+        <div class="notes__loader">…</div>
+      </div>
+    </section>`;
+
   const stayHtml = stay ? renderStayCard(stay) : '';
 
   // Navigation
@@ -1833,6 +1987,7 @@ function renderDay(n) {
           </section>` : ''}
         ${stayHtml}
         ${tipsHtml}
+        ${notesHtml}
       </div>
 
       <nav class="day-nav" aria-label="Navigation entre jours">
@@ -1847,6 +2002,7 @@ function renderDay(n) {
   attachSwipe(day.n);
   window.scrollTo(0, 0);
   preloadNeighborPhotos(day.n);
+  paintNotes(day.n);
 }
 
 function preloadNeighborPhotos(n) {
@@ -2227,6 +2383,137 @@ function renderStayPageCard(stay) {
 function dayForStay(stayId) {
   const d = STATE.days.find(d => d.stay === stayId);
   return d ? d.n : 1;
+}
+
+// =========================================================
+// NOTES (par jour) — partagées Firestore, éditables
+// =========================================================
+function paintNotes(dayN) {
+  const container = document.querySelector(`.notes[data-day="${dayN}"]`);
+  if (!container) return;
+  const notes = NOTES_BY_DAY[dayN] || [];
+  const isAddingNew = NOTE_EDITING_ID === `new:${dayN}`;
+
+  const items = notes.map(n =>
+    NOTE_EDITING_ID === n.id ? renderNoteEdit(n, dayN) : renderNoteRead(n)
+  );
+  if (isAddingNew) {
+    items.push(renderNoteEdit({ id: `new:${dayN}`, text: '', dayN }, dayN));
+  }
+
+  let html = '';
+  if (notes.length === 0 && !isAddingNew) {
+    html += `<p class="notes__empty">Pas encore de note pour cette étape.</p>`;
+  }
+  html += items.join('');
+  if (!isAddingNew) {
+    html += `<button class="note-add" data-act="note-add" data-day="${dayN}">+ Ajouter une note</button>`;
+  }
+  container.innerHTML = html;
+  attachNotesEvents(container, dayN);
+}
+
+function renderNoteRead(n) {
+  const ts = n.updatedAt || n.createdAt;
+  const stamp = formatNoteDate(ts);
+  return `
+    <article class="note" data-id="${n.id}">
+      <div class="note__text">${escapeHtml(n.text || '').replace(/\n/g, '<br>')}</div>
+      <footer class="note__meta">
+        <span>${stamp}</span>
+        <button class="note__edit" data-act="note-edit" data-id="${n.id}" aria-label="Modifier">✎ Modifier</button>
+      </footer>
+    </article>
+  `;
+}
+
+function renderNoteEdit(n, dayN) {
+  const isNew = String(n.id).startsWith('new:');
+  return `
+    <form class="note note--editing" data-id="${n.id}" data-day="${dayN}">
+      <textarea class="note__textarea" maxlength="2000" placeholder="Tape la note ici…">${escapeHtml(n.text || '')}</textarea>
+      <div class="note__edit-actions">
+        <button type="submit" class="note__btn note__btn--save">Enregistrer</button>
+        <button type="button" class="note__btn" data-act="note-cancel">Annuler</button>
+        ${isNew ? '' : `<button type="button" class="note__btn note__btn--danger" data-act="note-delete" data-id="${n.id}">Supprimer</button>`}
+      </div>
+    </form>
+  `;
+}
+
+function attachNotesEvents(container, dayN) {
+  container.querySelectorAll('[data-act="note-add"]').forEach(b =>
+    b.addEventListener('click', () => { NOTE_EDITING_ID = `new:${dayN}`; paintNotes(dayN); })
+  );
+  container.querySelectorAll('[data-act="note-edit"]').forEach(b =>
+    b.addEventListener('click', () => { NOTE_EDITING_ID = b.dataset.id; paintNotes(dayN); })
+  );
+  container.querySelectorAll('[data-act="note-cancel"]').forEach(b =>
+    b.addEventListener('click', () => { NOTE_EDITING_ID = null; paintNotes(dayN); })
+  );
+  container.querySelectorAll('[data-act="note-delete"]').forEach(b =>
+    b.addEventListener('click', () => deleteNote(b.dataset.id))
+  );
+  container.querySelectorAll('form.note--editing').forEach(f => {
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = f.querySelector('textarea').value.trim();
+      if (!text) return;
+      saveNote(f.dataset.id, text, parseInt(f.dataset.day, 10));
+    });
+    const ta = f.querySelector('textarea');
+    autoResizeTa(ta);
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+    ta.addEventListener('input', () => autoResizeTa(ta));
+    ta.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); NOTE_EDITING_ID = null; paintNotes(dayN); }
+    });
+  });
+}
+
+function autoResizeTa(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = Math.max(80, ta.scrollHeight) + 'px';
+}
+
+async function saveNote(id, text, dayN) {
+  if (String(id).startsWith('new:')) {
+    try {
+      await addDoc(collection(db, 'notes'), {
+        dayN: dayN,
+        text,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      NOTE_EDITING_ID = null;
+    } catch (err) { console.error(err); flashError(err.message); }
+  } else {
+    try {
+      await updateDoc(doc(db, 'notes', id), { text, updatedAt: serverTimestamp() });
+      NOTE_EDITING_ID = null;
+    } catch (err) { console.error(err); flashError(err.message); }
+  }
+  paintNotes(dayN);
+}
+
+async function deleteNote(id) {
+  if (!confirm('Supprimer cette note ?')) return;
+  try {
+    await deleteDoc(doc(db, 'notes', id));
+    if (NOTE_EDITING_ID === id) NOTE_EDITING_ID = null;
+  } catch (err) { console.error(err); flashError(err.message); }
+}
+
+function formatNoteDate(ts) {
+  if (!ts || typeof ts.toDate !== 'function') return 'à l\'instant';
+  const d = ts.toDate();
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60)        return 'à l\'instant';
+  if (diff < 3600)      return `il y a ${Math.floor(diff / 60)} min`;
+  if (diff < 86400)     return `il y a ${Math.floor(diff / 3600)} h`;
+  if (diff < 86400 * 7) return `il y a ${Math.floor(diff / 86400)} j`;
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
 }
 
 // =========================================================
@@ -2723,6 +3010,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     route();
     fbPing();
     startActionsSubscription();
+    startNotesSubscription();
   } catch (e) {
     console.error(e);
     document.getElementById('app').innerHTML = `
