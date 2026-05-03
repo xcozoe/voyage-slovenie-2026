@@ -1247,30 +1247,31 @@
      CARTE — Leaflet intégré
      ========================================================= */
   .map-view {
+    position: relative;
     height: 100vh;
     height: 100dvh;
-    display: flex;
-    flex-direction: column;
     background: var(--bg-deep);
+    overflow: hidden;
   }
-  .map-topbar {
-    flex-shrink: 0;
-    padding: env(safe-area-inset-top, 0px) 14px 10px;
+  .leaflet-map {
+    width: 100%;
+    height: 100%;
     background: var(--bg-deep);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    position: relative;
   }
   .map-back,
   .map-external {
-    margin-top: 10px;
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    z-index: 1000;
     display: inline-flex;
     align-items: center;
     gap: 8px;
     padding: 10px 16px;
     border-radius: 999px;
-    background: rgba(251, 246, 233, 0.06);
+    background: rgba(6, 34, 41, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     color: var(--ink);
     font-family: 'Inter', sans-serif;
     font-size: var(--fz-micro);
@@ -1279,17 +1280,10 @@
     font-weight: 600;
     border: 1px solid var(--line);
   }
+  .map-back  { left: calc(env(safe-area-inset-left, 0px) + 12px); }
+  .map-external { right: calc(env(safe-area-inset-right, 0px) + 12px); }
   .map-back::before { content: '←'; letter-spacing: 0; font-size: 14px; }
-  .map-external {
-    color: var(--coral);
-    border-color: rgba(233, 141, 88, 0.4);
-  }
-  .leaflet-map {
-    flex: 1;
-    width: 100%;
-    background: var(--bg-deep);
-    position: relative;
-  }
+  .map-external { color: var(--coral); border-color: rgba(233, 141, 88, 0.4); }
   .map-loader {
     position: absolute;
     inset: 0;
@@ -2527,10 +2521,8 @@ async function loadKmlFeatures() {
 async function renderMap() {
   mount(`
     <section class="page map-view">
-      <header class="map-topbar">
-        <a class="map-back" href="#/">Retour</a>
-        <a class="map-external" href="${MY_MAPS_URL}" target="_blank" rel="noopener" title="Ouvrir dans Google Maps">Google Maps ↗</a>
-      </header>
+      <a class="map-back" href="#/">Retour</a>
+      <a class="map-external" href="${MY_MAPS_URL}" target="_blank" rel="noopener" title="Ouvrir dans Google Maps">Google Maps ↗</a>
       <div id="leaflet-map" class="leaflet-map" aria-label="Carte du voyage">
         <div class="map-loader">Chargement de la carte…</div>
       </div>
@@ -2543,8 +2535,9 @@ async function renderMap() {
     if (!mapEl) return; // user a quitté
     mapEl.innerHTML = ''; // remove loader
 
-    const map = L.map(mapEl, { zoomControl: true, attributionControl: true })
+    const map = L.map(mapEl, { zoomControl: false, attributionControl: true })
       .setView([45.7, 13.7], 6);
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 18,
