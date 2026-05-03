@@ -1302,33 +1302,62 @@
     color: var(--ink);
   }
 
-  /* Drag-and-drop */
-  .todo:not(.todo--done):not(.todo--editing) {
-    touch-action: pan-y;       /* permet scroll vertical en attendant le long-press */
+  /* Empêche le menu/preview iOS au long-press, sans casser le scroll */
+  .todo:not(.todo--done):not(.todo--editing):not(.todo--reorder) {
     user-select: none;
     -webkit-user-select: none;
-    -webkit-touch-callout: none; /* désactive le menu/preview iOS au long-press */
+    -webkit-touch-callout: none;
   }
-  body.is-dragging-todo {
-    cursor: grabbing;
-    overflow: hidden;          /* lock scroll pendant le drag */
-    touch-action: none;
+
+  /* Mode réorganisation — flèches inline */
+  .todo--reorder {
+    background: rgba(233, 141, 88, 0.10);
+    border-bottom: 1px solid rgba(233, 141, 88, 0.30);
+    align-items: center;
+    padding: 6px 0;
   }
-  .todo.is-dragging {
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
-    background: var(--bg-soft);
+  .todo--reorder .todo__check {
+    margin: 0 12px 0 8px;
+    opacity: 0.4;
+  }
+  .todo__title-static {
+    flex: 1;
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink);
+    word-wrap: break-word;
+    padding: 6px 4px;
+  }
+  .todo__reorder {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 4px;
+  }
+  .todo__reorder-btn {
+    min-width: 40px;
+    height: 36px;
+    padding: 0 8px;
     border-radius: 6px;
-    border-bottom-color: transparent;
-    transition: box-shadow 200ms var(--ease), background 200ms var(--ease);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    background: rgba(251, 246, 233, 0.08);
+    border: 1px solid var(--line);
+    font-size: 17px;
+    line-height: 1;
+    transition: background 180ms var(--ease), opacity 180ms var(--ease);
   }
-  .todo-placeholder {
-    list-style: none;
-    background: rgba(233, 141, 88, 0.06);
-    border: 0;
-    border-bottom: 1px solid var(--line);
-    box-shadow: inset 0 2px 0 var(--coral);
-    transition: background 200ms var(--ease);
+  .todo__reorder-btn:active { background: rgba(251, 246, 233, 0.18); }
+  .todo__reorder-btn:disabled { opacity: 0.3; }
+  .todo__reorder-btn--ok {
+    color: var(--bg-deep);
+    background: var(--olive);
+    border-color: var(--olive);
+    font-weight: 700;
   }
+  .todo__reorder-btn--ok:active { opacity: 0.85; }
 
   /* =========================================================
      LOADER & STATUS
@@ -2163,6 +2192,16 @@ function paintTodos(items) {
   listEl.querySelectorAll('[data-act="delete"]').forEach(b =>
     b.addEventListener('click', () => deleteTodo(b.dataset.id))
   );
+  // Reorder mode : monter / descendre / terminer
+  listEl.querySelectorAll('[data-act="move-up"]').forEach(b =>
+    b.addEventListener('click', () => moveAction(b.dataset.id, -1))
+  );
+  listEl.querySelectorAll('[data-act="move-down"]').forEach(b =>
+    b.addEventListener('click', () => moveAction(b.dataset.id, +1))
+  );
+  listEl.querySelectorAll('[data-act="reorder-done"]').forEach(b =>
+    b.addEventListener('click', exitReorderMode)
+  );
   // Escape pour annuler
   const editInput = listEl.querySelector('.todo__edit-input');
   if (editInput) {
@@ -2180,6 +2219,7 @@ function paintTodos(items) {
 function renderTodoRow(item) {
   const isDone = item.status === 'done';
   const isEditing = item.id === EDITING_ID;
+  const isReordering = item.id === REORDER_ID;
 
   if (isEditing) {
     return `
@@ -2193,6 +2233,24 @@ function renderTodoRow(item) {
             <button type="button" class="todo__edit-btn todo__edit-btn--danger" data-act="delete" data-id="${item.id}">Supprimer</button>
           </div>
         </form>
+      </li>
+    `;
+  }
+
+  if (isReordering) {
+    const open = CURRENT_TODOS.filter(t => t.status !== 'done');
+    const idx = open.findIndex(t => t.id === item.id);
+    const isFirst = idx <= 0;
+    const isLast  = idx >= open.length - 1;
+    return `
+      <li class="todo todo--reorder" data-id="${item.id}">
+        <span class="todo__check" aria-hidden="true"></span>
+        <span class="todo__title-static">${escapeHtml(item.title)}</span>
+        <div class="todo__reorder">
+          <button class="todo__reorder-btn" data-act="move-up" data-id="${item.id}" ${isFirst ? 'disabled' : ''} aria-label="Monter">↑</button>
+          <button class="todo__reorder-btn" data-act="move-down" data-id="${item.id}" ${isLast  ? 'disabled' : ''} aria-label="Descendre">↓</button>
+          <button class="todo__reorder-btn todo__reorder-btn--ok" data-act="reorder-done" aria-label="Terminer">✓</button>
+        </div>
       </li>
     `;
   }
@@ -2248,29 +2306,25 @@ async function deleteTodo(id) {
 }
 
 // =========================================================
-// DRAG-AND-DROP — réorganisation par long-press
+// REORDER MODE — long-press → mode flèches ↑ ↓ ✓
 // =========================================================
-let DRAG = null;
+let REORDER_ID = null;
 const LONG_PRESS_MS = 450;
 const PRESS_MOVE_TOLERANCE = 8;
 
 function attachReorder(listEl) {
-  // Seuls les items ouverts (non terminés, non en édition) sont déplaçables
-  listEl.querySelectorAll('.todo:not(.todo--done):not(.todo--editing)').forEach(row => {
+  listEl.querySelectorAll('.todo:not(.todo--done):not(.todo--editing):not(.todo--reorder)').forEach(row => {
     row.addEventListener('pointerdown', (e) => onRowPointerDown(e, row));
   });
 }
 
 function onRowPointerDown(e, row) {
-  if (DRAG) return;
+  if (REORDER_ID) return; // déjà en mode reorder
   if (e.pointerType === 'mouse' && e.button !== 0) return;
-  // Ne pas déclencher si on tape précisément la case ronde (toggle done)
-  // ou un input / bouton du mode édition. Mais autoriser sur le titre (qui
-  // occupe tout l'espace restant — sinon le drag ne se déclenche jamais).
   if (e.target.closest('.todo__check-btn, .todo__edit-btn, input, form')) return;
 
   const startX = e.clientX, startY = e.clientY;
-  const pressTimer = setTimeout(() => activateDrag(row, startY), LONG_PRESS_MS);
+  const pressTimer = setTimeout(() => enterReorderMode(row.dataset.id), LONG_PRESS_MS);
 
   const cleanup = () => {
     clearTimeout(pressTimer);
@@ -2280,9 +2334,7 @@ function onRowPointerDown(e, row) {
   };
   function onPreMove(ev) {
     if (Math.abs(ev.clientX - startX) > PRESS_MOVE_TOLERANCE ||
-        Math.abs(ev.clientY - startY) > PRESS_MOVE_TOLERANCE) {
-      cleanup();
-    }
+        Math.abs(ev.clientY - startY) > PRESS_MOVE_TOLERANCE) cleanup();
   }
   function onPreUp() { cleanup(); }
   document.addEventListener('pointermove', onPreMove);
@@ -2290,11 +2342,9 @@ function onRowPointerDown(e, row) {
   document.addEventListener('pointercancel', onPreUp);
 }
 
-function activateDrag(row, startY) {
+function enterReorderMode(id) {
   if (navigator.vibrate) navigator.vibrate(18);
-  document.body.classList.add('is-dragging-todo');
-  row.classList.add('is-dragging');
-
+  REORDER_ID = id;
   // Empêche le click qui suit le pointerup de déclencher l'édition
   const suppressClick = (ev) => {
     ev.stopPropagation();
@@ -2303,108 +2353,45 @@ function activateDrag(row, startY) {
   };
   document.addEventListener('click', suppressClick, true);
   setTimeout(() => document.removeEventListener('click', suppressClick, true), 1000);
-
-  const ul = row.parentNode;
-  const openRows = [...ul.querySelectorAll('.todo:not(.todo--done):not(.todo--editing)')];
-  const initialIndex = openRows.indexOf(row);
-  const rect = row.getBoundingClientRect();
-  const rowHeight = rect.height;
-
-  // Placeholder = la "trace" qui suit la position cible dans la liste
-  const placeholder = document.createElement('li');
-  placeholder.className = 'todo-placeholder';
-  placeholder.style.height = rowHeight + 'px';
-  ul.insertBefore(placeholder, row);
-
-  // Row → position:fixed à sa coordonnée actuelle. Reste exactement
-  // là où il était quand le long-press s'est déclenché — pas de saut.
-  row.style.position = 'fixed';
-  row.style.top = rect.top + 'px';
-  row.style.left = rect.left + 'px';
-  row.style.width = rect.width + 'px';
-  row.style.margin = '0';
-  row.style.zIndex = '50';
-
-  DRAG = {
-    row, ul, openRows, initialIndex,
-    currentIndex: initialIndex,
-    startY,
-    startTop: rect.top,
-    placeholder,
-    rowHeight,
-  };
-
-  document.addEventListener('pointermove', onDragMove, { passive: false });
-  document.addEventListener('pointerup', onDragEnd);
-  document.addEventListener('pointercancel', onDragEnd);
+  paintTodos(CURRENT_TODOS);
 }
 
-function onDragMove(e) {
-  if (!DRAG) return;
-  e.preventDefault();
-  const { row, openRows, startY, startTop, rowHeight, initialIndex, placeholder, ul } = DRAG;
-  const dy = e.clientY - startY;
-  // Le row reste pile sous le doigt (top fixe + delta)
-  row.style.top = (startTop + dy) + 'px';
-
-  // Calcul d'index cible
-  const offset = Math.round(dy / rowHeight);
-  const targetIndex = Math.max(0, Math.min(openRows.length - 1, initialIndex + offset));
-
-  if (targetIndex !== DRAG.currentIndex) {
-    DRAG.currentIndex = targetIndex;
-    const refRow = openRows[targetIndex];
-    if (targetIndex > initialIndex) {
-      ul.insertBefore(placeholder, refRow.nextSibling);
-    } else {
-      ul.insertBefore(placeholder, refRow);
-    }
-  }
+function exitReorderMode() {
+  REORDER_ID = null;
+  paintTodos(CURRENT_TODOS);
 }
 
-async function onDragEnd() {
-  if (!DRAG) return;
-  const { row, initialIndex, currentIndex, placeholder } = DRAG;
-  const movedId = row.dataset.id;
-  document.removeEventListener('pointermove', onDragMove);
-  document.removeEventListener('pointerup', onDragEnd);
-  document.removeEventListener('pointercancel', onDragEnd);
-  document.body.classList.remove('is-dragging-todo');
-  row.classList.remove('is-dragging');
-  row.style.position = '';
-  row.style.top = '';
-  row.style.left = '';
-  row.style.width = '';
-  row.style.margin = '';
-  row.style.zIndex = '';
-  row.style.transform = '';
-  if (placeholder?.parentNode) placeholder.parentNode.removeChild(placeholder);
-  const moved = initialIndex !== currentIndex;
-  DRAG = null;
-  if (moved) await persistOrder(movedId, currentIndex);
-}
-
-async function persistOrder(movedId, targetIndex) {
+async function moveAction(id, direction) {
+  // direction = -1 (up) ou +1 (down)
   const open = CURRENT_TODOS.filter(t => t.status !== 'done');
-  const fromIdx = open.findIndex(t => t.id === movedId);
-  if (fromIdx === -1) return;
-  const moved = open[fromIdx];
-  const newList = [...open];
-  newList.splice(fromIdx, 1);
-  newList.splice(targetIndex, 0, moved);
+  const idx = open.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  const newIdx = idx + direction;
+  if (newIdx < 0 || newIdx >= open.length) return;
 
-  const left  = targetIndex > 0                   ? newList[targetIndex - 1] : null;
-  const right = targetIndex < newList.length - 1  ? newList[targetIndex + 1] : null;
-
+  // Calcul du nouvel order (insertion sparse entre les voisins)
+  const reordered = [...open];
+  const [moved] = reordered.splice(idx, 1);
+  reordered.splice(newIdx, 0, moved);
+  const left  = newIdx > 0                       ? reordered[newIdx - 1] : null;
+  const right = newIdx < reordered.length - 1    ? reordered[newIdx + 1] : null;
   let newOrder;
   if (left && right) newOrder = (effectiveOrder(left) + effectiveOrder(right)) / 2;
   else if (left)     newOrder = effectiveOrder(left)  + 1;
   else if (right)    newOrder = effectiveOrder(right) - 1;
   else               newOrder = Date.now();
 
-  try {
-    await updateDoc(doc(db, 'actions', movedId), { order: newOrder });
-  } catch (err) { console.error(err); flashError(err.message); }
+  // Optimiste : on met à jour CURRENT_TODOS et on repaint, sans attendre Firestore
+  const allIdx = CURRENT_TODOS.findIndex(t => t.id === id);
+  if (allIdx >= 0) CURRENT_TODOS[allIdx] = { ...CURRENT_TODOS[allIdx], order: newOrder };
+  CURRENT_TODOS.sort(sortTodos);
+  paintTodos(CURRENT_TODOS);
+
+  // Persiste en arrière-plan
+  updateDoc(doc(db, 'actions', id), { order: newOrder }).catch(err => {
+    console.error(err);
+    flashError(err.message);
+  });
 }
 
 function flashError(msg) {
