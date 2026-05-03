@@ -2,7 +2,7 @@
 // Cache-first pour les assets statiques (offline-friendly pendant le voyage).
 // Network-only pour Firebase (Firestore).
 
-const CACHE = 'voyage-slovenie-v2';
+const CACHE = 'voyage-slovenie-v3';
 const SHELL = [
   './',
   './index.html',
