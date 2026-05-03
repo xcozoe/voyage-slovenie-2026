@@ -1261,11 +1261,21 @@
     color: var(--ink);
   }
 
-  /* Empêche le menu/preview iOS au long-press, sans casser le scroll */
-  .todo:not(.todo--done):not(.todo--editing):not(.todo--reorder) {
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
+  /* Bouton ⋮ pour entrer en mode réorganisation */
+  .todo__reorder-toggle {
+    width: 36px;
+    display: grid;
+    place-items: center;
+    color: var(--ink-mute);
+    font-size: 22px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: color 200ms var(--ease), background 200ms var(--ease);
+    flex-shrink: 0;
+  }
+  .todo__reorder-toggle:active {
+    color: var(--coral);
+    background: rgba(233, 141, 88, 0.08);
   }
 
   /* Mode réorganisation — flèches inline */
@@ -2131,6 +2141,10 @@ function paintTodos(items) {
   listEl.querySelectorAll('[data-act="delete"]').forEach(b =>
     b.addEventListener('click', () => deleteTodo(b.dataset.id))
   );
+  // Entrée en mode reorder via le bouton ⋮
+  listEl.querySelectorAll('[data-act="enter-reorder"]').forEach(b =>
+    b.addEventListener('click', () => enterReorderMode(b.dataset.id))
+  );
   // Reorder mode : monter / descendre / terminer
   listEl.querySelectorAll('[data-act="move-up"]').forEach(b =>
     b.addEventListener('click', () => moveAction(b.dataset.id, -1))
@@ -2151,8 +2165,6 @@ function paintTodos(items) {
     });
   }
 
-  // Drag-and-drop sur les actions ouvertes
-  attachReorder(listEl);
 }
 
 function renderTodoRow(item) {
@@ -2200,6 +2212,7 @@ function renderTodoRow(item) {
         <span class="todo__check ${isDone ? 'is-done' : ''}" aria-hidden="true">${isDone ? '✓' : ''}</span>
       </button>
       <button class="todo__title-btn" data-act="edit" data-id="${item.id}" aria-label="Modifier l'action">${escapeHtml(item.title)}</button>
+      ${!isDone ? `<button class="todo__reorder-toggle" data-act="enter-reorder" data-id="${item.id}" aria-label="Réorganiser">⋮</button>` : ''}
     </li>
   `;
 }
@@ -2245,53 +2258,13 @@ async function deleteTodo(id) {
 }
 
 // =========================================================
-// REORDER MODE — long-press → mode flèches ↑ ↓ ✓
+// REORDER MODE — bouton ⋮ → mode flèches ↑ ↓ ✓
 // =========================================================
 let REORDER_ID = null;
-const LONG_PRESS_MS = 450;
-const PRESS_MOVE_TOLERANCE = 8;
-
-function attachReorder(listEl) {
-  listEl.querySelectorAll('.todo:not(.todo--done):not(.todo--editing):not(.todo--reorder)').forEach(row => {
-    row.addEventListener('pointerdown', (e) => onRowPointerDown(e, row));
-  });
-}
-
-function onRowPointerDown(e, row) {
-  if (REORDER_ID) return; // déjà en mode reorder
-  if (e.pointerType === 'mouse' && e.button !== 0) return;
-  if (e.target.closest('.todo__check-btn, .todo__edit-btn, input, form')) return;
-
-  const startX = e.clientX, startY = e.clientY;
-  const pressTimer = setTimeout(() => enterReorderMode(row.dataset.id), LONG_PRESS_MS);
-
-  const cleanup = () => {
-    clearTimeout(pressTimer);
-    document.removeEventListener('pointermove', onPreMove);
-    document.removeEventListener('pointerup', onPreUp);
-    document.removeEventListener('pointercancel', onPreUp);
-  };
-  function onPreMove(ev) {
-    if (Math.abs(ev.clientX - startX) > PRESS_MOVE_TOLERANCE ||
-        Math.abs(ev.clientY - startY) > PRESS_MOVE_TOLERANCE) cleanup();
-  }
-  function onPreUp() { cleanup(); }
-  document.addEventListener('pointermove', onPreMove);
-  document.addEventListener('pointerup', onPreUp);
-  document.addEventListener('pointercancel', onPreUp);
-}
 
 function enterReorderMode(id) {
-  if (navigator.vibrate) navigator.vibrate(18);
+  if (navigator.vibrate) navigator.vibrate(15);
   REORDER_ID = id;
-  // Empêche le click qui suit le pointerup de déclencher l'édition
-  const suppressClick = (ev) => {
-    ev.stopPropagation();
-    ev.preventDefault();
-    document.removeEventListener('click', suppressClick, true);
-  };
-  document.addEventListener('click', suppressClick, true);
-  setTimeout(() => document.removeEventListener('click', suppressClick, true), 1000);
   paintTodos(CURRENT_TODOS);
 }
 
