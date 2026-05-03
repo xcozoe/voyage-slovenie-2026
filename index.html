@@ -1247,11 +1247,13 @@
      CARTE — Leaflet intégré
      ========================================================= */
   .map-view {
-    position: relative;
-    height: 100vh;
-    height: 100dvh;
+    /* fixed pour s'affranchir du max-width du #app conteneur,
+       sinon en landscape on resterait borné à 540 px de large */
+    position: fixed;
+    inset: 0;
     background: var(--bg-deep);
     overflow: hidden;
+    z-index: 200;
   }
   .leaflet-map {
     width: 100%;
