@@ -397,6 +397,24 @@
   }
   .action:active { background: rgba(251, 246, 233, 0.08); border-color: var(--coral); }
   .action__icon { font-size: 14px; }
+  .action--accent {
+    border-color: var(--coral);
+    color: var(--coral);
+  }
+  .action--accent:active {
+    background: rgba(233, 141, 88, 0.12);
+    color: var(--ink);
+  }
+  .action--ghost {
+    border-color: transparent;
+    color: var(--ink-soft);
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .action--ghost:active {
+    background: rgba(251, 246, 233, 0.06);
+    color: var(--ink);
+  }
 
   /* TIPS --------------------------------------------------- */
   .tips { display: flex; flex-direction: column; gap: 12px; }
@@ -923,6 +941,24 @@
   .stay-card--tbd .stay-card__status {
     color: var(--bg-deep);
     background: rgba(233, 141, 88, 0.92);
+  }
+  .stay-card__open {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    color: var(--ink);
+    background: rgba(6, 34, 41, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1;
   }
 
   .stay-card__body {
@@ -1562,14 +1598,24 @@ function renderStayPageCard(stay) {
     heroSrc   = photoKey ? photoSrc(photoKey, 'hero')   : null;
   }
 
+  // Si une annonce externe existe, la photo l'ouvre directement
+  // (Airbnb sur iOS bascule vers l'app native via Universal Links).
+  // Sinon, fallback : la photo mène au jour correspondant.
+  const photoHref = stay.listing ? stay.listing.url : `#/jour/${dayN}`;
+  const photoTarget = stay.listing ? ' target="_blank" rel="noopener"' : '';
+  const photoLabel = stay.listing
+    ? `Ouvrir l'annonce ${stay.listing.type}`
+    : `Voir le jour ${dayN}`;
+
   const photoHtml = mobileSrc ? `
-    <a class="stay-card__photo" href="#/jour/${dayN}" aria-label="Voir le jour ${dayN}">
+    <a class="stay-card__photo" href="${escapeHtml(photoHref)}"${photoTarget} aria-label="${photoLabel}">
       <picture>
         <source media="(min-width: 768px)" srcset="${heroSrc}">
         <img src="${mobileSrc}" alt="" loading="lazy" decoding="async">
       </picture>
       <span class="stay-card__nights">${nightsLabel}</span>
       <span class="stay-card__status">${statusLabel}</span>
+      ${stay.listing ? `<span class="stay-card__open" aria-hidden="true">↗</span>` : ''}
     </a>` : '';
 
   const head = `
@@ -1629,11 +1675,16 @@ function renderStayPageCard(stay) {
   if (stay.phone) {
     actions.push(`<a class="action" href="${telLink(stay.phone)}"><span class="action__icon">📞</span>Appeler</a>`);
   }
-  if (stay.website) {
-    actions.push(`<a class="action" href="${escapeHtml(stay.website)}" target="_blank" rel="noopener"><span class="action__icon">↗</span>Site</a>`);
+  if (stay.listing) {
+    const labels = { airbnb: 'Voir sur Airbnb', booking: 'Voir sur Booking', website: 'Site officiel' };
+    const label = labels[stay.listing.type] || 'Voir l\'annonce';
+    actions.push(`<a class="action action--accent" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener"><span class="action__icon">↗</span>${label}</a>`);
   }
   if (stay.email) {
     actions.push(`<a class="action" href="mailto:${escapeHtml(stay.email)}"><span class="action__icon">✉</span>Email</a>`);
+  }
+  if (stay.listing && dayN) {
+    actions.push(`<a class="action action--ghost" href="#/jour/${dayN}"><span class="action__icon">→</span>Jour ${dayN}</a>`);
   }
   const actionsHtml = actions.length
     ? `<div class="stay-card__actions">${actions.join('')}</div>`

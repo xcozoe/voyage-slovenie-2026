@@ -42,7 +42,8 @@
       "cancellation": "gratuite jusqu'à 7 jours avant",
       "bookedBy": "Elsa",
       "bookedByEmail": "elsa.poixjover@gmail.com",
-      "amenities": ["WiFi gratuit", "climatisation indépendante", "baignoire d'hydromassage", "minibar", "TV satellite", "coffre-fort"]
+      "amenities": ["WiFi gratuit", "climatisation indépendante", "baignoire d'hydromassage", "minibar", "TV satellite", "coffre-fort"],
+      "listing": { "type": "website", "url": "https://palazzoodoni.com" }
     },
     {
       "id": "piran",
@@ -70,7 +71,8 @@
         "remaining": 172,
         "remainingDue": "2026-06-25"
       },
-      "bookedBy": "Rémi"
+      "bookedBy": "Rémi",
+      "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/925230185667649945" }
     },
     {
       "id": "postojna",
@@ -100,7 +102,8 @@
       },
       "bookedBy": "Rémi",
       "notes": "Sauna sur place. Pas adapté aux enfants en bas âge mais OK pour ado.",
-      "amenities": ["sauna", "nature"]
+      "amenities": ["sauna", "nature"],
+      "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/51762261" }
     },
     {
       "id": "ljubljana",
@@ -128,7 +131,8 @@
         "remaining": 0
       },
       "bookedBy": "Rémi",
-      "amenities": ["boîte à clé sécurisée", "centre historique"]
+      "amenities": ["boîte à clé sécurisée", "centre historique"],
+      "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/1199822276290029517" }
     },
     {
       "id": "bled",
