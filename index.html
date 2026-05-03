@@ -2127,7 +2127,15 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 })();
 
 // Service Worker — cache offline pour usage en voyage
+// Auto-reload de la page dès qu'un nouveau SW prend la main (post-skipWaiting + claim).
+// Sans ça, l'app standalone iOS reste sur le shell mis en cache par l'ancien SW.
 if ('serviceWorker' in navigator) {
+  let reloadingForSwUpdate = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloadingForSwUpdate) return;
+    reloadingForSwUpdate = true;
+    window.location.reload();
+  });
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   });

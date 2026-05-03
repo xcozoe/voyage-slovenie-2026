@@ -1,8 +1,9 @@
 // Service Worker — voyage Slovénie 2026
-// Cache-first pour les assets statiques (offline-friendly pendant le voyage).
-// Network-only pour Firebase (Firestore).
+// - Network-first pour le shell (HTML, JSON) → toujours frais quand en ligne
+// - Cache-first pour assets stables (photos, polices) → instantané + offline
+// - Bypass Firebase (Firestore en réseau direct)
 
-const CACHE = 'voyage-slovenie-v7';
+const CACHE = 'voyage-slovenie-v8';
 const SHELL = [
   './',
   './index.html',
@@ -26,14 +27,41 @@ self.addEventListener('activate', (e) => {
   );
 });
 
+function isShellRequest(url) {
+  if (url.origin !== self.location.origin) return false;
+  const p = url.pathname;
+  if (p === '/' || p.endsWith('/')) return true;
+  if (p.endsWith('.html')) return true;
+  if (p.endsWith('.json')) return true;
+  return false;
+}
+
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
-  // Bypass Firebase (Firestore) — toujours en réseau direct
+
+  // Firebase / Firestore : toujours réseau, jamais cache
   if (url.host.includes('firestore.googleapis.com') ||
       url.host.includes('firebase') ||
       url.host.includes('firebaseio.com')) return;
 
+  // Shell (HTML + JSON) : network-first, fallback cache pour offline
+  if (isShellRequest(url)) {
+    e.respondWith(
+      fetch(e.request)
+        .then((resp) => {
+          if (resp && resp.status === 200) {
+            const clone = resp.clone();
+            caches.open(CACHE).then((c) => c.put(e.request, clone));
+          }
+          return resp;
+        })
+        .catch(() => caches.match(e.request))
+    );
+    return;
+  }
+
+  // Assets stables (photos, polices) : cache-first
   e.respondWith(
     caches.match(e.request).then((cached) => {
       if (cached) return cached;
