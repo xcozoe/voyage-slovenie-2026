@@ -3,7 +3,7 @@
 // - Cache-first pour assets stables (photos, polices) → instantané + offline
 // - Bypass Firebase (Firestore en réseau direct)
 
-const CACHE = 'voyage-slovenie-v18';
+const CACHE = 'voyage-slovenie-v19';
 const SHELL = [
   './',
   './index.html',
@@ -71,7 +71,9 @@ self.addEventListener('fetch', (e) => {
           url.origin === self.location.origin ||
           url.host.includes('fonts.gstatic.com') ||
           url.host.includes('fonts.googleapis.com') ||
-          url.host.includes('gstatic.com');
+          url.host.includes('gstatic.com') ||
+          url.host.includes('unpkg.com') ||
+          url.host.includes('tile.openstreetmap.org');
         if (cacheable) {
           const clone = resp.clone();
           caches.open(CACHE).then((c) => c.put(e.request, clone));

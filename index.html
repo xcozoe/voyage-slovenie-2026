@@ -1054,6 +1054,96 @@
   }
 
   /* =========================================================
+     CARTE — Leaflet intégré
+     ========================================================= */
+  .map-view {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-deep);
+  }
+  .map-topbar {
+    flex-shrink: 0;
+    padding: env(safe-area-inset-top, 0px) 14px 10px;
+    background: var(--bg-deep);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .map-back,
+  .map-external {
+    margin-top: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: rgba(251, 246, 233, 0.06);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 1px solid var(--line);
+  }
+  .map-back::before { content: '←'; letter-spacing: 0; font-size: 14px; }
+  .map-external {
+    color: var(--coral);
+    border-color: rgba(233, 141, 88, 0.4);
+  }
+  .leaflet-map {
+    flex: 1;
+    width: 100%;
+    background: var(--bg-deep);
+    position: relative;
+  }
+  .map-loader {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--ink-faint);
+    font-size: var(--fz-small);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-style: italic;
+  }
+  /* Tweaks Leaflet pour s'intégrer au thème sombre */
+  .leaflet-container { background: var(--bg-deep); }
+  .leaflet-popup-content-wrapper {
+    border-radius: 6px;
+    background: #fbf6e9;
+    color: #062229;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  }
+  .leaflet-popup-content {
+    margin: 14px 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .leaflet-popup-content b {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #062229;
+  }
+  .leaflet-popup-content a { color: #c46a35; text-decoration: underline; }
+  .leaflet-popup-tip { background: #fbf6e9; }
+  .leaflet-control-attribution {
+    background: rgba(6, 34, 41, 0.7) !important;
+    color: var(--ink-faint) !important;
+    font-size: 10px !important;
+  }
+  .leaflet-control-attribution a { color: var(--coral) !important; }
+
+  /* =========================================================
      TODOS — actions partagées
      ========================================================= */
   .todos {
@@ -1505,11 +1595,13 @@ const ROUTES = [
   { match: /^#?\/timeline\/?$/,       render: renderTimeline },
   { match: /^#?\/hebergements\/?$/,   render: renderStays },
   { match: /^#?\/a-faire\/?$/,        render: renderTodos },
+  { match: /^#?\/carte\/?$/,          render: renderMap },
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
 ];
 
 const MY_MAPS_ID = '1MqgbSNlPFTARwIBmdg3xtdE9kVftrTk';
 const MY_MAPS_URL = `https://www.google.com/maps/d/viewer?mid=${MY_MAPS_ID}`;
+const KML_URL = 'voyage-slovenie-2026.kml';
 
 // Subscription globale Firestore pour les actions — alimente la liste
 // /a-faire ET la pastille notification sur la cover.
@@ -1785,7 +1877,7 @@ function renderCover() {
         <nav class="cover__links">
           <a href="#/timeline">Itinéraire</a>
           <a href="#/hebergements">Hébergements</a>
-          <a href="${MY_MAPS_URL}" target="_blank" rel="noopener">Carte ↗</a>
+          <a href="#/carte">Carte</a>
           <a href="#/a-faire" class="cover__link-todo">
             À faire
             <span class="cover__badge" data-actions-badge hidden></span>
@@ -2020,6 +2112,127 @@ function renderStayPageCard(stay) {
 function dayForStay(stayId) {
   const d = STATE.days.find(d => d.stay === stayId);
   return d ? d.n : 1;
+}
+
+// =========================================================
+// PAGE CARTE — Leaflet + parsing KML local
+// =========================================================
+const LEAFLET_VER = '1.9.4';
+let LEAFLET_LOADING = null;
+
+function ensureLeaflet() {
+  if (window.L) return Promise.resolve();
+  if (LEAFLET_LOADING) return LEAFLET_LOADING;
+  LEAFLET_LOADING = new Promise((resolve, reject) => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://unpkg.com/leaflet@${LEAFLET_VER}/dist/leaflet.css`;
+    document.head.appendChild(link);
+    const script = document.createElement('script');
+    script.src = `https://unpkg.com/leaflet@${LEAFLET_VER}/dist/leaflet.js`;
+    script.onload = () => resolve();
+    script.onerror = (e) => reject(new Error('Leaflet load failed'));
+    document.head.appendChild(script);
+  });
+  return LEAFLET_LOADING;
+}
+
+async function loadKmlFeatures() {
+  const resp = await fetch(KML_URL);
+  if (!resp.ok) throw new Error('KML fetch ' + resp.status);
+  const text = await resp.text();
+  const xml = new DOMParser().parseFromString(text, 'text/xml');
+  const features = { stays: [], pois: [], routes: [] };
+
+  xml.querySelectorAll('Folder').forEach(folder => {
+    const folderName = folder.querySelector(':scope > name')?.textContent || '';
+    const isStays  = folderName.startsWith('Hébergements');
+    const isPois   = folderName.startsWith('Sites');
+    const isRoutes = folderName.startsWith('Itinéraire');
+
+    folder.querySelectorAll('Placemark').forEach(pm => {
+      const name = pm.querySelector(':scope > name')?.textContent.trim() || '';
+      const description = pm.querySelector(':scope > description')?.textContent.trim() || '';
+      const styleUrl = pm.querySelector(':scope > styleUrl')?.textContent.trim() || '';
+      const point = pm.querySelector('Point > coordinates');
+      const line  = pm.querySelector('LineString > coordinates');
+      if (point) {
+        const [lng, lat] = point.textContent.trim().split(',').map(parseFloat);
+        const item = { name, description, styleUrl, lat, lng };
+        if (isStays) features.stays.push(item);
+        else if (isPois) features.pois.push(item);
+      } else if (line && isRoutes) {
+        const coords = line.textContent.trim().split(/\s+/).map(s => {
+          const [lng, lat] = s.split(',').map(parseFloat);
+          return [lat, lng];
+        }).filter(c => Number.isFinite(c[0]) && Number.isFinite(c[1]));
+        if (coords.length > 1) features.routes.push({ name, description, coords });
+      }
+    });
+  });
+  return features;
+}
+
+async function renderMap() {
+  mount(`
+    <section class="page map-view">
+      <header class="map-topbar">
+        <a class="map-back" href="#/">Retour</a>
+        <a class="map-external" href="${MY_MAPS_URL}" target="_blank" rel="noopener" title="Ouvrir dans Google Maps">Google Maps ↗</a>
+      </header>
+      <div id="leaflet-map" class="leaflet-map" aria-label="Carte du voyage">
+        <div class="map-loader">Chargement de la carte…</div>
+      </div>
+    </section>
+  `);
+
+  try {
+    const [_, features] = await Promise.all([ensureLeaflet(), loadKmlFeatures()]);
+    const mapEl = document.getElementById('leaflet-map');
+    if (!mapEl) return; // user a quitté
+    mapEl.innerHTML = ''; // remove loader
+
+    const map = L.map(mapEl, { zoomControl: true, attributionControl: true })
+      .setView([45.7, 13.7], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const all = L.featureGroup().addTo(map);
+
+    // Routes en premier (pour qu'elles soient sous les marqueurs)
+    features.routes.forEach(r => {
+      L.polyline(r.coords, {
+        color: '#e98d58', weight: 4, opacity: 0.78, lineJoin: 'round'
+      }).bindPopup(`<b>${escapeHtml(r.name)}</b><br>${r.description || ''}`).addTo(all);
+    });
+
+    // POIs (sand)
+    features.pois.forEach(p => {
+      L.circleMarker([p.lat, p.lng], {
+        radius: 6, color: '#fbf6e9', weight: 1.5,
+        fillColor: '#d4a574', fillOpacity: 0.92,
+      }).bindPopup(`<b>${escapeHtml(p.name)}</b><br>${escapeHtml(p.description)}`).addTo(all);
+    });
+
+    // Hébergements (vert si confirmé, corail si TBD)
+    features.stays.forEach(s => {
+      const isConfirmed = s.styleUrl.includes('confirmed');
+      L.circleMarker([s.lat, s.lng], {
+        radius: 10, color: '#fbf6e9', weight: 2,
+        fillColor: isConfirmed ? '#7a9657' : '#e98d58', fillOpacity: 0.96,
+      }).bindPopup(`<b>${escapeHtml(s.name)}</b><br>${s.description}`, { maxWidth: 300 }).addTo(all);
+    });
+
+    if (all.getLayers().length) {
+      map.fitBounds(all.getBounds(), { padding: [40, 40] });
+    }
+  } catch (err) {
+    console.error(err);
+    const mapEl = document.getElementById('leaflet-map');
+    if (mapEl) mapEl.innerHTML = `<div class="map-loader" style="color:var(--coral);">Erreur de chargement : ${escapeHtml(err.message)}</div>`;
+  }
 }
 
 

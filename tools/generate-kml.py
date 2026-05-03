@@ -161,10 +161,12 @@ def osrm_route(from_coord, to_coord):
     cache_key = f"{lat1:.4f},{lng1:.4f}|{lat2:.4f},{lng2:.4f}"
     if cache_key in ROUTE_CACHE:
         return [tuple(p) for p in ROUTE_CACHE[cache_key]]
+    # overview=full → suit fidèlement les routes (autoroute, lacets, etc.)
+    # ~7000 points par long trajet ; KML final ~1 MB mais bien plus précis.
     url = (
         f"https://router.project-osrm.org/route/v1/driving/"
         f"{lng1},{lat1};{lng2},{lat2}"
-        f"?overview=simplified&geometries=geojson"
+        f"?overview=full&geometries=geojson"
     )
     # urllib échoue en SSL handshake sur Python 3.9 système macOS — on délègue à curl
     try:
