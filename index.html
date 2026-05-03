@@ -645,6 +645,28 @@
     border-bottom-color: var(--sand);
   }
 
+  /* Lien « À faire » + pastille notification */
+  .cover__link-todo { position: relative; white-space: nowrap; }
+  .cover__badge {
+    position: absolute;
+    top: -10px;
+    right: -16px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--coral);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: 0 2px 10px rgba(233, 141, 88, 0.55), 0 0 0 2px var(--bg-deep);
+  }
+
   /* Staggered fade-in */
   .stagger > * {
     opacity: 0;
@@ -1447,10 +1469,36 @@ const ROUTES = [
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
 ];
 
-// État du listener Firestore actions (pour le détacher quand on quitte la page)
-let TODOS_UNSUB = null;
-function detachTodos() { if (TODOS_UNSUB) { TODOS_UNSUB(); TODOS_UNSUB = null; } }
-window.addEventListener('hashchange', detachTodos);
+// Subscription globale Firestore pour les actions — alimente la liste
+// /a-faire ET la pastille notification sur la cover.
+let ACTIONS_UNSUB = null;
+let OPEN_ACTIONS_COUNT = 0;
+
+function startActionsSubscription() {
+  if (ACTIONS_UNSUB) return;
+  ACTIONS_UNSUB = onSnapshot(collection(db, 'actions'),
+    (snap) => {
+      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      items.sort(sortTodos);
+      CURRENT_TODOS = items;
+      OPEN_ACTIONS_COUNT = items.filter(t => t.status !== 'done').length;
+      updateActionsBadge();
+      if (location.hash.startsWith('#/a-faire')) paintTodos(items);
+    },
+    (err) => { console.error(err); flashError('Sync impossible : ' + err.code); }
+  );
+}
+
+function updateActionsBadge() {
+  document.querySelectorAll('[data-actions-badge]').forEach(el => {
+    if (OPEN_ACTIONS_COUNT > 0) {
+      el.textContent = OPEN_ACTIONS_COUNT;
+      el.hidden = false;
+    } else {
+      el.hidden = true;
+    }
+  });
+}
 
 function route() {
   const hash = location.hash || '#/';
@@ -1695,12 +1743,16 @@ function renderCover() {
         <nav class="cover__links">
           <a href="#/timeline">Itinéraire</a>
           <a href="#/hebergements">Hébergements</a>
-          <a href="#/a-faire">À faire</a>
+          <a href="#/a-faire" class="cover__link-todo">
+            À faire
+            <span class="cover__badge" data-actions-badge hidden></span>
+          </a>
         </nav>
       </div>
     </section>
   `);
   window.scrollTo(0, 0);
+  updateActionsBadge();
 }
 
 function renderTimeline() {
@@ -1978,16 +2030,9 @@ function renderTodos() {
     }
   });
 
-  detachTodos();
-  // Pas d'orderBy Firestore — on trie côté client pour gérer order + createdAt + status
-  TODOS_UNSUB = onSnapshot(collection(db, 'actions'),
-    (snap) => {
-      const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      items.sort(sortTodos);
-      paintTodos(items);
-    },
-    (err)  => { console.error(err); flashError('Sync impossible : ' + err.code); }
-  );
+  // Affichage initial à partir du cache local — la subscription globale
+  // pousse les mises à jour suivantes.
+  paintTodos(CURRENT_TODOS);
 }
 
 function effectiveOrder(item) {
@@ -2320,6 +2365,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     await loadData();
     route();
     fbPing();
+    startActionsSubscription();
   } catch (e) {
     console.error(e);
     document.getElementById('app').innerHTML = `
