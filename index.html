@@ -1322,13 +1322,14 @@
   /* Tweaks Leaflet pour s'intégrer au thème sombre */
   .leaflet-container { background: var(--bg-deep); }
 
-  /* Popups premium — header, body scrollable, footer sticky */
+  /* Popups premium — dark theme + footer sticky.
+     Leaflet écrase certains styles via sa feuille CDN, d'où !important. */
   .leaflet-popup-content-wrapper {
-    padding: 0;
-    border-radius: 10px;
-    background: #fbf6e9;
-    color: #062229;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    padding: 0 !important;
+    border-radius: 12px !important;
+    background: var(--bg-soft) !important;
+    color: var(--ink) !important;
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(251, 246, 233, 0.07) !important;
     overflow: hidden;
   }
   .leaflet-popup-content {
@@ -1337,13 +1338,13 @@
     font-size: 13px;
     line-height: 1.5;
   }
-  .leaflet-popup-tip { background: #fbf6e9; }
+  .leaflet-popup-tip { background: var(--bg-soft) !important; }
   .leaflet-popup-close-button {
-    color: #062229 !important;
+    color: var(--ink) !important;
     opacity: 0.55;
     z-index: 5;
-    width: 26px !important;
-    height: 26px !important;
+    width: 28px !important;
+    height: 28px !important;
     font-size: 22px !important;
     padding: 0 !important;
     top: 6px !important;
@@ -1354,36 +1355,47 @@
   .pop-card {
     display: flex;
     flex-direction: column;
-    width: 280px;
-    max-width: 80vw;
-    max-height: 60vh;
-    max-height: 60dvh;
+    width: 290px;
+    max-width: 86vw;
+    max-height: 80dvh;
   }
-  .pop-card--compact { width: 240px; }
+  .pop-card--compact { width: 250px; }
 
   .pop-header {
     flex-shrink: 0;
-    padding: 18px 18px 14px;
-    background: linear-gradient(180deg, #f5e9d2 0%, #fbf6e9 100%);
-    border-bottom: 1px solid rgba(6, 34, 41, 0.08);
+    padding: 18px 22px 14px 18px;
+    background: linear-gradient(180deg, rgba(233, 141, 88, 0.14) 0%, transparent 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  .pop-stage-line {
+    display: flex;
+    align-items: baseline;
+    gap: 10px 14px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
   }
   .pop-stage {
-    display: inline-block;
     font-family: 'Inter', sans-serif;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: #c46a35;
-    margin-bottom: 8px;
+    color: var(--coral);
+  }
+  .pop-stage-dates {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1;
   }
   .pop-name {
     font-family: 'Fraunces', serif;
     font-style: italic;
     font-weight: 500;
-    font-size: 19px;
+    font-size: 20px;
     line-height: 1.15;
-    color: #062229;
+    color: var(--ink);
     margin: 0 0 4px;
     text-wrap: balance;
   }
@@ -1391,9 +1403,9 @@
   .pop-city {
     font-family: 'Inter', sans-serif;
     font-size: 10px;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.20em;
     text-transform: uppercase;
-    color: #62737a;
+    color: var(--ink-faint);
     font-weight: 600;
   }
 
@@ -1408,7 +1420,7 @@
   .pop-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
+    gap: 14px 16px;
     margin: 0;
   }
   .pop-detail { margin: 0; min-width: 0; }
@@ -1416,15 +1428,15 @@
   .pop-detail dt {
     font-family: 'Inter', sans-serif;
     font-size: 9px;
-    letter-spacing: 0.20em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #8d9e9e;
+    color: var(--ink-mute);
     font-weight: 600;
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .pop-detail dd {
-    font-size: 12.5px;
-    color: #062229;
+    font-size: 13px;
+    color: var(--ink);
     margin: 0;
     line-height: 1.4;
   }
@@ -1433,17 +1445,17 @@
     margin-top: 14px;
     font-family: 'Fraunces', serif;
     font-style: italic;
-    font-size: 13px;
+    font-size: 13.5px;
     line-height: 1.55;
-    color: #2a4148;
+    color: var(--ink-soft);
   }
   .pop-card--compact .pop-notes { margin-top: 8px; }
 
   .pop-footer {
     flex-shrink: 0;
     padding: 12px 14px;
-    background: #f0e3c8;
-    border-top: 1px solid rgba(6, 34, 41, 0.10);
+    background: var(--bg-deep);
+    border-top: 1px solid var(--line);
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
@@ -1453,7 +1465,7 @@
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 7px;
     padding: 11px 14px;
     border-radius: 999px;
     font-family: 'Inter', sans-serif;
@@ -1464,18 +1476,42 @@
     text-decoration: none !important;
     white-space: nowrap;
     min-width: 0;
-    transition: opacity 180ms var(--ease);
+    transition: opacity 180ms var(--ease), transform 180ms var(--ease);
   }
-  .pop-btn:active { opacity: 0.85; }
+  .pop-btn:active { opacity: 0.88; transform: scale(0.98); }
+
+  /* Y aller — corail */
   .pop-btn--primary {
-    background: #c46a35;
-    color: #fbf6e9 !important;
-    box-shadow: 0 2px 8px rgba(196, 106, 53, 0.35);
+    background: var(--coral);
+    color: var(--bg-deep) !important;
+    box-shadow: 0 2px 10px rgba(233, 141, 88, 0.35);
   }
-  .pop-btn--secondary {
+  /* Boutons marques */
+  .pop-btn--airbnb {
+    background: #FF5A5F;
+    color: #ffffff !important;
+  }
+  .pop-btn--booking {
+    background: #003B95;
+    color: #ffffff !important;
+  }
+  .pop-btn--website {
     background: transparent;
-    color: #c46a35 !important;
-    border: 1px solid rgba(196, 106, 53, 0.45);
+    color: var(--ink) !important;
+    border: 1px solid var(--line-strong);
+  }
+  .pop-btn__icon { font-size: 13px; line-height: 1; }
+
+  /* Landscape : header & footer compacts pour laisser de la place au body */
+  @media (max-height: 500px) {
+    .pop-card { width: 320px; max-height: 90dvh; }
+    .pop-header { padding: 12px 22px 10px 16px; }
+    .pop-stage { margin-bottom: 4px; }
+    .pop-name { font-size: 17px; margin-bottom: 2px; }
+    .pop-body { padding: 10px 16px 12px; }
+    .pop-details { gap: 10px 14px; }
+    .pop-footer { padding: 8px 10px; }
+    .pop-btn { padding: 9px 12px; }
   }
   .leaflet-control-attribution {
     background: rgba(6, 34, 41, 0.7) !important;
@@ -2785,16 +2821,19 @@ function renderStayPopup(stay, kmlItem, letter) {
   const name = (stay && stay.name) || kmlItem.name.split('—').slice(1).join('—').trim() || kmlItem.name;
   const city = (stay && stay.city) || kmlItem.name.split('—')[0].trim();
 
+  // Dates remontées dans le header (économise de la place dans le body)
+  let dateLine = '';
+  if (stay && stay.arrival && stay.departure) {
+    dateLine = `${formatRange(stay.arrival, stay.departure)} · ${stay.nights} nuit${stay.nights > 1 ? 's' : ''}`;
+  }
+
   const details = [];
   if (stay) {
-    if (stay.arrival && stay.departure) {
-      details.push(['Dates', `${formatRange(stay.arrival, stay.departure)} · ${stay.nights} nuit${stay.nights > 1 ? 's' : ''}`]);
-    }
-    if (stay.checkin)  details.push(['Check-in',  stay.checkin]);
-    if (stay.checkout) details.push(['Check-out', stay.checkout]);
-    if (stay.host)     details.push(['Hôte', stay.host]);
+    if (stay.checkin)      details.push(['Check-in',  stay.checkin]);
+    if (stay.checkout)     details.push(['Check-out', stay.checkout]);
     if (stay.confirmation) details.push(['Référence', stay.confirmation]);
-    if (stay.address)  details.push(['Adresse', stay.address, true]); // full-width
+    if (stay.phone)        details.push(['Téléphone', stay.phone]);
+    if (stay.address)      details.push(['Adresse',   stay.address, true]); // full-width
   }
   const detailsHtml = details.map(([k, v, full]) =>
     `<div class="pop-detail${full ? ' pop-detail--full' : ''}"><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`
@@ -2804,15 +2843,21 @@ function renderStayPopup(stay, kmlItem, letter) {
 
   let listingBtn = '';
   if (stay && stay.listing && stay.listing.url) {
-    const labels = { airbnb: 'Voir sur Airbnb', booking: 'Voir sur Booking', website: 'Site officiel' };
-    const label = labels[stay.listing.type] || 'Voir l\'annonce';
-    listingBtn = `<a class="pop-btn pop-btn--secondary" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">↗ ${label}</a>`;
+    const conf = ({
+      airbnb:  { cls: 'pop-btn--airbnb',  text: 'Airbnb' },
+      booking: { cls: 'pop-btn--booking', text: 'Booking.com' },
+      website: { cls: 'pop-btn--website', text: 'Site officiel ↗' },
+    })[stay.listing.type] || { cls: 'pop-btn--website', text: 'Voir l\'annonce ↗' };
+    listingBtn = `<a class="pop-btn ${conf.cls}" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">${conf.text}</a>`;
   }
 
   return `
     <div class="pop-card">
       <header class="pop-header">
-        <div class="pop-stage">Étape ${letter}</div>
+        <div class="pop-stage-line">
+          <span class="pop-stage">Étape ${letter}</span>
+          ${dateLine ? `<span class="pop-stage-dates">${escapeHtml(dateLine)}</span>` : ''}
+        </div>
         <h2 class="pop-name">${escapeHtml(name)}</h2>
         <div class="pop-city">${escapeHtml(city)}</div>
       </header>
