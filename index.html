@@ -625,9 +625,13 @@
   .cover__cta:hover::after { transform: translateX(3px); }
 
   .cover__links {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 28px;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    text-align: center;
     font-size: var(--fz-micro);
     letter-spacing: 0.22em;
     text-transform: uppercase;
@@ -636,35 +640,44 @@
   .cover__links a {
     color: var(--ink);
     opacity: 0.8;
-    padding: 6px 2px;
+    padding: 8px 2px;
     border-bottom: 1px solid transparent;
     transition: opacity 200ms var(--ease), border-color 200ms var(--ease);
+    white-space: nowrap;
   }
   .cover__links a:active {
     opacity: 1;
     border-bottom-color: var(--sand);
   }
 
-  /* Lien « À faire » + pastille notification */
-  .cover__link-todo { position: relative; white-space: nowrap; }
+  /* Lien « À faire » : pleine largeur, badge notif intégré */
+  .cover__link-todo {
+    position: relative;
+    grid-column: 1 / -1;
+    margin-top: 4px;
+    padding-top: 14px !important;
+    border-top: 1px solid var(--line);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
   .cover__badge {
-    position: absolute;
-    top: -10px;
-    right: -16px;
-    min-width: 20px;
-    height: 20px;
-    padding: 0 6px;
+    position: static;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 7px;
     border-radius: 999px;
     background: var(--coral);
     color: var(--ink);
     font-family: 'Inter', sans-serif;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
-    line-height: 20px;
+    line-height: 22px;
     text-align: center;
     letter-spacing: 0;
     text-transform: none;
-    box-shadow: 0 2px 10px rgba(233, 141, 88, 0.55), 0 0 0 2px var(--bg-deep);
+    box-shadow: 0 2px 10px rgba(233, 141, 88, 0.55);
   }
 
   /* Staggered fade-in */
@@ -1051,6 +1064,105 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  }
+
+  /* =========================================================
+     ACTIVITÉS — programme par jour (initialisation)
+     ========================================================= */
+  .activities {
+    padding: calc(env(safe-area-inset-top, 0px) + 28px) 0 110px;
+  }
+  .activities__head { padding: 0 var(--pad-x) 8px; }
+
+  .activities__list {
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+    margin-top: 32px;
+  }
+  .activities__day {
+    padding: 0 var(--pad-x);
+  }
+  .activities__day-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 6px;
+  }
+  .activities__day-num {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 600;
+  }
+  .activities__day-date {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .activities__day-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.15;
+    margin-bottom: 18px;
+    text-wrap: balance;
+  }
+  .activities__day-title a {
+    color: var(--ink);
+    border-bottom: 1px solid transparent;
+    transition: border-color 200ms var(--ease);
+  }
+  .activities__day-title a:active { border-bottom-color: var(--coral); }
+
+  .activities__items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-left: 1px solid var(--line);
+    padding-left: 18px;
+  }
+  .activities__item {
+    position: relative;
+  }
+  .activities__item::before {
+    content: '';
+    position: absolute;
+    left: -22px;
+    top: 9px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--sand);
+  }
+  .activities__item-time {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sand);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .activities__item-title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .activities__item-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
   }
 
   /* =========================================================
@@ -1594,6 +1706,7 @@ const ROUTES = [
   { match: /^#?\/?$/,                 render: renderCover },
   { match: /^#?\/timeline\/?$/,       render: renderTimeline },
   { match: /^#?\/hebergements\/?$/,   render: renderStays },
+  { match: /^#?\/activites\/?$/,      render: renderActivities },
   { match: /^#?\/a-faire\/?$/,        render: renderTodos },
   { match: /^#?\/carte\/?$/,          render: renderMap },
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
@@ -1877,6 +1990,7 @@ function renderCover() {
         <nav class="cover__links">
           <a href="#/timeline">Itinéraire</a>
           <a href="#/hebergements">Hébergements</a>
+          <a href="#/activites">Activités</a>
           <a href="#/carte">Carte</a>
           <a href="#/a-faire" class="cover__link-todo">
             À faire
@@ -2235,6 +2349,49 @@ async function renderMap() {
   }
 }
 
+
+// =========================================================
+// PAGE ACTIVITÉS — programme du voyage par jour
+// (initialisation, à étoffer plus tard)
+// =========================================================
+function renderActivities() {
+  const days = STATE.days.filter(d => d.schedule && d.schedule.length);
+  const totalItems = days.reduce((n, d) => n + d.schedule.length, 0);
+
+  const sections = days.map(d => `
+    <section class="activities__day">
+      <header class="activities__day-head">
+        <span class="activities__day-num">J${String(d.n).padStart(2, '0')}</span>
+        <span class="activities__day-date">${escapeHtml(d.weekday)} ${formatDate(d.date)}</span>
+      </header>
+      <h2 class="activities__day-title">
+        <a href="#/jour/${d.n}">${escapeHtml(d.title)}</a>
+      </h2>
+      <ol class="activities__items">
+        ${d.schedule.map(item => `
+          <li class="activities__item">
+            <span class="activities__item-time">${escapeHtml(item.time)}</span>
+            <h3 class="activities__item-title">${escapeHtml(item.title)}</h3>
+            <p class="activities__item-desc">${escapeHtml(item.desc)}</p>
+          </li>
+        `).join('')}
+      </ol>
+    </section>
+  `).join('');
+
+  mount(`
+    <section class="page activities">
+      <header class="activities__head">
+        <a class="timeline__back" href="#/">Retour</a>
+        <div class="timeline__kicker">Au programme</div>
+        <h1 class="timeline__title">${totalItems} activités,<br><em>${days.length} journées</em></h1>
+        <p class="timeline__lead">Vue brute du programme par jour.<br>À étoffer (réservations, contacts, infos pratiques).</p>
+      </header>
+      <div class="activities__list">${sections}</div>
+    </section>
+  `);
+  window.scrollTo(0, 0);
+}
 
 // =========================================================
 // PAGE À FAIRE — actions partagées Firestore
