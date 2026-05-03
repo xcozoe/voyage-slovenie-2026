@@ -1543,21 +1543,6 @@
     text-transform: uppercase;
   }
 
-  .fb-status {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 18px);
-    right: 18px;
-    z-index: 100;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--ink-mute);
-    transition: background 400ms var(--ease), box-shadow 400ms var(--ease);
-    pointer-events: none;
-  }
-  .fb-status.is-ok    { background: var(--olive); box-shadow: 0 0 8px rgba(122, 150, 87, 0.5); }
-  .fb-status.is-error { background: var(--coral); }
-
   /* Hide focus outlines for mouse, keep for keyboard */
   :focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
 </style>
@@ -1567,8 +1552,6 @@
 <main id="app" aria-live="polite">
   <div class="loader">Chargement…</div>
 </main>
-
-<div id="fb-status" class="fb-status" aria-hidden="true"></div>
 
 <script type="module">
 // =========================================================
@@ -1594,16 +1577,12 @@ const fbApp = initializeApp(firebaseConfig);
 const db = initializeFirestore(fbApp, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
 });
-const fbStatusEl = document.getElementById('fb-status');
 
 async function fbPing() {
   try {
     await setDoc(doc(db, "ping", "client"), { at: serverTimestamp(), ua: navigator.userAgent.slice(0, 80) });
-    fbStatusEl.classList.remove('is-error');
-    fbStatusEl.classList.add('is-ok');
   } catch (e) {
     console.warn('Firebase ping failed', e);
-    fbStatusEl.classList.add('is-error');
   }
 }
 
@@ -2677,9 +2656,7 @@ async function moveAction(id, direction) {
 }
 
 function flashError(msg) {
-  fbStatusEl.classList.add('is-error');
-  fbStatusEl.title = msg;
-  setTimeout(() => { fbStatusEl.classList.remove('is-error'); fbStatusEl.title = ''; }, 4000);
+  console.warn('flashError:', msg);
 }
 
 // =========================================================

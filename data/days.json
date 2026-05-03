@@ -20,12 +20,12 @@
       "date": "2026-07-07",
       "weekday": "Mardi",
       "title": "Toulouse → Nice",
-      "subtitle": "Soirée avec le fils",
+      "subtitle": "Soirée avec Corentin",
       "leg": "approach",
       "photo": "j01-nice",
       "drive": { "km": 564, "hours": "5h55", "from": "Toulouse", "to": "Nice" },
       "stay": "nice",
-      "intro": "Départ matinal de Toulouse. Étape simple à Nice : pas de visite, vous connaissez la ville. L'objectif est de profiter de la fin de journée pour un moment baignade et un dîner avec votre fils.",
+      "intro": "Départ matinal de Toulouse. Étape simple à Nice : pas de visite, vous connaissez la ville. L'objectif est de profiter de la fin de journée pour un moment baignade et un dîner avec Corentin.",
       "schedule": [
         {
           "time": "Fin d'après-midi",
@@ -34,7 +34,7 @@
         },
         {
           "time": "Soirée",
-          "title": "Dîner avec le fils",
+          "title": "Dîner avec Corentin",
           "desc": "Le moment important de cette étape niçoise. Restaurant au choix selon ses suggestions. Nuit à Nice, départ tôt le lendemain pour Venise."
         }
       ],
