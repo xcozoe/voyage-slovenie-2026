@@ -1124,21 +1124,23 @@
   .todo {
     display: flex;
     align-items: stretch;
-    gap: 4px;
+    gap: 0;
     border-bottom: 1px solid var(--line);
   }
-  .todo__toggle {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 4px;
-    text-align: left;
-    color: var(--ink);
-    transition: opacity 200ms var(--ease);
-  }
-  .todo__check {
+
+  /* Case ronde — bouton dédié, cible plus petite et intentionnelle */
+  .todo__check-btn {
     flex-shrink: 0;
+    width: 44px;
+    padding: 14px 0 14px 4px;
+    display: grid;
+    place-items: center;
+    border-radius: 4px;
+    transition: background 180ms var(--ease);
+  }
+  .todo__check-btn:active { background: rgba(251, 246, 233, 0.06); }
+
+  .todo__check {
     width: 22px;
     height: 22px;
     border-radius: 50%;
@@ -1151,34 +1153,90 @@
     font-weight: 700;
     transition: background 180ms var(--ease), border-color 180ms var(--ease);
   }
-  .todo--done .todo__check {
+  .todo__check.is-done {
     background: var(--olive);
     border-color: var(--olive);
     color: var(--ink);
   }
-  .todo__title {
-    font-size: 15px;
-    line-height: 1.4;
+
+  /* Titre — bouton plein largeur pour entrer en édition */
+  .todo__title-btn {
     flex: 1;
     min-width: 0;
+    text-align: left;
+    padding: 14px 8px;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.4;
     word-wrap: break-word;
+    border-radius: 4px;
+    transition: background 180ms var(--ease);
   }
-  .todo--done .todo__title {
+  .todo__title-btn:active { background: rgba(251, 246, 233, 0.06); }
+
+  .todo--done .todo__title-btn {
     color: var(--ink-faint);
     text-decoration: line-through;
     text-decoration-color: var(--ink-mute);
   }
-  .todo__delete {
-    width: 36px;
-    color: var(--ink-mute);
-    font-size: 22px;
-    line-height: 1;
-    transition: color 200ms var(--ease), background 200ms var(--ease);
-    border-radius: 4px;
+
+  /* Mode édition */
+  .todo--editing { padding: 12px 0; align-items: flex-start; }
+  .todo--editing .todo__check {
+    margin: 6px 12px 0 4px;
+    opacity: 0.4;
   }
-  .todo__delete:active {
+  .todo__edit {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .todo__edit-input {
+    width: 100%;
+    background: rgba(251, 246, 233, 0.06);
+    border: 1px solid var(--coral);
+    border-radius: 6px;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.4;
+    padding: 10px 12px;
+  }
+  .todo__edit-input:focus { outline: none; border-color: var(--sand); }
+
+  .todo__edit-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .todo__edit-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+    transition: background 180ms var(--ease), border-color 180ms var(--ease), color 180ms var(--ease);
+  }
+  .todo__edit-btn:active { background: rgba(251, 246, 233, 0.08); }
+  .todo__edit-btn--save {
+    background: var(--coral);
+    border-color: var(--coral);
+    color: var(--ink);
+  }
+  .todo__edit-btn--save:active { opacity: 0.9; }
+  .todo__edit-btn--danger {
     color: var(--coral);
-    background: rgba(233, 141, 88, 0.08);
+    border-color: rgba(233, 141, 88, 0.4);
+  }
+  .todo__edit-btn--danger:active {
+    background: rgba(233, 141, 88, 0.12);
+    color: var(--ink);
   }
 
   /* =========================================================
@@ -1899,7 +1957,11 @@ function renderTodos() {
   );
 }
 
+let CURRENT_TODOS = [];
+let EDITING_ID = null;
+
 function paintTodos(items) {
+  CURRENT_TODOS = items;
   const open = items.filter(i => i.status !== 'done');
   const done = items.filter(i => i.status === 'done');
   document.getElementById('todos-counter').textContent =
@@ -1915,7 +1977,7 @@ function paintTodos(items) {
       </ul>` : `<p class="todos__empty">Rien à faire pour le moment.</p>`}
 
     ${done.length ? `
-      <details class="todos__done">
+      <details class="todos__done"${done.some(d => d.id === EDITING_ID) ? ' open' : ''}>
         <summary>${done.length} faite${done.length > 1 ? 's' : ''}</summary>
         <ul class="todos__group todos__group--done">
           ${done.map(renderTodoRow).join('')}
@@ -1923,25 +1985,94 @@ function paintTodos(items) {
       </details>` : ''}
   `;
 
+  // Toggle (case ronde uniquement)
   listEl.querySelectorAll('[data-act="toggle"]').forEach(b =>
-    b.addEventListener('click', () => toggleTodo(b.dataset.id, b.dataset.status))
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTodo(b.dataset.id, b.dataset.status);
+    })
   );
+  // Edit (clic sur le titre)
+  listEl.querySelectorAll('[data-act="edit"]').forEach(b =>
+    b.addEventListener('click', () => startEdit(b.dataset.id))
+  );
+  // Save (formulaire édition)
+  listEl.querySelectorAll('form.todo__edit').forEach(f => {
+    f.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveEdit(f.dataset.id, f.querySelector('input').value);
+    });
+  });
+  // Cancel
+  listEl.querySelectorAll('[data-act="cancel"]').forEach(b =>
+    b.addEventListener('click', cancelEdit)
+  );
+  // Delete (depuis mode édition)
   listEl.querySelectorAll('[data-act="delete"]').forEach(b =>
-    b.addEventListener('click', (e) => { e.stopPropagation(); deleteTodo(b.dataset.id); })
+    b.addEventListener('click', () => deleteTodo(b.dataset.id))
   );
+  // Escape pour annuler
+  const editInput = listEl.querySelector('.todo__edit-input');
+  if (editInput) {
+    editInput.focus();
+    editInput.setSelectionRange(editInput.value.length, editInput.value.length);
+    editInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+    });
+  }
 }
 
 function renderTodoRow(item) {
   const isDone = item.status === 'done';
+  const isEditing = item.id === EDITING_ID;
+
+  if (isEditing) {
+    return `
+      <li class="todo todo--editing" data-id="${item.id}">
+        <span class="todo__check ${isDone ? 'is-done' : ''}" aria-hidden="true">${isDone ? '✓' : ''}</span>
+        <form class="todo__edit" data-id="${item.id}">
+          <input class="todo__edit-input" type="text" value="${escapeHtml(item.title)}" maxlength="140" required>
+          <div class="todo__edit-actions">
+            <button type="submit" class="todo__edit-btn todo__edit-btn--save">Enregistrer</button>
+            <button type="button" class="todo__edit-btn" data-act="cancel">Annuler</button>
+            <button type="button" class="todo__edit-btn todo__edit-btn--danger" data-act="delete" data-id="${item.id}">Supprimer</button>
+          </div>
+        </form>
+      </li>
+    `;
+  }
+
   return `
-    <li class="todo ${isDone ? 'todo--done' : ''}">
-      <button class="todo__toggle" data-act="toggle" data-id="${item.id}" data-status="${item.status}" aria-label="${isDone ? 'Marquer à faire' : 'Marquer fait'}">
-        <span class="todo__check">${isDone ? '✓' : ''}</span>
-        <span class="todo__title">${escapeHtml(item.title)}</span>
+    <li class="todo ${isDone ? 'todo--done' : ''}" data-id="${item.id}">
+      <button class="todo__check-btn" data-act="toggle" data-id="${item.id}" data-status="${item.status}" aria-label="${isDone ? 'Marquer à faire' : 'Marquer fait'}">
+        <span class="todo__check ${isDone ? 'is-done' : ''}" aria-hidden="true">${isDone ? '✓' : ''}</span>
       </button>
-      <button class="todo__delete" data-act="delete" data-id="${item.id}" aria-label="Supprimer">×</button>
+      <button class="todo__title-btn" data-act="edit" data-id="${item.id}" aria-label="Modifier l'action">${escapeHtml(item.title)}</button>
     </li>
   `;
+}
+
+function startEdit(id) {
+  EDITING_ID = id;
+  paintTodos(CURRENT_TODOS);
+}
+
+function cancelEdit() {
+  EDITING_ID = null;
+  paintTodos(CURRENT_TODOS);
+}
+
+async function saveEdit(id, newTitle) {
+  const title = newTitle.trim();
+  if (!title) return;
+  try {
+    await updateDoc(doc(db, 'actions', id), { title });
+    EDITING_ID = null;
+    // Le snapshot va re-painter, mais on peut aussi forcer pour la fluidité
+    const idx = CURRENT_TODOS.findIndex(t => t.id === id);
+    if (idx >= 0) CURRENT_TODOS[idx] = { ...CURRENT_TODOS[idx], title };
+    paintTodos(CURRENT_TODOS);
+  } catch (err) { console.error(err); flashError(err.message); }
 }
 
 async function toggleTodo(id, currentStatus) {
@@ -1955,8 +2086,10 @@ async function toggleTodo(id, currentStatus) {
 
 async function deleteTodo(id) {
   if (!confirm('Supprimer cette action ?')) return;
-  try { await deleteDoc(doc(db, 'actions', id)); }
-  catch (err) { console.error(err); flashError(err.message); }
+  try {
+    await deleteDoc(doc(db, 'actions', id));
+    if (EDITING_ID === id) EDITING_ID = null;
+  } catch (err) { console.error(err); flashError(err.message); }
 }
 
 function flashError(msg) {
