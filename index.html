@@ -1344,6 +1344,28 @@
   }
   .leaflet-popup-content a { color: #c46a35; text-decoration: underline; }
   .leaflet-popup-tip { background: #fbf6e9; }
+
+  /* Bouton « Y aller » dans les popups Leaflet */
+  .popup-actions {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(6, 34, 41, 0.10);
+  }
+  .popup-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    background: #c46a35;
+    color: #fbf6e9 !important;
+    text-decoration: none !important;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
   .leaflet-control-attribution {
     background: rgba(6, 34, 41, 0.7) !important;
     color: var(--ink-faint) !important;
@@ -2546,6 +2568,8 @@ async function renderMap() {
     }).addTo(map);
 
     const all = L.featureGroup().addTo(map);
+    const goBtn = (lat, lng) =>
+      `<div class="popup-actions"><a class="popup-btn" href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" rel="noopener">📍 Y aller</a></div>`;
 
     // Routes en premier (pour qu'elles soient sous les marqueurs)
     // Sand pour ne pas concurrencer le code couleur stays/POIs
@@ -2560,7 +2584,7 @@ async function renderMap() {
       L.circleMarker([p.lat, p.lng], {
         radius: 7, color: '#fbf6e9', weight: 1.5,
         fillColor: '#e98d58', fillOpacity: 0.92,
-      }).bindPopup(`<b>${escapeHtml(p.name)}</b><br>${escapeHtml(p.description)}`).addTo(all);
+      }).bindPopup(`<b>${escapeHtml(p.name)}</b><br>${escapeHtml(p.description)}${goBtn(p.lat, p.lng)}`).addTo(all);
     });
 
     // Hébergements en vert avec lettre d'étape (A, B, C, … chronologique)
@@ -2576,27 +2600,63 @@ async function renderMap() {
         popupAnchor: [0, -14],
       });
       L.marker([s.lat, s.lng], { icon })
-        .bindPopup(`<b>Étape ${letter} — ${escapeHtml(s.name)}</b><br>${s.description}`, { maxWidth: 300 })
+        .bindPopup(`<b>Étape ${letter} — ${escapeHtml(s.name)}</b><br>${s.description}${goBtn(s.lat, s.lng)}`, { maxWidth: 300 })
         .addTo(all);
     });
+
+    // Géolocalisation utilisateur (cercle bleu + halo de précision)
+    let userMarker = null, accCircle = null, watchId = null;
+    if (navigator.geolocation) {
+      const onPos = (pos) => {
+        const ll = [pos.coords.latitude, pos.coords.longitude];
+        if (!userMarker) {
+          userMarker = L.circleMarker(ll, {
+            radius: 8, color: '#ffffff', weight: 2,
+            fillColor: '#1976d2', fillOpacity: 1,
+          }).bindPopup('Ma position').addTo(map);
+        } else {
+          userMarker.setLatLng(ll);
+        }
+        if (pos.coords.accuracy && pos.coords.accuracy < 5000) {
+          if (!accCircle) {
+            accCircle = L.circle(ll, {
+              radius: pos.coords.accuracy,
+              color: '#1976d2', weight: 0,
+              fillColor: '#1976d2', fillOpacity: 0.12,
+            }).addTo(map);
+          } else {
+            accCircle.setLatLng(ll);
+            accCircle.setRadius(pos.coords.accuracy);
+          }
+        }
+      };
+      const onErr = (err) => console.warn('Geolocation:', err.message);
+      navigator.geolocation.getCurrentPosition(onPos, onErr, { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+      watchId = navigator.geolocation.watchPosition(onPos, onErr, { enableHighAccuracy: true, timeout: 15000, maximumAge: 30000 });
+    }
 
     if (all.getLayers().length) {
       map.fitBounds(all.getBounds(), { padding: [40, 40] });
     }
 
-    // Recalcul des dimensions Leaflet quand le conteneur change de taille
-    // (rotation portrait/landscape, changement de viewport)
+    // Recalcul des dimensions Leaflet + cleanup géoloc à la sortie
+    let ro = null;
     if (typeof ResizeObserver !== 'undefined') {
-      const ro = new ResizeObserver(() => map.invalidateSize());
+      ro = new ResizeObserver(() => map.invalidateSize());
       ro.observe(mapEl);
-      const cleanup = () => {
-        ro.disconnect();
-        window.removeEventListener('hashchange', cleanup);
-      };
-      window.addEventListener('hashchange', cleanup);
     }
     const onOrient = () => setTimeout(() => map.invalidateSize(), 200);
     window.addEventListener('orientationchange', onOrient);
+
+    const cleanup = () => {
+      if (ro) ro.disconnect();
+      window.removeEventListener('orientationchange', onOrient);
+      if (watchId != null && navigator.geolocation) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+      window.removeEventListener('hashchange', cleanup);
+    };
+    window.addEventListener('hashchange', cleanup);
   } catch (err) {
     console.error(err);
     const mapEl = document.getElementById('leaflet-map');
