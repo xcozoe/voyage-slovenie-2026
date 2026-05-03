@@ -1260,10 +1260,11 @@
   }
   .todo-placeholder {
     list-style: none;
-    background: rgba(233, 141, 88, 0.10);
-    border: 1px dashed rgba(233, 141, 88, 0.40);
-    border-radius: 6px;
-    margin: 1px 0;
+    background: rgba(233, 141, 88, 0.06);
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    box-shadow: inset 0 2px 0 var(--coral);
+    transition: background 200ms var(--ease);
   }
 
   /* =========================================================
@@ -2195,19 +2196,29 @@ function activateDrag(row, startY) {
   const ul = row.parentNode;
   const openRows = [...ul.querySelectorAll('.todo:not(.todo--done):not(.todo--editing)')];
   const initialIndex = openRows.indexOf(row);
-  const rowHeight = row.offsetHeight;
+  const rect = row.getBoundingClientRect();
+  const rowHeight = rect.height;
+
+  // Placeholder = la "trace" qui suit la position cible dans la liste
   const placeholder = document.createElement('li');
   placeholder.className = 'todo-placeholder';
   placeholder.style.height = rowHeight + 'px';
   ul.insertBefore(placeholder, row);
-  // Sortir le row du flow normal
-  row.style.position = 'relative';
-  row.style.zIndex = '20';
+
+  // Row → position:fixed à sa coordonnée actuelle. Reste exactement
+  // là où il était quand le long-press s'est déclenché — pas de saut.
+  row.style.position = 'fixed';
+  row.style.top = rect.top + 'px';
+  row.style.left = rect.left + 'px';
+  row.style.width = rect.width + 'px';
+  row.style.margin = '0';
+  row.style.zIndex = '50';
 
   DRAG = {
     row, ul, openRows, initialIndex,
     currentIndex: initialIndex,
     startY,
+    startTop: rect.top,
     placeholder,
     rowHeight,
   };
@@ -2220,17 +2231,17 @@ function activateDrag(row, startY) {
 function onDragMove(e) {
   if (!DRAG) return;
   e.preventDefault();
-  const { row, openRows, startY, rowHeight, initialIndex, placeholder, ul } = DRAG;
+  const { row, openRows, startY, startTop, rowHeight, initialIndex, placeholder, ul } = DRAG;
   const dy = e.clientY - startY;
-  row.style.transform = `translateY(${dy}px) scale(1.02)`;
+  // Le row reste pile sous le doigt (top fixe + delta)
+  row.style.top = (startTop + dy) + 'px';
 
-  // Calcul d'index cible : combien de "rangs" parcourus
+  // Calcul d'index cible
   const offset = Math.round(dy / rowHeight);
   const targetIndex = Math.max(0, Math.min(openRows.length - 1, initialIndex + offset));
 
   if (targetIndex !== DRAG.currentIndex) {
     DRAG.currentIndex = targetIndex;
-    // Repositionne le placeholder
     const refRow = openRows[targetIndex];
     if (targetIndex > initialIndex) {
       ul.insertBefore(placeholder, refRow.nextSibling);
@@ -2249,9 +2260,13 @@ async function onDragEnd() {
   document.removeEventListener('pointercancel', onDragEnd);
   document.body.classList.remove('is-dragging-todo');
   row.classList.remove('is-dragging');
-  row.style.transform = '';
   row.style.position = '';
+  row.style.top = '';
+  row.style.left = '';
+  row.style.width = '';
+  row.style.margin = '';
   row.style.zIndex = '';
+  row.style.transform = '';
   if (placeholder?.parentNode) placeholder.parentNode.removeChild(placeholder);
   const moved = initialIndex !== currentIndex;
   DRAG = null;
