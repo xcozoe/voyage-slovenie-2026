@@ -398,23 +398,32 @@
   .action:active { background: rgba(251, 246, 233, 0.08); border-color: var(--coral); }
   .action__icon { font-size: 14px; }
   .action--accent {
+    background: var(--coral);
     border-color: var(--coral);
-    color: var(--coral);
+    color: var(--bg-deep);
+    font-weight: 700;
   }
-  .action--accent:active {
-    background: rgba(233, 141, 88, 0.12);
+  .action--accent:active { opacity: 0.88; }
+  /* Boutons marque hébergements */
+  .action--airbnb {
+    background: #FF5A5F;
+    border-color: #FF5A5F;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .action--booking {
+    background: #003B95;
+    border-color: #003B95;
+    color: #ffffff;
+    font-weight: 700;
+  }
+  .action--website {
+    background: transparent;
+    border-color: var(--line-strong);
     color: var(--ink);
   }
-  .action--ghost {
-    border-color: transparent;
-    color: var(--ink-soft);
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-  .action--ghost:active {
-    background: rgba(251, 246, 233, 0.06);
-    color: var(--ink);
-  }
+  .action--airbnb:active,
+  .action--booking:active { opacity: 0.88; }
 
   /* NOTES (par jour) --------------------------------------- */
   .notes {
@@ -992,6 +1001,13 @@
   /* STAY CARD (page hébergements) -------------------------- */
   .stay-card {
     color: var(--ink);
+    scroll-margin-top: 20px;
+    transition: outline-color 600ms var(--ease);
+    outline: 2px solid transparent;
+    outline-offset: 4px;
+  }
+  .stay-card--focused {
+    outline-color: var(--coral);
   }
   .stay-card__photo {
     display: block;
@@ -1465,6 +1481,20 @@
     text-decoration: underline;
     text-decoration-color: rgba(233, 141, 88, 0.4);
     text-underline-offset: 2px;
+  }
+  .pop-link-card {
+    display: inline-block;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--coral) !important;
+    text-decoration: none !important;
+    width: 100%;
   }
   .pop-btn {
     flex: 1;
@@ -1955,7 +1985,7 @@ function photoSrc(key, kind = 'hero') {
 const ROUTES = [
   { match: /^#?\/?$/,                 render: renderCover },
   { match: /^#?\/timeline\/?$/,       render: renderTimeline },
-  { match: /^#?\/hebergements\/?$/,   render: renderStays },
+  { match: /^#?\/hebergements(?:\/([\w-]+))?\/?$/, render: renderStays },
   { match: /^#?\/activites\/?$/,      render: renderActivities },
   { match: /^#?\/a-faire\/?$/,        render: renderTodos },
   { match: /^#?\/carte\/?$/,          render: renderMap },
@@ -2342,7 +2372,8 @@ function renderTimelineDay(d) {
   `;
 }
 
-function renderStays() {
+function renderStays(match) {
+  const focusId = match && match[1];
   const stays = Object.values(STATE.staysById);
   const totalNights = stays.reduce((s, x) => s + (x.nights || 0), 0);
   let confirmed = 0, paid = 0, toPay = 0;
@@ -2382,7 +2413,23 @@ function renderStays() {
       <div class="stays__list">${cards}</div>
     </section>
   `);
-  window.scrollTo(0, 0);
+  if (focusId) {
+    // window.scrollTo(offsetTop) plus fiable que scrollIntoView selon
+    // les contextes Safari iOS / popup-fermeture
+    const scrollToCard = () => {
+      const el = document.getElementById('stay-card-' + focusId);
+      if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 16;
+      console.log('[stays] scroll to', focusId, 'top=', top);
+      window.scrollTo({ top, behavior: 'auto' });
+      el.classList.add('stay-card--focused');
+      setTimeout(() => el.classList.remove('stay-card--focused'), 1800);
+    };
+    requestAnimationFrame(() => requestAnimationFrame(scrollToCard));
+    setTimeout(scrollToCard, 600);
+  } else {
+    window.scrollTo(0, 0);
+  }
 }
 
 function renderStayPageCard(stay) {
@@ -2465,29 +2512,26 @@ function renderStayPageCard(stay) {
 
   const actions = [];
   if (stay.coords) {
-    const url = `https://www.google.com/maps/search/?api=1&query=${stay.coords[0]},${stay.coords[1]}`;
-    actions.push(`<a class="action" href="${url}" target="_blank" rel="noopener"><span class="action__icon">📍</span>Itinéraire</a>`);
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${stay.coords[0]},${stay.coords[1]}`;
+    actions.push(`<a class="action action--accent" href="${url}" target="_blank" rel="noopener">📍 Y aller</a>`);
   }
   if (stay.phone) {
-    actions.push(`<a class="action" href="${telLink(stay.phone)}"><span class="action__icon">📞</span>Appeler</a>`);
+    actions.push(`<a class="action" href="${telLink(stay.phone)}">📞 Appeler</a>`);
   }
   if (stay.listing) {
-    const labels = { airbnb: 'Voir sur Airbnb', booking: 'Voir sur Booking', website: 'Site officiel' };
-    const label = labels[stay.listing.type] || 'Voir l\'annonce';
-    actions.push(`<a class="action action--accent" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener"><span class="action__icon">↗</span>${label}</a>`);
-  }
-  if (stay.email) {
-    actions.push(`<a class="action" href="mailto:${escapeHtml(stay.email)}"><span class="action__icon">✉</span>Email</a>`);
-  }
-  if (stay.listing && dayN) {
-    actions.push(`<a class="action action--ghost" href="#/jour/${dayN}"><span class="action__icon">→</span>Jour ${dayN}</a>`);
+    const conf = ({
+      airbnb:  { cls: 'action--airbnb',  text: 'Airbnb' },
+      booking: { cls: 'action--booking', text: 'Booking.com' },
+      website: { cls: 'action--website', text: 'Site officiel ↗' },
+    })[stay.listing.type] || { cls: 'action--accent', text: 'Voir l\'annonce ↗' };
+    actions.push(`<a class="action ${conf.cls}" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">${conf.text}</a>`);
   }
   const actionsHtml = actions.length
     ? `<div class="stay-card__actions">${actions.join('')}</div>`
     : '';
 
   return `
-    <article class="stay-card ${cls}">
+    <article class="stay-card ${cls}" id="stay-card-${stay.id}" data-stay-id="${stay.id}">
       ${photoHtml}
       <div class="stay-card__body">
         ${head}
@@ -2876,6 +2920,7 @@ function renderStayPopup(stay, kmlItem, letter) {
       <div class="pop-body">
         ${detailsHtml ? `<dl class="pop-details">${detailsHtml}</dl>` : ''}
         ${notesHtml}
+        ${stay && stay.id ? `<a class="pop-link-card" href="#/hebergements/${stay.id}">Voir la fiche complète →</a>` : ''}
       </div>
       <footer class="pop-footer">
         <a class="pop-btn pop-btn--primary" href="${dirUrl(lat, lng)}" target="_blank" rel="noopener">📍 Y aller</a>
