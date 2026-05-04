@@ -43,7 +43,8 @@
       "bookedBy": "Elsa",
       "bookedByEmail": "elsa.poixjover@gmail.com",
       "amenities": ["WiFi gratuit", "climatisation indépendante", "baignoire d'hydromassage", "minibar", "TV satellite", "coffre-fort"],
-      "listing": { "type": "website", "url": "https://palazzoodoni.com" }
+      "listing": { "type": "website", "url": "https://palazzoodoni.com" },
+      "notes": "Suite familiale de plain-pied à Santa Croce, 10 min à pied du Pont du Rialto. Stationner au Tronchetto puis 5 min de vaporetto."
     },
     {
       "id": "piran",
@@ -72,7 +73,8 @@
         "remainingDue": "2026-06-25"
       },
       "bookedBy": "Rémi",
-      "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/925230185667649945" }
+      "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/925230185667649945" },
+      "notes": "Cœur du centre médiéval, à 50 m de la Place Tartini et des rochers de Punta pour la baignade. Stationnement public à l'entrée de la vieille ville."
     },
     {
       "id": "postojna",
@@ -132,7 +134,8 @@
       },
       "bookedBy": "Rémi",
       "amenities": ["boîte à clé sécurisée", "centre historique"],
-      "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/1199822276290029517" }
+      "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/1199822276290029517" },
+      "notes": "Centre piéton, à 5 min du Triple Pont et du marché central de Plečnik. Quartier de bars à vin et de bonnes adresses, parfait pour explorer à pied."
     },
     {
       "id": "bled",
