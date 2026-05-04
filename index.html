@@ -2494,7 +2494,19 @@ function renderStayCard(stay) {
 // =========================================================
 // SWIPE entre jours
 // =========================================================
+let SWIPE_HANDLERS = null;
+function detachSwipe() {
+  if (!SWIPE_HANDLERS) return;
+  const { container, onStart, onMove, onEnd, onKey } = SWIPE_HANDLERS;
+  container.removeEventListener('touchstart', onStart);
+  container.removeEventListener('touchmove',  onMove);
+  container.removeEventListener('touchend',   onEnd);
+  document.removeEventListener('keydown', onKey);
+  SWIPE_HANDLERS = null;
+}
+
 function attachSwipe(currentN) {
+  detachSwipe(); // jamais empiler — désactive complètement hors vue jour
   const container = document.getElementById('app');
   let startX = 0, startY = 0, tracking = false, locked = null;
   const THRESHOLD = 60;
@@ -2520,6 +2532,8 @@ function attachSwipe(currentN) {
   function onEnd(e) {
     if (!tracking) return;
     tracking = false;
+    // Garde : si on a quitté la vue jour entre-temps (carte, etc.), on ignore
+    if (!/^#?\/jour\/\d+/.test(location.hash)) return;
     const t = (e.changedTouches ? e.changedTouches[0] : e);
     const dx = t.clientX - startX;
     const dy = t.clientY - startY;
@@ -2528,18 +2542,23 @@ function attachSwipe(currentN) {
     if (dx < 0 && currentN < STATE.days.length) location.hash = `#/jour/${currentN + 1}`;
     if (dx > 0 && currentN > 1)                 location.hash = `#/jour/${currentN - 1}`;
   }
+  function onKey(e) {
+    if (!/^#?\/jour\/\d+/.test(location.hash)) return;
+    if (e.key === 'ArrowRight' && currentN < STATE.days.length) location.hash = `#/jour/${currentN + 1}`;
+    if (e.key === 'ArrowLeft'  && currentN > 1)                 location.hash = `#/jour/${currentN - 1}`;
+  }
 
   container.addEventListener('touchstart', onStart, { passive: true });
   container.addEventListener('touchmove',  onMove,  { passive: true });
   container.addEventListener('touchend',   onEnd,   { passive: true });
-
-  // Clavier (desktop)
-  function onKey(e) {
-    if (e.key === 'ArrowRight' && currentN < STATE.days.length) location.hash = `#/jour/${currentN + 1}`;
-    if (e.key === 'ArrowLeft'  && currentN > 1)                 location.hash = `#/jour/${currentN - 1}`;
-  }
-  document.addEventListener('keydown', onKey, { once: true });
+  document.addEventListener('keydown', onKey);
+  SWIPE_HANDLERS = { container, onStart, onMove, onEnd, onKey };
 }
+
+// Détache le swipe à chaque navigation vers une route hors vue jour
+window.addEventListener('hashchange', () => {
+  if (!/^#?\/jour\/\d+/.test(location.hash)) detachSwipe();
+});
 
 // =========================================================
 // STUBS — Cover, Timeline, Hébergements (à refaire après validation jour)
