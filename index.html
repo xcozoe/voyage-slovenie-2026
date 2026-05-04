@@ -1106,6 +1106,43 @@
     color: var(--bg-deep);
     background: rgba(233, 141, 88, 0.92);
   }
+  .stay-card__listing {
+    position: absolute;
+    bottom: 14px;
+    right: calc(env(safe-area-inset-right, 0px) + 14px);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none !important;
+    border: 1px solid transparent;
+    transition: opacity 180ms var(--ease), transform 180ms var(--ease);
+  }
+  .stay-card__listing:active { opacity: 0.85; transform: scale(0.97); }
+  .stay-card__listing.is-airbnb {
+    background: #FF5A5F;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(255, 90, 95, 0.45);
+  }
+  .stay-card__listing.is-booking {
+    background: #003B95;
+    color: #ffffff !important;
+    box-shadow: 0 2px 10px rgba(0, 59, 149, 0.45);
+  }
+  .stay-card__listing.is-website {
+    background: rgba(6, 34, 41, 0.55);
+    color: var(--ink) !important;
+    border-color: var(--line);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
 
   .stay-card__body {
     flex: 1 1 auto;
@@ -1154,6 +1191,16 @@
     text-decoration: underline;
     text-decoration-color: rgba(233, 141, 88, 0.4);
     text-underline-offset: 2px;
+  }
+  .stay-card__link-block {
+    display: inline-block;
+    line-height: 1.4;
+  }
+  .stay-card__link-arrow {
+    color: var(--coral);
+    margin-left: 6px;
+    font-size: 11px;
+    letter-spacing: 0;
   }
   .stay-card__meta dt {
     font-family: 'Inter', sans-serif;
@@ -1537,6 +1584,30 @@
     font-size: 11px;
     color: var(--ink-soft);
     letter-spacing: 0.06em;
+  }
+  .sheet__listing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 22px;
+    padding: 14px 20px;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none !important;
+    transition: opacity 180ms var(--ease);
+  }
+  .sheet__listing:active { opacity: 0.88; }
+  .sheet__listing--airbnb  { background: #FF5A5F; color: #ffffff !important; }
+  .sheet__listing--booking { background: #003B95; color: #ffffff !important; }
+  .sheet__listing--website {
+    background: transparent;
+    color: var(--ink) !important;
+    border: 1px solid var(--line-strong);
   }
 
   /* =========================================================
@@ -2750,6 +2821,15 @@ function renderStayPageCard(stay) {
     heroSrc   = photoKey ? photoSrc(photoKey, 'hero')   : null;
   }
 
+  const listingPill = stay.listing && stay.listing.url ? (() => {
+    const conf = ({
+      airbnb:  { cls: 'is-airbnb',  text: 'Airbnb' },
+      booking: { cls: 'is-booking', text: 'Booking' },
+      website: { cls: 'is-website', text: 'Site officiel' },
+    })[stay.listing.type] || { cls: 'is-website', text: 'Annonce' };
+    return `<a class="stay-card__listing ${conf.cls}" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">${conf.text} ↗</a>`;
+  })() : '';
+
   const photoHtml = mobileSrc ? `
     <figure class="stay-card__photo">
       <picture>
@@ -2758,6 +2838,7 @@ function renderStayPageCard(stay) {
       </picture>
       <span class="stay-card__nights">${nightsLabel}</span>
       <span class="stay-card__status">${statusLabel}</span>
+      ${listingPill}
     </figure>` : '';
 
   const head = `
@@ -2778,7 +2859,16 @@ function renderStayPageCard(stay) {
       const tel = stay.phone.replace(/\s/g, '');
       meta.push({ k: 'Téléphone', v: `<a class="stay-card__link" href="tel:${escapeHtml(tel)}">${escapeHtml(stay.phone)}</a>` });
     }
-    if (stay.address) meta.push({ k: 'Adresse', v: escapeHtml(stay.address), full: true });
+    if (stay.address) {
+      const dir = stay.coords
+        ? `https://www.google.com/maps/dir/?api=1&destination=${stay.coords[0]},${stay.coords[1]}`
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stay.address)}`;
+      meta.push({
+        k: 'Adresse <span class="stay-card__link-arrow">↗</span>',
+        v: `<a class="stay-card__link stay-card__link-block" href="${escapeHtml(dir)}" target="_blank" rel="noopener">${escapeHtml(stay.address)}</a>`,
+        full: true,
+      });
+    }
     if (meta.length) {
       metaHtml = `<dl class="stay-card__meta">${
         meta.map(d => `<div${d.full ? ' class="stay-card__meta-full"' : ''}><dt>${d.k}</dt><dd>${d.v}</dd></div>`).join('')
@@ -2810,25 +2900,10 @@ function renderStayPageCard(stay) {
     ? `<p class="stay-card__notes">${escapeHtml(stay.notes)}</p>`
     : '';
 
-  const actions = [];
-  if (stay.coords) {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${stay.coords[0]},${stay.coords[1]}`;
-    actions.push(`<a class="action action--accent" href="${url}" target="_blank" rel="noopener">📍 Y aller</a>`);
-  }
-  if (stay.phone) {
-    actions.push(`<a class="action" href="${telLink(stay.phone)}">📞 Appeler</a>`);
-  }
-  if (stay.listing) {
-    const conf = ({
-      airbnb:  { cls: 'action--airbnb',  text: 'Airbnb' },
-      booking: { cls: 'action--booking', text: 'Booking.com' },
-      website: { cls: 'action--website', text: 'Site officiel ↗' },
-    })[stay.listing.type] || { cls: 'action--accent', text: 'Voir l\'annonce ↗' };
-    actions.push(`<a class="action ${conf.cls}" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">${conf.text}</a>`);
-  }
-  const actionsHtml = actions.length
-    ? `<div class="stay-card__actions">${actions.join('')}</div>`
-    : '';
+  // Plus de boutons d'action en bas : adresse + téléphone sont
+  // cliquables inline, et le bouton annonce a migré dans la sheet
+  // « Réservation » pour regrouper tout le contexte de la résa.
+  const actionsHtml = '';
 
   return `
     <article class="stay-card ${cls}" id="stay-card-${stay.id}" data-stay-id="${stay.id}">
