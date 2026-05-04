@@ -970,7 +970,7 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 0;
-    margin: 28px var(--pad-x) 0;
+    margin: 32px 0 0;
     border-top: 1px solid var(--line-strong);
     border-bottom: 1px solid var(--line-strong);
   }
@@ -2634,22 +2634,21 @@ function renderStays(match) {
         <a class="timeline__back" href="#/">Retour</a>
         <div class="timeline__kicker">Les hébergements</div>
         <h1 class="timeline__title">${totalNights} nuits,<br><em>${stays.length} étapes</em></h1>
+        <dl class="stays__summary">
+          <div>
+            <dt>Réservés</dt>
+            <dd>${confirmed}<small>/${stays.length}</small></dd>
+          </div>
+          <div>
+            <dt>Payé</dt>
+            <dd>${Math.round(paid)}<small> €</small></dd>
+          </div>
+          <div>
+            <dt>À régler</dt>
+            <dd>${Math.round(toPay)}<small> €</small></dd>
+          </div>
+        </dl>
       </header>
-
-      <dl class="stays__summary">
-        <div>
-          <dt>Réservés</dt>
-          <dd>${confirmed}<small>/${stays.length}</small></dd>
-        </div>
-        <div>
-          <dt>Payé</dt>
-          <dd>${Math.round(paid)}<small> €</small></dd>
-        </div>
-        <div>
-          <dt>À régler</dt>
-          <dd>${Math.round(toPay)}<small> €</small></dd>
-        </div>
-      </dl>
 
       <div class="stays__list">${cards}</div>
     </section>
