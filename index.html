@@ -327,10 +327,28 @@
   /* STAY CARD ---------------------------------------------- */
   .stay {
     position: relative;
+    display: block;
     border: 1px solid var(--line-strong);
     border-radius: 4px;
     padding: 22px;
+    padding-right: 40px;
     background: rgba(251, 246, 233, 0.03);
+    color: var(--ink);
+    text-decoration: none !important;
+    transition: background 200ms var(--ease), border-color 200ms var(--ease);
+  }
+  .stay:active {
+    background: rgba(251, 246, 233, 0.06);
+    border-color: var(--coral);
+  }
+  .stay::after {
+    content: '→';
+    position: absolute;
+    top: 22px;
+    right: 18px;
+    color: var(--ink-faint);
+    font-size: 18px;
+    line-height: 1;
   }
   .stay__status {
     display: inline-block;
@@ -2525,31 +2543,14 @@ function renderStayCard(stay) {
   const statusLabel = isConfirmed ? 'Réservé' : 'À réserver';
   const cls = isConfirmed ? 'stay--confirmed' : 'stay--tbd';
 
-  const actions = [];
-  if (stay.coords) {
-    const url = `https://www.google.com/maps/search/?api=1&query=${stay.coords[0]},${stay.coords[1]}`;
-    actions.push(`<a class="action" href="${url}" target="_blank" rel="noopener"><span class="action__icon">📍</span>Itinéraire</a>`);
-  }
-  if (stay.phone) {
-    actions.push(`<a class="action" href="${telLink(stay.phone)}"><span class="action__icon">📞</span>Appeler</a>`);
-  }
-  if (stay.website) {
-    actions.push(`<a class="action" href="${escapeHtml(stay.website)}" target="_blank" rel="noopener"><span class="action__icon">↗</span>Site</a>`);
-  }
-  if (stay.email) {
-    actions.push(`<a class="action" href="mailto:${escapeHtml(stay.email)}"><span class="action__icon">✉</span>Email</a>`);
-  }
-
   const meta = [];
   if (stay.checkin)  meta.push(['Check-in',  stay.checkin]);
   if (stay.checkout) meta.push(['Check-out', stay.checkout]);
-  if (isConfirmed && stay.host) meta.push(['Hôte', stay.host]);
-  if (isConfirmed && stay.confirmation) meta.push(['Réf.', stay.confirmation]);
 
   return `
     <section class="day__stay">
       <h2 class="section-title">Nuit à ${escapeHtml(stay.city)}</h2>
-      <div class="stay ${cls}">
+      <a class="stay ${cls}" href="#/hebergements/${stay.id}" aria-label="Voir la fiche hébergement">
         <span class="stay__status">${statusLabel}</span>
         ${stay.name
           ? `<h3 class="stay__name">${escapeHtml(stay.name)}</h3>
@@ -2558,9 +2559,7 @@ function renderStayCard(stay) {
              <p class="stay__city">Hébergement à finaliser</p>`
         }
         ${meta.length ? `<dl class="stay__meta">${meta.map(([k,v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
-        ${stay.notes ? `<p class="stay__notes">${escapeHtml(stay.notes)}</p>` : ''}
-        ${actions.length ? `<div class="stay__actions">${actions.join('')}</div>` : ''}
-      </div>
+      </a>
     </section>
   `;
 }
