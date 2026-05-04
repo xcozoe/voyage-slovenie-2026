@@ -3416,9 +3416,8 @@ function renderStayPopup(stay, kmlItem, letter) {
 
   const details = [];
   if (stay) {
-    if (stay.checkin)      details.push({ k: 'Check-in',  v: escapeHtml(stay.checkin) });
-    if (stay.checkout)     details.push({ k: 'Check-out', v: escapeHtml(stay.checkout) });
-    if (stay.confirmation) details.push({ k: 'Référence', v: escapeHtml(stay.confirmation) });
+    if (stay.checkin)  details.push({ k: 'Check-in',  v: escapeHtml(stay.checkin) });
+    if (stay.checkout) details.push({ k: 'Check-out', v: escapeHtml(stay.checkout) });
     if (stay.phone) {
       const tel = stay.phone.replace(/\s/g, '');
       details.push({
@@ -3426,23 +3425,22 @@ function renderStayPopup(stay, kmlItem, letter) {
         v: `<a class="pop-link" href="tel:${escapeHtml(tel)}">${escapeHtml(stay.phone)}</a>`,
       });
     }
-    if (stay.address) details.push({ k: 'Adresse', v: escapeHtml(stay.address), full: true });
+    if (stay.address) {
+      const dir = stay.coords
+        ? `https://www.google.com/maps/dir/?api=1&destination=${stay.coords[0]},${stay.coords[1]}`
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stay.address)}`;
+      details.push({
+        k: 'Adresse',
+        v: `<a class="pop-link" href="${escapeHtml(dir)}" target="_blank" rel="noopener">${escapeHtml(stay.address)}</a>`,
+        full: true,
+      });
+    }
   }
   const detailsHtml = details.map(d =>
     `<div class="pop-detail${d.full ? ' pop-detail--full' : ''}"><dt>${d.k}</dt><dd>${d.v}</dd></div>`
   ).join('');
 
   const notesHtml = stay && stay.notes ? `<p class="pop-notes">${escapeHtml(stay.notes)}</p>` : '';
-
-  let listingBtn = '';
-  if (stay && stay.listing && stay.listing.url) {
-    const conf = ({
-      airbnb:  { cls: 'pop-btn--airbnb',  text: 'Airbnb' },
-      booking: { cls: 'pop-btn--booking', text: 'Booking.com' },
-      website: { cls: 'pop-btn--website', text: 'Site officiel ↗' },
-    })[stay.listing.type] || { cls: 'pop-btn--website', text: 'Voir l\'annonce ↗' };
-    listingBtn = `<a class="pop-btn ${conf.cls}" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">${conf.text}</a>`;
-  }
 
   return `
     <div class="pop-card">
@@ -3459,10 +3457,6 @@ function renderStayPopup(stay, kmlItem, letter) {
         ${notesHtml}
         ${stay && stay.id ? `<a class="pop-link-card" href="#/hebergements/${stay.id}">Voir la fiche complète →</a>` : ''}
       </div>
-      <footer class="pop-footer">
-        <a class="pop-btn pop-btn--primary" href="${dirUrl(lat, lng)}" target="_blank" rel="noopener">📍 Y aller</a>
-        ${listingBtn}
-      </footer>
     </div>
   `;
 }
