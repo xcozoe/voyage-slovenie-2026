@@ -1107,42 +1107,36 @@
     color: var(--bg-deep);
     background: rgba(233, 141, 88, 0.92);
   }
+  .stay-card__city-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
   .stay-card__listing {
-    position: absolute;
-    bottom: 14px;
-    right: calc(env(safe-area-inset-right, 0px) + 14px);
-    z-index: 2;
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 7px 13px;
+    padding: 5px 11px;
     border-radius: 999px;
     font-family: 'Inter', sans-serif;
-    font-size: var(--fz-micro);
+    font-size: 10px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     font-weight: 700;
     text-decoration: none !important;
     border: 1px solid transparent;
+    flex-shrink: 0;
     transition: opacity 180ms var(--ease), transform 180ms var(--ease);
   }
   .stay-card__listing:active { opacity: 0.85; transform: scale(0.97); }
-  .stay-card__listing.is-airbnb {
-    background: #FF5A5F;
-    color: #ffffff !important;
-    box-shadow: 0 2px 10px rgba(255, 90, 95, 0.45);
-  }
-  .stay-card__listing.is-booking {
-    background: #003B95;
-    color: #ffffff !important;
-    box-shadow: 0 2px 10px rgba(0, 59, 149, 0.45);
-  }
+  .stay-card__listing.is-airbnb  { background: #FF5A5F; color: #ffffff !important; }
+  .stay-card__listing.is-booking { background: #003B95; color: #ffffff !important; }
   .stay-card__listing.is-website {
-    background: rgba(6, 34, 41, 0.55);
+    background: rgba(251, 246, 233, 0.10);
     color: var(--ink) !important;
     border-color: var(--line);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
   }
 
   .stay-card__body {
@@ -2828,7 +2822,7 @@ function renderStayPageCard(stay) {
     const conf = ({
       airbnb:  { cls: 'is-airbnb',  text: 'Airbnb' },
       booking: { cls: 'is-booking', text: 'Booking' },
-      website: { cls: 'is-website', text: 'Site officiel' },
+      website: { cls: 'is-website', text: 'Site' },
     })[stay.listing.type] || { cls: 'is-website', text: 'Annonce' };
     return `<a class="stay-card__listing ${conf.cls}" href="${escapeHtml(stay.listing.url)}" target="_blank" rel="noopener">${conf.text} ↗</a>`;
   })() : '';
@@ -2841,12 +2835,14 @@ function renderStayPageCard(stay) {
       </picture>
       <span class="stay-card__nights">${nightsLabel}</span>
       <span class="stay-card__status">${statusLabel}</span>
-      ${listingPill}
     </figure>` : '';
 
   const head = `
     <header class="stay-card__head">
-      <div class="stay-card__city">${escapeHtml(stay.city)} · ${escapeHtml(stay.country)}</div>
+      <div class="stay-card__city-row">
+        <span class="stay-card__city">${escapeHtml(stay.city)} · ${escapeHtml(stay.country)}</span>
+        ${listingPill}
+      </div>
       <h2 class="stay-card__name">${escapeHtml(stay.name || 'À réserver')}</h2>
       <p class="stay-card__dates">${formatRange(stay.arrival, stay.departure)}</p>
     </header>
