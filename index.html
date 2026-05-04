@@ -1350,26 +1350,42 @@
     to   { transform: translateY(0); }
   }
   .sheet__handle {
-    width: 40px;
-    height: 4px;
+    width: 48px;
+    height: 5px;
     border-radius: 999px;
-    background: rgba(251, 246, 233, 0.20);
-    margin: 0 auto 16px;
+    background: rgba(251, 246, 233, 0.30);
+    margin: 0 auto 18px;
+    cursor: grab;
+    touch-action: none;
   }
+  .sheet__handle-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    cursor: grab;
+    touch-action: none;
+  }
+  .sheet__handle-zone:active { cursor: grabbing; }
   .sheet__close {
     position: absolute;
-    top: 14px;
+    top: 12px;
     right: 14px;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: rgba(251, 246, 233, 0.10);
+    background: rgba(251, 246, 233, 0.16);
     color: var(--ink);
     font-size: 22px;
     line-height: 1;
+    border: 1px solid var(--line);
+    z-index: 2;
+    transition: background 180ms var(--ease);
   }
+  .sheet__close:active { background: rgba(251, 246, 233, 0.28); }
   .sheet__head { padding-right: 36px; margin-bottom: 22px; }
   .sheet__kicker {
     font-family: 'Inter', sans-serif;
@@ -2871,6 +2887,7 @@ function paintBookingSheet() {
 
   el.innerHTML = `
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet__handle-zone" data-act="sheet-handle"></div>
       <div class="sheet__handle"></div>
       <button class="sheet__close" type="button" data-act="sheet-close" aria-label="Fermer">×</button>
       <div class="sheet__head">
@@ -2888,6 +2905,53 @@ function paintBookingSheet() {
     if (e.target === el || e.target.closest('[data-act="sheet-close"]')) closeBookingSheet();
   });
   document.addEventListener('keydown', escClose, { once: true });
+
+  // Swipe-down sur la zone handle pour fermer
+  const sheetEl = el.querySelector('.sheet');
+  const handleZone = el.querySelector('[data-act="sheet-handle"]');
+  if (sheetEl && handleZone) attachSheetSwipe(sheetEl, handleZone);
+}
+
+function attachSheetSwipe(sheet, handle) {
+  let startY = null;
+  let lastY = null;
+  let lastTime = null;
+
+  const onMove = (e) => {
+    if (startY === null) return;
+    const y = e.clientY;
+    const dy = y - startY;
+    if (dy > 0) sheet.style.transform = `translateY(${dy}px)`;
+    lastY = y;
+    lastTime = Date.now();
+  };
+  const onUp = (e) => {
+    if (startY === null) return;
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    document.removeEventListener('pointercancel', onUp);
+    const dy = e.clientY - startY;
+    const h = sheet.getBoundingClientRect().height;
+    const velocity = (e.clientY - lastY) / Math.max(1, Date.now() - lastTime); // px/ms
+    startY = null;
+    if (dy > h * 0.22 || velocity > 0.6) {
+      sheet.style.transition = 'transform 200ms var(--ease)';
+      sheet.style.transform = `translateY(${h}px)`;
+      setTimeout(closeBookingSheet, 180);
+    } else {
+      sheet.style.transition = 'transform 220ms cubic-bezier(.2, .65, .2, 1)';
+      sheet.style.transform = 'translateY(0)';
+    }
+  };
+  handle.addEventListener('pointerdown', (e) => {
+    startY = e.clientY;
+    lastY = e.clientY;
+    lastTime = Date.now();
+    sheet.style.transition = 'none';
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+    document.addEventListener('pointercancel', onUp);
+  });
 }
 function escClose(e) { if (e.key === 'Escape') closeBookingSheet(); }
 
