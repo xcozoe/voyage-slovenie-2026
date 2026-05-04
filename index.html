@@ -1011,6 +1011,7 @@
 
   /* STAY CARD (page hébergements) — pleine viewport avec snap */
   .stay-card {
+    position: relative;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     min-height: 100dvh;
@@ -1021,6 +1022,26 @@
     outline: 2px solid transparent;
     outline-offset: -8px;
   }
+  .stay-card__back {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    left: calc(env(safe-area-inset-left, 0px) + 14px);
+    z-index: 3;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(6, 34, 41, 0.55);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    color: var(--ink);
+    font-size: 20px;
+    line-height: 1;
+    border: 1px solid var(--line);
+    transition: background 200ms var(--ease);
+  }
+  .stay-card__back:active { background: rgba(6, 34, 41, 0.78); }
   .stay-card--focused { outline-color: var(--coral); }
 
   .stay-card__photo {
@@ -1046,20 +1067,21 @@
   }
   .stay-card__nights {
     position: absolute;
-    top: 14px;
-    right: 14px;
-    z-index: 1;
+    top: calc(env(safe-area-inset-top, 0px) + 14px);
+    right: calc(env(safe-area-inset-right, 0px) + 14px);
+    z-index: 2;
     font-family: 'Inter', sans-serif;
     font-size: var(--fz-micro);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     font-weight: 600;
     color: var(--ink);
-    background: rgba(6, 34, 41, 0.40);
-    padding: 6px 12px;
+    background: rgba(6, 34, 41, 0.55);
+    padding: 7px 13px;
     border-radius: 999px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line);
   }
   .stay-card__status {
     position: absolute;
@@ -2790,6 +2812,7 @@ function renderStayPageCard(stay) {
 
   return `
     <article class="stay-card ${cls}" id="stay-card-${stay.id}" data-stay-id="${stay.id}">
+      <a class="stay-card__back" href="#/" aria-label="Retour à l'accueil">←</a>
       ${photoHtml}
       <div class="stay-card__body">
         ${head}
