@@ -2692,7 +2692,7 @@ const ROUTES = [
   { match: /^#?\/timeline\/?$/,       render: renderTimeline },
   { match: /^#?\/hebergements(?:\/([\w-]+))?\/?$/, render: renderStays },
   { match: /^#?\/activites\/?$/,      render: renderActivities },
-  { match: /^#?\/gestion(?:\/(\w+))?\/?$/, render: renderGestion },
+  { match: /^#?\/gestion(?:\/([\w-]+))?\/?$/, render: renderGestion },
   { match: /^#?\/a-faire\/?$/,        render: () => renderGestion([null, 'a-faire']) },
   { match: /^#?\/carte\/?$/,          render: renderMap },
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
@@ -2716,7 +2716,7 @@ function startActionsSubscription() {
       CURRENT_TODOS = items;
       OPEN_ACTIONS_COUNT = items.filter(t => t.status !== 'done').length;
       updateActionsBadge();
-      if (location.hash.startsWith('#/a-faire')) paintTodos(items);
+      if (/^#?\/(a-faire|gestion\/a-faire)/.test(location.hash)) paintTodos(items);
     },
     (err) => { console.error(err); flashError('Sync impossible : ' + err.code); }
   );
