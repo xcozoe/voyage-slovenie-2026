@@ -1929,6 +1929,339 @@
   .leaflet-control-attribution a { color: var(--coral) !important; }
 
   /* =========================================================
+     PAGE GESTION (tabs À faire / Budget)
+     ========================================================= */
+  .gestion {
+    padding: calc(env(safe-area-inset-top, 0px) + 28px) var(--pad-x) 110px;
+  }
+  .gestion__head { margin-bottom: 16px; }
+  .gestion__title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(40px, 11vw, 56px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 14px 0 12px;
+  }
+  .gestion__title em { font-style: italic; color: var(--sand); }
+  .gestion__lead {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+  }
+  .gestion__tabs {
+    display: flex;
+    gap: 4px;
+    margin-top: 22px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(251, 246, 233, 0.06);
+    border: 1px solid var(--line);
+  }
+  .gestion__tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--ink-soft);
+    transition: background 200ms var(--ease), color 200ms var(--ease);
+    position: relative;
+  }
+  .gestion__tab.is-active {
+    background: var(--coral);
+    color: var(--bg-deep);
+  }
+  .gestion__tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-left: 6px;
+    border-radius: 999px;
+    background: rgba(251, 246, 233, 0.18);
+    color: var(--ink);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 18px;
+  }
+  .gestion__tab.is-active .gestion__tab-badge {
+    background: var(--bg-deep);
+    color: var(--coral);
+  }
+
+  /* =========================================================
+     BUDGET — onglet
+     ========================================================= */
+  .budget__advances {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .budget__advance {
+    padding: 18px 14px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    text-align: center;
+    background: rgba(251, 246, 233, 0.04);
+  }
+  .budget__advance-name {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .budget__advance-amount {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .budget__advance-amount small {
+    font-size: 14px;
+    color: var(--ink-faint);
+    margin-left: 2px;
+    font-style: italic;
+  }
+  .budget__advance-auto {
+    display: block;
+    margin-top: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+  .budget__balance {
+    margin-top: 14px;
+    padding: 18px;
+    border-radius: 8px;
+    text-align: center;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.4;
+  }
+  .budget__balance strong {
+    font-weight: 500;
+    color: var(--coral);
+    font-size: 20px;
+  }
+  .budget__balance-who { font-weight: 500; }
+  .budget__balance.is-due {
+    background: rgba(233, 141, 88, 0.12);
+    border: 1px solid rgba(233, 141, 88, 0.30);
+    color: var(--ink);
+  }
+  .budget__balance.is-even {
+    background: rgba(122, 150, 87, 0.14);
+    border: 1px solid rgba(122, 150, 87, 0.35);
+    color: var(--ink);
+  }
+  .budget__total {
+    margin-top: 14px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .budget__total strong {
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .budget__add-btn {
+    display: block;
+    width: 100%;
+    margin: 24px 0 16px;
+    padding: 14px 18px;
+    border-radius: 999px;
+    background: var(--coral);
+    color: var(--bg-deep);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: opacity 180ms var(--ease);
+    box-shadow: 0 4px 14px rgba(233, 141, 88, 0.35);
+  }
+  .budget__add-btn:active { opacity: 0.88; }
+  .budget__list-title {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 600;
+    margin: 24px 0 10px;
+  }
+  .budget__items { display: flex; flex-direction: column; gap: 6px; }
+  .budget__empty {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 6px;
+    background: rgba(251, 246, 233, 0.04);
+    color: var(--ink-faint);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .budget__item-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: rgba(251, 246, 233, 0.04);
+    border: 1px solid var(--line);
+    text-align: left;
+    color: var(--ink);
+    transition: background 180ms var(--ease);
+  }
+  .budget__item-btn:active { background: rgba(251, 246, 233, 0.08); }
+  .budget__item-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .budget__item-text { flex: 1; min-width: 0; }
+  .budget__item-label {
+    display: block;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .budget__item-text small {
+    display: block;
+    margin-top: 2px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+  }
+  .budget__item-amount {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  /* Expense sheet — formulaire */
+  .expense-form { display: flex; flex-direction: column; gap: 16px; }
+  .expense-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .expense-field > span {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .expense-field input[type="text"],
+  .expense-field input[type="number"],
+  .expense-field input[type="date"] {
+    background: rgba(251, 246, 233, 0.06);
+    border: 1px solid var(--line-strong);
+    border-radius: 6px;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    padding: 12px 14px;
+  }
+  .expense-field input:focus { outline: none; border-color: var(--coral); }
+  .expense-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .expense-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: rgba(251, 246, 233, 0.04);
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    transition: background 180ms var(--ease), border-color 180ms var(--ease), color 180ms var(--ease);
+  }
+  .expense-chip.is-active {
+    background: var(--chip-color, var(--coral));
+    border-color: var(--chip-color, var(--coral));
+    color: #ffffff;
+  }
+  .expense-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .expense-btn {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--line-strong);
+    background: rgba(251, 246, 233, 0.06);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: opacity 180ms var(--ease);
+  }
+  .expense-btn:active { opacity: 0.85; }
+  .expense-btn--save {
+    background: var(--coral);
+    border-color: var(--coral);
+    color: var(--bg-deep);
+  }
+  .expense-btn--danger {
+    color: var(--coral);
+    border-color: rgba(233, 141, 88, 0.4);
+    background: transparent;
+  }
+
+  /* =========================================================
      TODOS — actions partagées
      ========================================================= */
   .todos {
@@ -2359,7 +2692,8 @@ const ROUTES = [
   { match: /^#?\/timeline\/?$/,       render: renderTimeline },
   { match: /^#?\/hebergements(?:\/([\w-]+))?\/?$/, render: renderStays },
   { match: /^#?\/activites\/?$/,      render: renderActivities },
-  { match: /^#?\/a-faire\/?$/,        render: renderTodos },
+  { match: /^#?\/gestion(?:\/(\w+))?\/?$/, render: renderGestion },
+  { match: /^#?\/a-faire\/?$/,        render: () => renderGestion([null, 'a-faire']) },
   { match: /^#?\/carte\/?$/,          render: renderMap },
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
 ];
@@ -2671,8 +3005,8 @@ function renderCover() {
           <a href="#/hebergements">Hébergements</a>
           <a href="#/activites">Activités</a>
           <a href="#/carte">Carte</a>
-          <a href="#/a-faire" class="cover__link-todo">
-            À faire
+          <a href="#/gestion" class="cover__link-todo">
+            Gestion
             <span class="cover__badge" data-actions-badge hidden></span>
           </a>
         </nav>
@@ -3519,7 +3853,362 @@ function renderActivities() {
 }
 
 // =========================================================
-// PAGE À FAIRE — actions partagées Firestore
+// PAGE GESTION — tabs « À faire » + « Budget »
+// =========================================================
+function renderGestion(match) {
+  const tab = (match && match[1] === 'budget') ? 'budget' : 'a-faire';
+  mount(`
+    <section class="page gestion">
+      <header class="gestion__head">
+        <a class="timeline__back" href="#/">Retour</a>
+        <div class="timeline__kicker">Gestion</div>
+        <nav class="gestion__tabs">
+          <a class="gestion__tab ${tab === 'a-faire' ? 'is-active' : ''}" href="#/gestion/a-faire">
+            À faire
+            <span class="gestion__tab-badge" data-actions-badge hidden></span>
+          </a>
+          <a class="gestion__tab ${tab === 'budget' ? 'is-active' : ''}" href="#/gestion/budget">Budget</a>
+        </nav>
+      </header>
+      <div class="gestion__content">
+        ${tab === 'budget' ? budgetTabHtml() : todosTabHtml()}
+      </div>
+    </section>
+  `);
+  updateActionsBadge();
+  if (tab === 'a-faire') {
+    bindTodosTab();
+    paintTodos(CURRENT_TODOS);
+  } else {
+    bindBudgetTab();
+    paintBudget();
+  }
+  window.scrollTo(0, 0);
+}
+
+// --- TAB À FAIRE ---
+function todosTabHtml() {
+  return `
+    <h1 class="gestion__title" id="todos-counter-host">À faire,<br><em id="todos-counter">…</em></h1>
+    <p class="gestion__lead">Liste partagée entre les téléphones.</p>
+    <form class="todos__add" id="todos-add" autocomplete="off">
+      <input id="todos-input" type="text" placeholder="Nouvelle action…" maxlength="140" required>
+      <button type="submit" aria-label="Ajouter">Ajouter</button>
+    </form>
+    <div id="todos-list" class="todos__list" aria-live="polite">
+      <div class="todos__loader">Chargement…</div>
+    </div>
+  `;
+}
+function bindTodosTab() {
+  const form  = document.getElementById('todos-add');
+  const input = document.getElementById('todos-input');
+  if (!form || !input) return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = input.value.trim();
+    if (!title) return;
+    input.value = '';
+    input.disabled = true;
+    try {
+      await addDoc(collection(db, 'actions'), {
+        title, status: 'open', order: Date.now(),
+        createdAt: serverTimestamp(), doneAt: null,
+      });
+    } catch (err) {
+      console.error(err);
+      input.value = title;
+      flashError(err.message);
+    } finally {
+      input.disabled = false;
+      input.focus();
+    }
+  });
+}
+
+// --- TAB BUDGET ---
+function budgetTabHtml() {
+  return `
+    <div id="budget-summary"><div class="todos__loader">Calcul…</div></div>
+    <button class="budget__add-btn" type="button" data-act="open-expense-add">+ Ajouter une dépense</button>
+    <div id="budget-list" class="budget__list" aria-live="polite"></div>
+  `;
+}
+function bindBudgetTab() {
+  document.querySelector('[data-act="open-expense-add"]')?.addEventListener('click', () => openExpenseSheet(null));
+}
+
+// --- Subscription expenses ---
+let EXPENSES = [];
+let EXPENSES_UNSUB = null;
+
+function startExpensesSubscription() {
+  if (EXPENSES_UNSUB) return;
+  EXPENSES_UNSUB = onSnapshot(collection(db, 'expenses'),
+    (snap) => {
+      EXPENSES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      EXPENSES.sort((a, b) => {
+        const am = a.createdAt?.toMillis?.() ?? 0;
+        const bm = b.createdAt?.toMillis?.() ?? 0;
+        return bm - am; // plus récent en haut
+      });
+      if (location.hash.startsWith('#/gestion/budget')) paintBudget();
+    },
+    (err) => { console.error(err); flashError('Sync budget : ' + err.code); }
+  );
+}
+
+const CATEGORIES = [
+  { id: 'hebergement', label: 'Hébergement', icon: '🛏', color: '#7a9657' },
+  { id: 'transport',   label: 'Transport',   icon: '🚗', color: '#6cb6c4' },
+  { id: 'repas',       label: 'Repas',       icon: '🍽', color: '#e98d58' },
+  { id: 'activite',    label: 'Activité',    icon: '🎟', color: '#d4a574' },
+  { id: 'autre',       label: 'Autre',       icon: '✦', color: '#9aa9ab' },
+];
+const PAYERS = ['Rémi', 'Elsa'];
+
+function paintBudget() {
+  // Avances depuis stays.json (paiements déjà effectués)
+  const autoAdvances = { 'Rémi': 0, 'Elsa': 0 };
+  for (const s of Object.values(STATE.staysById)) {
+    const p = s.paymentBreakdown?.paid;
+    if (p && p > 0 && PAYERS.includes(s.bookedBy)) {
+      autoAdvances[s.bookedBy] += p;
+    }
+  }
+  // Plus dépenses manuelles
+  const advances = { 'Rémi': autoAdvances['Rémi'], 'Elsa': autoAdvances['Elsa'] };
+  for (const e of EXPENSES) {
+    if (PAYERS.includes(e.payer)) advances[e.payer] += (Number(e.amount) || 0);
+  }
+  const total = advances['Rémi'] + advances['Elsa'];
+  const halfShare = total / 2;
+  const remiBalance = advances['Rémi'] - halfShare;
+  // Si remiBalance > 0 → Elsa doit ce montant à Rémi
+
+  let balanceLine;
+  if (Math.abs(remiBalance) < 0.5) {
+    balanceLine = `<div class="budget__balance is-even">Tout est équilibré ✓</div>`;
+  } else if (remiBalance > 0) {
+    balanceLine = `<div class="budget__balance is-due"><span class="budget__balance-who">Elsa</span> doit <strong>${Math.round(remiBalance)} €</strong> à <span class="budget__balance-who">Rémi</span></div>`;
+  } else {
+    balanceLine = `<div class="budget__balance is-due"><span class="budget__balance-who">Rémi</span> doit <strong>${Math.round(-remiBalance)} €</strong> à <span class="budget__balance-who">Elsa</span></div>`;
+  }
+
+  document.getElementById('budget-summary').innerHTML = `
+    <div class="budget__advances">
+      <div class="budget__advance">
+        <div class="budget__advance-name">Rémi</div>
+        <div class="budget__advance-amount">${Math.round(advances['Rémi'])}<small> €</small></div>
+        ${autoAdvances['Rémi'] > 0 ? `<small class="budget__advance-auto">dont ${Math.round(autoAdvances['Rémi'])} € hébergements</small>` : ''}
+      </div>
+      <div class="budget__advance">
+        <div class="budget__advance-name">Elsa</div>
+        <div class="budget__advance-amount">${Math.round(advances['Elsa'])}<small> €</small></div>
+        ${autoAdvances['Elsa'] > 0 ? `<small class="budget__advance-auto">dont ${Math.round(autoAdvances['Elsa'])} € hébergements</small>` : ''}
+      </div>
+    </div>
+    ${balanceLine}
+    <div class="budget__total">Total avancé&nbsp;: <strong>${Math.round(total)} €</strong></div>
+  `;
+
+  // Liste des dépenses manuelles
+  const list = document.getElementById('budget-list');
+  if (!EXPENSES.length) {
+    list.innerHTML = `<p class="budget__empty">Aucune dépense ajoutée.<br>Les paiements d'hébergements sont comptabilisés automatiquement ci-dessus.</p>`;
+    return;
+  }
+  list.innerHTML = `
+    <h2 class="budget__list-title">${EXPENSES.length} dépense${EXPENSES.length > 1 ? 's' : ''}</h2>
+    <ul class="budget__items">
+      ${EXPENSES.map(renderExpenseItem).join('')}
+    </ul>
+  `;
+  list.querySelectorAll('[data-act="edit-expense"]').forEach(b =>
+    b.addEventListener('click', () => openExpenseSheet(b.dataset.id))
+  );
+}
+
+function renderExpenseItem(e) {
+  const cat = CATEGORIES.find(c => c.id === e.category) || CATEGORIES[4];
+  const dateStr = e.date ? formatExpenseDate(e.date) : '';
+  return `
+    <li class="budget__item">
+      <button class="budget__item-btn" data-act="edit-expense" data-id="${e.id}">
+        <span class="budget__item-icon" style="background:${cat.color}1f; color:${cat.color}">${cat.icon}</span>
+        <span class="budget__item-text">
+          <span class="budget__item-label">${escapeHtml(e.label || cat.label)}</span>
+          <small>${cat.label} · ${escapeHtml(e.payer || '?')} · ${dateStr}</small>
+        </span>
+        <span class="budget__item-amount">${Math.round(Number(e.amount) || 0)} €</span>
+      </button>
+    </li>
+  `;
+}
+
+function formatExpenseDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso + 'T00:00:00');
+  if (isNaN(d.getTime())) return iso;
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+}
+
+// --- Bottom sheet d'ajout / édition d'une dépense ---
+function openExpenseSheet(expenseId) {
+  let el = document.getElementById('expense-sheet');
+  if (el) el.remove();
+  const expense = expenseId ? EXPENSES.find(x => x.id === expenseId) : null;
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const initial = expense || { amount: '', label: '', category: 'repas', payer: 'Rémi', date: todayStr };
+
+  el = document.createElement('div');
+  el.id = 'expense-sheet';
+  el.className = 'sheet-backdrop';
+  document.body.appendChild(el);
+  el.innerHTML = `
+    <div class="sheet expense-sheet" role="dialog" aria-modal="true">
+      <div class="sheet__handle-zone" data-act="sheet-handle"></div>
+      <div class="sheet__handle"></div>
+      <button class="sheet__close" type="button" data-act="expense-close" aria-label="Fermer">×</button>
+      <div class="sheet__head">
+        <div class="sheet__kicker">${expense ? 'Modifier la dépense' : 'Nouvelle dépense'}</div>
+      </div>
+      <form class="expense-form" id="expense-form">
+        <label class="expense-field">
+          <span>Montant</span>
+          <input type="number" name="amount" step="0.01" min="0" inputmode="decimal" required value="${initial.amount}" placeholder="0">
+        </label>
+        <label class="expense-field">
+          <span>Description</span>
+          <input type="text" name="label" maxlength="80" placeholder="Petit-déjeuner, péage, musée…" value="${escapeHtml(initial.label)}">
+        </label>
+        <div class="expense-field">
+          <span>Catégorie</span>
+          <div class="expense-chips" role="radiogroup">
+            ${CATEGORIES.map(c => `
+              <button type="button" class="expense-chip ${initial.category === c.id ? 'is-active' : ''}" data-act="cat" data-id="${c.id}" style="--chip-color:${c.color}">
+                <span>${c.icon}</span> ${c.label}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        <div class="expense-field">
+          <span>Payeur</span>
+          <div class="expense-chips" role="radiogroup">
+            ${PAYERS.map(p => `
+              <button type="button" class="expense-chip ${initial.payer === p ? 'is-active' : ''}" data-act="payer" data-id="${p}">${p}</button>
+            `).join('')}
+          </div>
+        </div>
+        <label class="expense-field">
+          <span>Date</span>
+          <input type="date" name="date" value="${initial.date}">
+        </label>
+        <div class="expense-actions">
+          <button type="submit" class="expense-btn expense-btn--save">${expense ? 'Enregistrer' : 'Ajouter'}</button>
+          ${expense ? `<button type="button" class="expense-btn expense-btn--danger" data-act="expense-delete">Supprimer</button>` : `<button type="button" class="expense-btn" data-act="expense-close">Annuler</button>`}
+        </div>
+      </form>
+    </div>
+  `;
+
+  // State + handlers
+  let category = initial.category;
+  let payer = initial.payer;
+
+  el.addEventListener('click', (e) => {
+    if (e.target === el || e.target.closest('[data-act="expense-close"]')) closeExpenseSheet();
+  });
+  el.querySelectorAll('[data-act="cat"]').forEach(b =>
+    b.addEventListener('click', () => {
+      category = b.dataset.id;
+      el.querySelectorAll('[data-act="cat"]').forEach(x => x.classList.toggle('is-active', x.dataset.id === category));
+    })
+  );
+  el.querySelectorAll('[data-act="payer"]').forEach(b =>
+    b.addEventListener('click', () => {
+      payer = b.dataset.id;
+      el.querySelectorAll('[data-act="payer"]').forEach(x => x.classList.toggle('is-active', x.dataset.id === payer));
+    })
+  );
+  el.querySelector('[data-act="expense-delete"]')?.addEventListener('click', async () => {
+    if (!expense || !confirm('Supprimer cette dépense ?')) return;
+    try { await deleteDoc(doc(db, 'expenses', expense.id)); closeExpenseSheet(); }
+    catch (err) { console.error(err); flashError(err.message); }
+  });
+  el.querySelector('#expense-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const amount = parseFloat(fd.get('amount'));
+    const label = (fd.get('label') || '').toString().trim();
+    const date = fd.get('date');
+    if (!Number.isFinite(amount) || amount <= 0) return;
+    const data = { amount, label, category, payer, date, updatedAt: serverTimestamp() };
+    try {
+      if (expense) {
+        await updateDoc(doc(db, 'expenses', expense.id), data);
+      } else {
+        data.createdAt = serverTimestamp();
+        await addDoc(collection(db, 'expenses'), data);
+      }
+      closeExpenseSheet();
+    } catch (err) { console.error(err); flashError(err.message); }
+  });
+
+  document.body.classList.add('sheet-open');
+  // Swipe-down (réutilise la mécanique existante)
+  const sheetEl = el.querySelector('.sheet');
+  const handleZone = el.querySelector('[data-act="sheet-handle"]');
+  if (sheetEl && handleZone) attachSheetSwipeGeneric(sheetEl, handleZone, closeExpenseSheet);
+}
+
+function closeExpenseSheet() {
+  const el = document.getElementById('expense-sheet');
+  if (!el) return;
+  el.classList.add('is-closing');
+  document.body.classList.remove('sheet-open');
+  setTimeout(() => el.remove(), 220);
+}
+
+function attachSheetSwipeGeneric(sheet, handle, onClose) {
+  let startY = null, lastY = null, lastTime = null;
+  const onMove = (e) => {
+    if (startY === null) return;
+    const dy = e.clientY - startY;
+    if (dy > 0) sheet.style.transform = `translateY(${dy}px)`;
+    lastY = e.clientY;
+    lastTime = Date.now();
+  };
+  const onUp = (e) => {
+    if (startY === null) return;
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    document.removeEventListener('pointercancel', onUp);
+    const dy = e.clientY - startY;
+    const h = sheet.getBoundingClientRect().height;
+    const v = (e.clientY - lastY) / Math.max(1, Date.now() - lastTime);
+    startY = null;
+    if (dy > h * 0.22 || v > 0.6) {
+      sheet.style.transition = 'transform 200ms var(--ease)';
+      sheet.style.transform = `translateY(${h}px)`;
+      setTimeout(onClose, 180);
+    } else {
+      sheet.style.transition = 'transform 220ms cubic-bezier(.2, .65, .2, 1)';
+      sheet.style.transform = 'translateY(0)';
+    }
+  };
+  handle.addEventListener('pointerdown', (e) => {
+    startY = e.clientY; lastY = e.clientY; lastTime = Date.now();
+    sheet.style.transition = 'none';
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp);
+    document.addEventListener('pointercancel', onUp);
+  });
+}
+
+// =========================================================
+// PAGE À FAIRE — actions partagées Firestore (ANCIEN — réutilisé via gestion)
 // =========================================================
 function renderTodos() {
   mount(`
@@ -3825,6 +4514,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     fbPing();
     startActionsSubscription();
     startNotesSubscription();
+    startExpensesSubscription();
   } catch (e) {
     console.error(e);
     document.getElementById('app').innerHTML = `
