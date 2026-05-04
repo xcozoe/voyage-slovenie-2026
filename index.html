@@ -1150,6 +1150,8 @@
     -webkit-overflow-scrolling: touch;
     padding: 18px var(--pad-x) 28px;
     min-height: 0;
+    display: flex;
+    flex-direction: column;
   }
   .stay-card__city {
     font-family: 'Inter', sans-serif;
@@ -1223,7 +1225,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    margin-top: 18px;
+    margin-top: auto;
     padding: 14px 16px;
     background: rgba(212, 165, 116, 0.10);
     border: 1px solid var(--line);
@@ -2864,7 +2866,7 @@ function renderStayPageCard(stay) {
         ? `https://www.google.com/maps/dir/?api=1&destination=${stay.coords[0]},${stay.coords[1]}`
         : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(stay.address)}`;
       meta.push({
-        k: 'Adresse <span class="stay-card__link-arrow">↗</span>',
+        k: 'Adresse',
         v: `<a class="stay-card__link stay-card__link-block" href="${escapeHtml(dir)}" target="_blank" rel="noopener">${escapeHtml(stay.address)}</a>`,
         full: true,
       });
@@ -2912,8 +2914,8 @@ function renderStayPageCard(stay) {
       <div class="stay-card__body">
         ${head}
         ${metaHtml}
-        ${priceHtml}
         ${notesHtml}
+        ${priceHtml}
         ${actionsHtml}
       </div>
     </article>
