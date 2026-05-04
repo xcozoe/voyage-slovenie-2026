@@ -1148,27 +1148,47 @@
     line-height: 1.4;
   }
 
-  .stay-card__price {
-    margin-top: 18px;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
-    font-size: 13px;
-    color: var(--ink-faint);
-    line-height: 1.5;
+  .stay-card__booking {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 10px;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: rgba(212, 165, 116, 0.10);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    text-align: left;
+    color: var(--ink);
+    transition: background 200ms var(--ease), border-color 200ms var(--ease);
   }
-  .stay-card__price strong {
+  .stay-card__booking:active {
+    background: rgba(212, 165, 116, 0.18);
+    border-color: rgba(212, 165, 116, 0.45);
+  }
+  .stay-card__booking-text { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .stay-card__booking-label {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 600;
+  }
+  .stay-card__booking-summary {
     font-family: 'Fraunces', serif;
     font-style: italic;
     font-weight: 500;
-    font-size: 22px;
+    font-size: 17px;
     color: var(--ink);
   }
-  .stay-card__price-paid { color: var(--olive); }
-  .stay-card__price-due  { color: var(--coral); }
+  .stay-card__booking-arrow {
+    color: var(--ink-faint);
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
 
   .stay-card__notes {
     margin-top: 14px;
@@ -1283,6 +1303,201 @@
     font-size: 14px;
     line-height: 1.55;
     color: var(--ink-soft);
+  }
+
+  /* =========================================================
+     BOTTOM SHEET — détail réservation
+     ========================================================= */
+  .sheet-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 34, 41, 0.62);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 500;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    animation: sheet-fade 220ms var(--ease);
+  }
+  .sheet-backdrop.is-closing {
+    animation: sheet-fade 200ms var(--ease) reverse;
+    pointer-events: none;
+  }
+  @keyframes sheet-fade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  body.sheet-open { overflow: hidden; }
+  body.sheet-open .stays { overflow: hidden; }
+
+  .sheet {
+    width: 100%;
+    max-width: var(--max-w);
+    max-height: 85dvh;
+    background: var(--bg-soft);
+    border-radius: 18px 18px 0 0;
+    padding: 22px var(--pad-x) calc(env(safe-area-inset-bottom, 0px) + 30px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: sheet-up 320ms cubic-bezier(.2, .65, .2, 1);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+    color: var(--ink);
+  }
+  .is-closing .sheet { animation: sheet-up 220ms var(--ease) reverse; }
+  @keyframes sheet-up {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .sheet__handle {
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(251, 246, 233, 0.20);
+    margin: 0 auto 16px;
+  }
+  .sheet__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(251, 246, 233, 0.10);
+    color: var(--ink);
+    font-size: 22px;
+    line-height: 1;
+  }
+  .sheet__head { padding-right: 36px; margin-bottom: 22px; }
+  .sheet__kicker {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .sheet__title {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.15;
+    margin-bottom: 6px;
+    text-wrap: balance;
+  }
+  .sheet__sub {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .sheet__details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet__details > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .sheet__details dt {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .sheet__details dd {
+    font-size: 14px;
+    color: var(--ink);
+    text-align: right;
+    margin: 0;
+    word-break: break-word;
+  }
+
+  .sheet__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 18px;
+    padding: 6px 0 14px;
+  }
+  .sheet__total span {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .sheet__total strong {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 30px;
+    color: var(--ink);
+  }
+
+  .sheet__payments {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .sheet__payment {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    background: rgba(251, 246, 233, 0.04);
+  }
+  .sheet__payment.is-paid {
+    background: rgba(122, 150, 87, 0.14);
+    border-left: 3px solid var(--olive);
+  }
+  .sheet__payment.is-due {
+    background: rgba(233, 141, 88, 0.12);
+    border-left: 3px solid var(--coral);
+  }
+  .sheet__payment.is-info {
+    background: rgba(212, 165, 116, 0.10);
+    border-left: 3px solid var(--sand);
+  }
+  .sheet__payment-icon {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .sheet__payment-main {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .sheet__payment small {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
   }
 
   /* =========================================================
@@ -2499,11 +2714,9 @@ function renderStayPageCard(stay) {
   let metaHtml = '';
   if (isConfirmed) {
     const meta = [];
-    if (stay.checkin)      meta.push({ k: 'Check-in',  v: escapeHtml(stay.checkin) });
-    if (stay.checkout)     meta.push({ k: 'Check-out', v: escapeHtml(stay.checkout) });
-    if (stay.host)         meta.push({ k: 'Hôte',      v: escapeHtml(stay.host) });
-    if (stay.bookedBy && !stay.host) meta.push({ k: 'Réservé par', v: escapeHtml(stay.bookedBy) });
-    if (stay.confirmation) meta.push({ k: 'Référence', v: escapeHtml(stay.confirmation) });
+    if (stay.checkin)  meta.push({ k: 'Check-in',  v: escapeHtml(stay.checkin) });
+    if (stay.checkout) meta.push({ k: 'Check-out', v: escapeHtml(stay.checkout) });
+    if (stay.host)     meta.push({ k: 'Hôte',      v: escapeHtml(stay.host) });
     if (stay.phone) {
       const tel = stay.phone.replace(/\s/g, '');
       meta.push({ k: 'Téléphone', v: `<a class="stay-card__link" href="tel:${escapeHtml(tel)}">${escapeHtml(stay.phone)}</a>` });
@@ -2516,26 +2729,25 @@ function renderStayPageCard(stay) {
     }
   }
 
-  let priceHtml = '';
-  if (isConfirmed && stay.price) {
+  // Bouton « Réservation » → ouvre la bottom sheet avec le détail paiement
+  let bookingBtnHtml = '';
+  if (isConfirmed && (stay.price || stay.paymentBreakdown || stay.confirmation)) {
     const pb = stay.paymentBreakdown || {};
-    const parts = [];
-    if (pb.paid > 0) {
-      parts.push(`<span class="stay-card__price-paid">${Math.round(pb.paid)} € payé</span>`);
-    }
-    if (pb.remaining > 0) {
-      const due = pb.remainingDue;
-      const dueLabel = due === 'sur place' ? 'sur place'
-        : (due && /^\d{4}-\d{2}-\d{2}$/.test(due) ? formatDueDate(due) : (due || 'à payer'));
-      parts.push(`<span class="stay-card__price-due">${Math.round(pb.remaining)} € ${escapeHtml(dueLabel)}</span>`);
-    }
-    if (pb.extras) parts.push(`<span>${escapeHtml(pb.extras)}</span>`);
-    priceHtml = `
-      <p class="stay-card__price">
-        <strong>${Math.round(stay.price)} €</strong>
-        ${parts.join(' · ')}
-      </p>`;
+    const summary = [];
+    if (stay.price) summary.push(`${Math.round(stay.price)} €`);
+    if (pb.remaining > 0) summary.push(`${Math.round(pb.remaining)} € à régler`);
+    else if (pb.paid > 0 && (!pb.remaining || pb.remaining === 0)) summary.push('payé');
+    bookingBtnHtml = `
+      <button type="button" class="stay-card__booking" data-act="open-booking" data-stay-id="${stay.id}">
+        <span class="stay-card__booking-text">
+          <span class="stay-card__booking-label">Réservation</span>
+          <span class="stay-card__booking-summary">${summary.join(' · ') || 'Voir le détail'}</span>
+        </span>
+        <span class="stay-card__booking-arrow">→</span>
+      </button>
+    `;
   }
+  const priceHtml = bookingBtnHtml;
 
   const notesHtml = stay.notes
     ? `<p class="stay-card__notes">${escapeHtml(stay.notes)}</p>`
@@ -2579,6 +2791,115 @@ function dayForStay(stayId) {
   const d = STATE.days.find(d => d.stay === stayId);
   return d ? d.n : 1;
 }
+
+// =========================================================
+// BOTTOM SHEET RÉSERVATION
+// =========================================================
+let BOOKING_SHEET_ID = null;
+
+function openBookingSheet(stayId) {
+  BOOKING_SHEET_ID = stayId;
+  paintBookingSheet();
+}
+function closeBookingSheet() {
+  BOOKING_SHEET_ID = null;
+  paintBookingSheet();
+}
+window.addEventListener('hashchange', closeBookingSheet);
+
+function paintBookingSheet() {
+  let el = document.getElementById('booking-sheet');
+  if (!BOOKING_SHEET_ID) {
+    if (el) {
+      el.classList.add('is-closing');
+      setTimeout(() => el.remove(), 220);
+    }
+    document.body.classList.remove('sheet-open');
+    return;
+  }
+  const stay = STATE.staysById[BOOKING_SHEET_ID];
+  if (!stay) return;
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'booking-sheet';
+    el.className = 'sheet-backdrop';
+    document.body.appendChild(el);
+  }
+
+  const pb = stay.paymentBreakdown || {};
+  const details = [];
+  if (stay.confirmation) details.push(['Référence', stay.confirmation]);
+  if (stay.bookedBy)     details.push(['Réservé par', stay.bookedBy]);
+  if (stay.cancellation) details.push(['Annulation', stay.cancellation]);
+
+  const payments = [];
+  if (pb.paid && pb.paid > 0) {
+    const note = [
+      pb.paidDate ? formatDueDate(pb.paidDate) : null,
+      pb.paymentMethod || null,
+    ].filter(Boolean).join(' · ');
+    payments.push(`
+      <div class="sheet__payment is-paid">
+        <span class="sheet__payment-icon">✓</span>
+        <div>
+          <div class="sheet__payment-main">${Math.round(pb.paid)} € payé</div>
+          ${note ? `<small>${escapeHtml(note)}</small>` : ''}
+        </div>
+      </div>`);
+  }
+  if (pb.remaining && pb.remaining > 0) {
+    const due = pb.remainingDue;
+    const dueLabel = !due ? 'à payer'
+      : due === 'sur place' ? 'à payer sur place'
+      : /^\d{4}-\d{2}-\d{2}$/.test(due) ? formatDueDate(due)
+      : due;
+    payments.push(`
+      <div class="sheet__payment is-due">
+        <span class="sheet__payment-icon">⏳</span>
+        <div>
+          <div class="sheet__payment-main">${Math.round(pb.remaining)} € à régler</div>
+          <small>${escapeHtml(dueLabel)}</small>
+        </div>
+      </div>`);
+  }
+  if (pb.extras) {
+    payments.push(`
+      <div class="sheet__payment is-info">
+        <span class="sheet__payment-icon">ℹ︎</span>
+        <div><div class="sheet__payment-main">${escapeHtml(pb.extras)}</div></div>
+      </div>`);
+  }
+
+  el.innerHTML = `
+    <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet__handle"></div>
+      <button class="sheet__close" type="button" data-act="sheet-close" aria-label="Fermer">×</button>
+      <div class="sheet__head">
+        <div class="sheet__kicker">Réservation</div>
+        <h2 class="sheet__title" id="sheet-title">${escapeHtml(stay.name || stay.city)}</h2>
+        <p class="sheet__sub">${escapeHtml(stay.city)} · ${formatRange(stay.arrival, stay.departure)} · ${stay.nights} nuit${stay.nights > 1 ? 's' : ''}</p>
+      </div>
+      ${details.length ? `<dl class="sheet__details">${details.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
+      ${stay.price ? `<div class="sheet__total"><span>Montant total</span><strong>${Math.round(stay.price)} €</strong></div>` : ''}
+      ${payments.length ? `<div class="sheet__payments">${payments.join('')}</div>` : ''}
+    </div>
+  `;
+  document.body.classList.add('sheet-open');
+  el.addEventListener('click', (e) => {
+    if (e.target === el || e.target.closest('[data-act="sheet-close"]')) closeBookingSheet();
+  });
+  document.addEventListener('keydown', escClose, { once: true });
+}
+function escClose(e) { if (e.key === 'Escape') closeBookingSheet(); }
+
+// Délégation : tap sur le bouton « Réservation » d'une card
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-act="open-booking"]');
+  if (btn) {
+    e.preventDefault();
+    openBookingSheet(btn.dataset.stayId);
+  }
+});
 
 // =========================================================
 // NOTES (par jour) — partagées Firestore, éditables
