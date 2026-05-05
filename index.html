@@ -4189,9 +4189,68 @@ function paintBudget() {
   list.querySelectorAll('[data-act="edit-expense"]').forEach(b =>
     b.addEventListener('click', () => openExpenseSheet(b.dataset.id))
   );
-  list.querySelectorAll('[data-act="open-stay"]').forEach(b =>
-    b.addEventListener('click', () => { location.hash = `#/hebergements/${b.dataset.stayId}`; })
+  list.querySelectorAll('[data-act="open-stay-expense"]').forEach(b =>
+    b.addEventListener('click', () => openStayExpenseSheet(b.dataset.stayId, b.dataset.kind))
   );
+}
+
+// Sheet d'info pour un paiement hébergement (read-only, lien vers la fiche)
+function openStayExpenseSheet(stayId, kind) {
+  let el = document.getElementById('stay-expense-sheet');
+  if (el) el.remove();
+  const stay = STATE.staysById[stayId];
+  if (!stay) return;
+  const pb = stay.paymentBreakdown || {};
+  const isUpcoming = kind === 'upcoming';
+  const amount = isUpcoming ? pb.remaining : pb.paid;
+  const dateLabel = isUpcoming
+    ? (pb.remainingDue && /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue)
+        ? formatDueDate(pb.remainingDue)
+        : (pb.remainingDue || 'à payer'))
+    : (pb.paidDate ? formatDueDate(pb.paidDate) : '');
+
+  const details = [];
+  details.push(['Montant', `${Math.round(amount || 0)} €`]);
+  if (stay.bookedBy)  details.push(['Payeur', stay.bookedBy]);
+  if (dateLabel)      details.push([isUpcoming ? 'Échéance' : 'Date', dateLabel]);
+  if (!isUpcoming && pb.paymentMethod) details.push(['Moyen', pb.paymentMethod]);
+  if (isUpcoming && pb.extras)         details.push(['Note', pb.extras]);
+
+  el = document.createElement('div');
+  el.id = 'stay-expense-sheet';
+  el.className = 'sheet-backdrop';
+  document.body.appendChild(el);
+  el.innerHTML = `
+    <div class="sheet" role="dialog" aria-modal="true">
+      <div class="sheet__handle-zone" data-act="sheet-handle"></div>
+      <div class="sheet__handle"></div>
+      <button class="sheet__close" type="button" data-act="stay-exp-close" aria-label="Fermer">×</button>
+      <div class="sheet__head">
+        <div class="sheet__kicker">${isUpcoming ? 'Paiement à venir' : 'Paiement effectué'}</div>
+        <h2 class="sheet__title">${escapeHtml(stay.name || stay.city)}</h2>
+        <p class="sheet__sub">${escapeHtml(stay.city)} · ${formatRange(stay.arrival, stay.departure)}</p>
+      </div>
+      <dl class="sheet__details">
+        ${details.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}
+      </dl>
+      <a class="sheet__listing sheet__listing--website" href="#/hebergements/${stay.id}" data-act="stay-exp-go-card">Voir la fiche complète →</a>
+    </div>
+  `;
+  document.body.classList.add('sheet-open');
+  el.addEventListener('click', (e) => {
+    if (e.target === el || e.target.closest('[data-act="stay-exp-close"]')) closeStayExpenseSheet();
+    if (e.target.closest('[data-act="stay-exp-go-card"]')) closeStayExpenseSheet();
+  });
+  const sheetEl = el.querySelector('.sheet');
+  const handleZone = el.querySelector('[data-act="sheet-handle"]');
+  if (sheetEl && handleZone) attachSheetSwipeGeneric(sheetEl, handleZone, closeStayExpenseSheet);
+}
+function closeStayExpenseSheet() {
+  const el = document.getElementById('stay-expense-sheet');
+  if (!el) return;
+  el.classList.add('is-closing');
+  document.body.classList.remove('sheet-open');
+  setTimeout(() => el.remove(), 220);
 }
 
 function renderExpenseItem(e) {
@@ -4210,7 +4269,7 @@ function renderExpenseItem(e) {
   if (isStay) {
     return `
       <li class="${itemCls}">
-        <button class="budget__item-btn" data-act="open-stay" data-stay-id="${e._stayId}">
+        <button class="budget__item-btn" data-act="open-stay-expense" data-stay-id="${e._stayId}" data-kind="${e._kind}">
           <span class="${iconCls}" style="${isUpcoming ? `--cat-color:${cat.color}` : `background:${cat.color}1f; color:${cat.color}`}">${cat.icon}</span>
           <span class="budget__item-text">
             <span class="budget__item-label">${escapeHtml(e.label)}</span>
