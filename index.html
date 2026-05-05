@@ -3889,41 +3889,72 @@ function renderGestion(match) {
 // --- TAB À FAIRE ---
 function todosTabHtml() {
   return `
-    <h1 class="gestion__title" id="todos-counter-host">À faire,<br><em id="todos-counter">…</em></h1>
-    <p class="gestion__lead">Liste partagée entre les téléphones.</p>
-    <form class="todos__add" id="todos-add" autocomplete="off">
-      <input id="todos-input" type="text" placeholder="Nouvelle action…" maxlength="140" required>
-      <button type="submit" aria-label="Ajouter">Ajouter</button>
-    </form>
+    <div id="todos-stats"></div>
+    <button class="budget__add-btn" type="button" data-act="open-action-add">+ Ajouter une action</button>
     <div id="todos-list" class="todos__list" aria-live="polite">
       <div class="todos__loader">Chargement…</div>
     </div>
   `;
 }
 function bindTodosTab() {
-  const form  = document.getElementById('todos-add');
-  const input = document.getElementById('todos-input');
-  if (!form || !input) return;
-  form.addEventListener('submit', async (e) => {
+  document.querySelector('[data-act="open-action-add"]')?.addEventListener('click', () => openActionSheet());
+}
+
+// Sheet d'ajout d'une action — inputs minimaux, design cohérent avec expense
+function openActionSheet() {
+  let el = document.getElementById('action-sheet');
+  if (el) el.remove();
+  el = document.createElement('div');
+  el.id = 'action-sheet';
+  el.className = 'sheet-backdrop';
+  document.body.appendChild(el);
+  el.innerHTML = `
+    <div class="sheet expense-sheet" role="dialog" aria-modal="true">
+      <div class="sheet__handle-zone" data-act="sheet-handle"></div>
+      <div class="sheet__handle"></div>
+      <button class="sheet__close" type="button" data-act="action-close" aria-label="Fermer">×</button>
+      <div class="sheet__head">
+        <div class="sheet__kicker">Nouvelle action</div>
+      </div>
+      <form class="expense-form" id="action-form">
+        <label class="expense-field">
+          <span>Description</span>
+          <input type="text" name="title" maxlength="140" required autofocus placeholder="Ex : Réserver Vintgar en ligne">
+        </label>
+        <div class="expense-actions">
+          <button type="submit" class="expense-btn expense-btn--save">Ajouter</button>
+          <button type="button" class="expense-btn" data-act="action-close">Annuler</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.classList.add('sheet-open');
+  el.addEventListener('click', (e) => {
+    if (e.target === el || e.target.closest('[data-act="action-close"]')) closeActionSheet();
+  });
+  el.querySelector('#action-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const title = input.value.trim();
+    const title = (new FormData(e.currentTarget).get('title') || '').toString().trim();
     if (!title) return;
-    input.value = '';
-    input.disabled = true;
     try {
       await addDoc(collection(db, 'actions'), {
         title, status: 'open', order: Date.now(),
         createdAt: serverTimestamp(), doneAt: null,
       });
-    } catch (err) {
-      console.error(err);
-      input.value = title;
-      flashError(err.message);
-    } finally {
-      input.disabled = false;
-      input.focus();
-    }
+      closeActionSheet();
+    } catch (err) { console.error(err); flashError(err.message); }
   });
+  const sheetEl = el.querySelector('.sheet');
+  const handleZone = el.querySelector('[data-act="sheet-handle"]');
+  if (sheetEl && handleZone) attachSheetSwipeGeneric(sheetEl, handleZone, closeActionSheet);
+  setTimeout(() => el.querySelector('input[name="title"]')?.focus(), 100);
+}
+function closeActionSheet() {
+  const el = document.getElementById('action-sheet');
+  if (!el) return;
+  el.classList.add('is-closing');
+  document.body.classList.remove('sheet-open');
+  setTimeout(() => el.remove(), 220);
 }
 
 // --- TAB BUDGET ---
@@ -4282,10 +4313,30 @@ function paintTodos(items) {
   CURRENT_TODOS = items;
   const open = items.filter(i => i.status !== 'done');
   const done = items.filter(i => i.status === 'done');
-  document.getElementById('todos-counter').textContent =
-    open.length === 0
-      ? (done.length ? `tout est fait` : `aucune pour l'instant`)
-      : `${open.length} ouverte${open.length > 1 ? 's' : ''}`;
+  const counter = document.getElementById('todos-counter');
+  if (counter) {
+    counter.textContent =
+      open.length === 0
+        ? (done.length ? `tout est fait` : `aucune pour l'instant`)
+        : `${open.length} ouverte${open.length > 1 ? 's' : ''}`;
+  }
+  // Stats cards (page Gestion / onglet À faire)
+  const statsEl = document.getElementById('todos-stats');
+  if (statsEl) {
+    statsEl.innerHTML = `
+      <div class="budget__advances">
+        <div class="budget__advance">
+          <div class="budget__advance-name">Ouvertes</div>
+          <div class="budget__advance-amount">${open.length}</div>
+        </div>
+        <div class="budget__advance">
+          <div class="budget__advance-name">Faites</div>
+          <div class="budget__advance-amount">${done.length}</div>
+        </div>
+      </div>
+      <div class="budget__total">Total&nbsp;: <strong>${items.length} action${items.length > 1 ? 's' : ''}</strong></div>
+    `;
+  }
 
   const listEl = document.getElementById('todos-list');
   if (!open.length && !done.length) {
