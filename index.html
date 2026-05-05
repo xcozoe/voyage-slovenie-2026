@@ -3900,10 +3900,14 @@ function bindTodosTab() {
   document.querySelector('[data-act="open-action-add"]')?.addEventListener('click', () => openActionSheet());
 }
 
-// Sheet d'ajout d'une action — inputs minimaux, design cohérent avec expense
-function openActionSheet() {
+// Sheet d'ajout / édition d'une action — design cohérent avec expense
+function openActionSheet(actionId) {
   let el = document.getElementById('action-sheet');
   if (el) el.remove();
+  const action = actionId ? CURRENT_TODOS.find(a => a.id === actionId) : null;
+  const initialTitle = action ? action.title : '';
+  const initialDesc  = action ? (action.description || '') : '';
+
   el = document.createElement('div');
   el.id = 'action-sheet';
   el.className = 'sheet-backdrop';
@@ -3914,16 +3918,22 @@ function openActionSheet() {
       <div class="sheet__handle"></div>
       <button class="sheet__close" type="button" data-act="action-close" aria-label="Fermer">×</button>
       <div class="sheet__head">
-        <div class="sheet__kicker">Nouvelle action</div>
+        <div class="sheet__kicker">${action ? 'Modifier l\'action' : 'Nouvelle action'}</div>
       </div>
       <form class="expense-form" id="action-form">
         <label class="expense-field">
-          <span>Description</span>
-          <input type="text" name="title" maxlength="140" required autofocus placeholder="Ex : Réserver Vintgar en ligne">
+          <span>Titre</span>
+          <input type="text" name="title" maxlength="140" required value="${escapeHtml(initialTitle)}" placeholder="Ex : Réserver Vintgar en ligne">
+        </label>
+        <label class="expense-field">
+          <span>Description (optionnel)</span>
+          <textarea name="description" rows="3" maxlength="2000" placeholder="Détails, lien, contexte…">${escapeHtml(initialDesc)}</textarea>
         </label>
         <div class="expense-actions">
-          <button type="submit" class="expense-btn expense-btn--save">Ajouter</button>
-          <button type="button" class="expense-btn" data-act="action-close">Annuler</button>
+          <button type="submit" class="expense-btn expense-btn--save">${action ? 'Enregistrer' : 'Ajouter'}</button>
+          ${action
+            ? `<button type="button" class="expense-btn expense-btn--danger" data-act="action-delete">Supprimer</button>`
+            : `<button type="button" class="expense-btn" data-act="action-close">Annuler</button>`}
         </div>
       </form>
     </div>
@@ -3932,22 +3942,39 @@ function openActionSheet() {
   el.addEventListener('click', (e) => {
     if (e.target === el || e.target.closest('[data-act="action-close"]')) closeActionSheet();
   });
+  el.querySelector('[data-act="action-delete"]')?.addEventListener('click', async () => {
+    if (!action || !confirm('Supprimer cette action ?')) return;
+    try { await deleteDoc(doc(db, 'actions', action.id)); closeActionSheet(); }
+    catch (err) { console.error(err); flashError(err.message); }
+  });
   el.querySelector('#action-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const title = (new FormData(e.currentTarget).get('title') || '').toString().trim();
+    const fd = new FormData(e.currentTarget);
+    const title = (fd.get('title') || '').toString().trim();
+    const description = (fd.get('description') || '').toString().trim();
     if (!title) return;
     try {
-      await addDoc(collection(db, 'actions'), {
-        title, status: 'open', order: Date.now(),
-        createdAt: serverTimestamp(), doneAt: null,
-      });
+      if (action) {
+        await updateDoc(doc(db, 'actions', action.id), { title, description });
+      } else {
+        await addDoc(collection(db, 'actions'), {
+          title, description, status: 'open', order: Date.now(),
+          createdAt: serverTimestamp(), doneAt: null,
+        });
+      }
       closeActionSheet();
     } catch (err) { console.error(err); flashError(err.message); }
   });
   const sheetEl = el.querySelector('.sheet');
   const handleZone = el.querySelector('[data-act="sheet-handle"]');
   if (sheetEl && handleZone) attachSheetSwipeGeneric(sheetEl, handleZone, closeActionSheet);
-  setTimeout(() => el.querySelector('input[name="title"]')?.focus(), 100);
+  setTimeout(() => {
+    const input = el.querySelector('input[name="title"]');
+    if (input) {
+      input.focus();
+      if (action) input.setSelectionRange(input.value.length, input.value.length);
+    }
+  }, 100);
 }
 function closeActionSheet() {
   const el = document.getElementById('action-sheet');
@@ -4357,24 +4384,9 @@ function paintTodos(items) {
       toggleTodo(b.dataset.id, b.dataset.status);
     })
   );
-  // Edit (clic sur le titre)
+  // Edit (clic sur le titre) → ouvre la sheet d'édition
   listEl.querySelectorAll('[data-act="edit"]').forEach(b =>
-    b.addEventListener('click', () => startEdit(b.dataset.id))
-  );
-  // Save (formulaire édition)
-  listEl.querySelectorAll('form.todo__edit').forEach(f => {
-    f.addEventListener('submit', (e) => {
-      e.preventDefault();
-      saveEdit(f.dataset.id, f.querySelector('input').value);
-    });
-  });
-  // Cancel
-  listEl.querySelectorAll('[data-act="cancel"]').forEach(b =>
-    b.addEventListener('click', cancelEdit)
-  );
-  // Delete (depuis mode édition)
-  listEl.querySelectorAll('[data-act="delete"]').forEach(b =>
-    b.addEventListener('click', () => deleteTodo(b.dataset.id))
+    b.addEventListener('click', () => openActionSheet(b.dataset.id))
   );
   // Entrée en mode reorder via le bouton ⋮
   listEl.querySelectorAll('[data-act="enter-reorder"]').forEach(b =>
@@ -4390,38 +4402,11 @@ function paintTodos(items) {
   listEl.querySelectorAll('[data-act="reorder-done"]').forEach(b =>
     b.addEventListener('click', exitReorderMode)
   );
-  // Escape pour annuler
-  const editInput = listEl.querySelector('.todo__edit-input');
-  if (editInput) {
-    editInput.focus();
-    editInput.setSelectionRange(editInput.value.length, editInput.value.length);
-    editInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
-    });
-  }
-
 }
 
 function renderTodoRow(item) {
   const isDone = item.status === 'done';
-  const isEditing = item.id === EDITING_ID;
   const isReordering = item.id === REORDER_ID;
-
-  if (isEditing) {
-    return `
-      <li class="todo todo--editing" data-id="${item.id}">
-        <span class="todo__check ${isDone ? 'is-done' : ''}" aria-hidden="true">${isDone ? '✓' : ''}</span>
-        <form class="todo__edit" data-id="${item.id}">
-          <input class="todo__edit-input" type="text" value="${escapeHtml(item.title)}" maxlength="140" required>
-          <div class="todo__edit-actions">
-            <button type="submit" class="todo__edit-btn todo__edit-btn--save">Enregistrer</button>
-            <button type="button" class="todo__edit-btn" data-act="cancel">Annuler</button>
-            <button type="button" class="todo__edit-btn todo__edit-btn--danger" data-act="delete" data-id="${item.id}">Supprimer</button>
-          </div>
-        </form>
-      </li>
-    `;
-  }
 
   if (isReordering) {
     const open = CURRENT_TODOS.filter(t => t.status !== 'done');
