@@ -2055,6 +2055,28 @@
     color: var(--ink-mute);
     font-style: italic;
   }
+  .budget__advance-echeance {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .budget__advance-echeance strong {
+    display: block;
+    margin-top: 3px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--coral);
+    letter-spacing: 0;
+    text-transform: none;
+  }
   .budget__balance {
     margin-top: 14px;
     padding: 18px;
@@ -4125,26 +4147,38 @@ function paintBudget() {
     balanceLine = `<div class="budget__balance is-due"><span class="budget__balance-who">Rémi</span> doit <strong>${Math.round(-remiBalance)} €</strong> à <span class="budget__balance-who">Elsa</span></div>`;
   }
 
-  // Total à échéance : ce qui est avancé + ce qui reste à payer (tous stays confondus)
-  let upcomingTotal = 0;
+  // Paiements à venir par payeur (basés sur stays.bookedBy + remaining)
+  const upcomingByPayer = { 'Rémi': 0, 'Elsa': 0 };
   for (const s of Object.values(STATE.staysById)) {
     const r = s.paymentBreakdown?.remaining;
-    if (r && r > 0) upcomingTotal += r;
+    if (r && r > 0 && PAYERS.includes(s.bookedBy)) {
+      upcomingByPayer[s.bookedBy] += r;
+    }
   }
+  const upcomingTotal = upcomingByPayer['Rémi'] + upcomingByPayer['Elsa'];
   const totalAtMaturity = total + upcomingTotal;
+
+  const renderAdvance = (name) => {
+    const paid = advances[name];
+    const auto = autoAdvances[name];
+    const upc = upcomingByPayer[name];
+    const echeance = paid + upc;
+    return `
+      <div class="budget__advance">
+        <div class="budget__advance-name">${name}</div>
+        <div class="budget__advance-amount">${Math.round(paid)}<small> €</small></div>
+        ${auto > 0 ? `<small class="budget__advance-auto">dont ${Math.round(auto)} € hébergements</small>` : ''}
+        ${upc > 0
+          ? `<div class="budget__advance-echeance">à échéance <strong>${Math.round(echeance)} €</strong></div>`
+          : ''}
+      </div>
+    `;
+  };
 
   document.getElementById('budget-summary').innerHTML = `
     <div class="budget__advances">
-      <div class="budget__advance">
-        <div class="budget__advance-name">Rémi</div>
-        <div class="budget__advance-amount">${Math.round(advances['Rémi'])}<small> €</small></div>
-        ${autoAdvances['Rémi'] > 0 ? `<small class="budget__advance-auto">dont ${Math.round(autoAdvances['Rémi'])} € hébergements</small>` : ''}
-      </div>
-      <div class="budget__advance">
-        <div class="budget__advance-name">Elsa</div>
-        <div class="budget__advance-amount">${Math.round(advances['Elsa'])}<small> €</small></div>
-        ${autoAdvances['Elsa'] > 0 ? `<small class="budget__advance-auto">dont ${Math.round(autoAdvances['Elsa'])} € hébergements</small>` : ''}
-      </div>
+      ${renderAdvance('Rémi')}
+      ${renderAdvance('Elsa')}
     </div>
     ${balanceLine}
     <div class="budget__total">Total payé&nbsp;: <strong>${Math.round(total)} €</strong></div>
