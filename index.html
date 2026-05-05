@@ -1961,6 +1961,13 @@
     background: rgba(251, 246, 233, 0.06);
     border: 1px solid var(--line);
   }
+  .gestion__content {
+    transition: opacity 180ms var(--ease);
+  }
+  .gestion__content.is-switching {
+    opacity: 0.35;
+    pointer-events: none;
+  }
   .gestion__tab {
     flex: 1;
     text-align: center;
@@ -3878,6 +3885,37 @@ function renderActivities() {
 // =========================================================
 function renderGestion(match) {
   const tab = (match && match[1] === 'budget') ? 'budget' : 'a-faire';
+  const existing = document.querySelector('.gestion');
+
+  const populateTab = () => {
+    updateActionsBadge();
+    if (tab === 'a-faire') {
+      bindTodosTab();
+      paintTodos(CURRENT_TODOS);
+    } else {
+      bindBudgetTab();
+      paintBudget();
+    }
+  };
+
+  // Si la page Gestion est déjà montée → swap interne uniquement
+  if (existing) {
+    existing.querySelectorAll('.gestion__tab').forEach(t => {
+      t.classList.toggle('is-active', t.getAttribute('href') === `#/gestion/${tab}`);
+    });
+    const content = existing.querySelector('.gestion__content');
+    if (content) {
+      content.classList.add('is-switching');
+      requestAnimationFrame(() => {
+        content.innerHTML = tab === 'budget' ? budgetTabHtml() : todosTabHtml();
+        populateTab();
+        requestAnimationFrame(() => content.classList.remove('is-switching'));
+      });
+    }
+    return;
+  }
+
+  // Premier rendu : mount complet
   mount(`
     <section class="page gestion">
       <header class="gestion__head">
@@ -3896,14 +3934,7 @@ function renderGestion(match) {
       </div>
     </section>
   `);
-  updateActionsBadge();
-  if (tab === 'a-faire') {
-    bindTodosTab();
-    paintTodos(CURRENT_TODOS);
-  } else {
-    bindBudgetTab();
-    paintBudget();
-  }
+  populateTab();
   window.scrollTo(0, 0);
 }
 
