@@ -2099,6 +2099,10 @@
     text-transform: none;
     letter-spacing: 0;
   }
+  .budget__total--upcoming {
+    margin-top: 4px;
+  }
+  .budget__total--upcoming strong { color: var(--coral); }
   .budget__add-btn {
     display: block;
     width: 100%;
@@ -4121,6 +4125,14 @@ function paintBudget() {
     balanceLine = `<div class="budget__balance is-due"><span class="budget__balance-who">Rémi</span> doit <strong>${Math.round(-remiBalance)} €</strong> à <span class="budget__balance-who">Elsa</span></div>`;
   }
 
+  // Total à échéance : ce qui est avancé + ce qui reste à payer (tous stays confondus)
+  let upcomingTotal = 0;
+  for (const s of Object.values(STATE.staysById)) {
+    const r = s.paymentBreakdown?.remaining;
+    if (r && r > 0) upcomingTotal += r;
+  }
+  const totalAtMaturity = total + upcomingTotal;
+
   document.getElementById('budget-summary').innerHTML = `
     <div class="budget__advances">
       <div class="budget__advance">
@@ -4135,7 +4147,8 @@ function paintBudget() {
       </div>
     </div>
     ${balanceLine}
-    <div class="budget__total">Total avancé&nbsp;: <strong>${Math.round(total)} €</strong></div>
+    <div class="budget__total">Total payé&nbsp;: <strong>${Math.round(total)} €</strong></div>
+    <div class="budget__total budget__total--upcoming">Total à échéance&nbsp;: <strong>${Math.round(totalAtMaturity)} €</strong></div>
   `;
 
   // Construit la liste unifiée : dépenses manuelles + paiements stays
