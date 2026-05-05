@@ -2312,6 +2312,21 @@
     border-color: var(--chip-color, var(--coral));
     color: #ffffff;
   }
+  .expense-form[data-kind="shared"] [data-mode="settlement"],
+  .expense-form[data-kind="settlement"] [data-mode="shared"] { display: none; }
+  .expense-field__hint {
+    margin-top: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+  .expense-field__hint strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
   .expense-actions {
     display: flex;
     gap: 8px;
@@ -4141,10 +4156,11 @@ function paintBudget() {
     }
   }
   for (const e of EXPENSES) {
+    if (e.kind === 'settlement') continue;
     if (PAYERS.includes(e.payer)) advances[e.payer] += (Number(e.amount) || 0);
   }
   const total = advances['Rémi'] + advances['Elsa'];
-  const remiBalance = advances['Rémi'] - total / 2;
+  let remiBalance = advances['Rémi'] - total / 2;
   // Si remiBalance > 0 → Elsa doit ce montant à Rémi
 
   // Paiements à venir par payeur (basés sur stays.bookedBy + remaining)
@@ -4157,7 +4173,17 @@ function paintBudget() {
   }
   const upcomingTotal = upcomingByPayer['Rémi'] + upcomingByPayer['Elsa'];
   const totalAtMaturity = total + upcomingTotal;
-  const remiBalanceMaturity = (advances['Rémi'] + upcomingByPayer['Rémi']) - totalAtMaturity / 2;
+  let remiBalanceMaturity = (advances['Rémi'] + upcomingByPayer['Rémi']) - totalAtMaturity / 2;
+
+  // Régularisations : transfert direct, n'entre dans aucun total mais décale le solde.
+  // Elsa → Rémi : Elsa rembourse une partie de sa dette → remiBalance diminue.
+  // Rémi → Elsa : symétrique → remiBalance augmente.
+  for (const e of EXPENSES) {
+    if (e.kind !== 'settlement') continue;
+    const amt = Number(e.amount) || 0;
+    if (e.from === 'Elsa') { remiBalance -= amt; remiBalanceMaturity -= amt; }
+    else if (e.from === 'Rémi') { remiBalance += amt; remiBalanceMaturity += amt; }
+  }
 
   const balanceText = (b) => {
     if (Math.abs(b) < 0.5) return `équilibré ✓`;
@@ -4317,10 +4343,27 @@ function closeStayExpenseSheet() {
 }
 
 function renderExpenseItem(e) {
+  const isSettlement = e._kind === 'manual' && e.kind === 'settlement';
+  const dateStr = e.date ? formatExpenseDate(e.date) : '';
+
+  if (isSettlement) {
+    return `
+      <li class="budget__item">
+        <button class="budget__item-btn" data-act="edit-expense" data-id="${e.id}">
+          <span class="budget__item-icon" style="background:#9aa9ab1f; color:#9aa9ab">⇄</span>
+          <span class="budget__item-text">
+            <span class="budget__item-label">Régularisation</span>
+            <small>${escapeHtml(e.from || '?')} → ${escapeHtml(e.to || '?')} · ${dateStr}</small>
+          </span>
+          <span class="budget__item-amount">${Math.round(Number(e.amount) || 0)} €</span>
+        </button>
+      </li>
+    `;
+  }
+
   const cat = CATEGORIES.find(c => c.id === e.category) || CATEGORIES[4];
   const isUpcoming = e._kind === 'upcoming';
   const isStay     = e._kind === 'paid' || e._kind === 'upcoming';
-  const dateStr = e.date ? formatExpenseDate(e.date) : '';
 
   const meta = isUpcoming
     ? `${cat.label} · ${escapeHtml(e.payer || '?')} · à venir ${escapeHtml(e._dueLabel || '')}`
@@ -4372,7 +4415,14 @@ function openExpenseSheet(expenseId) {
   const expense = expenseId ? EXPENSES.find(x => x.id === expenseId) : null;
   const today = new Date();
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  const initial = expense || { amount: '', label: '', category: 'repas', payer: 'Rémi', date: todayStr };
+  const initial = expense || {
+    kind: 'shared',
+    amount: '', label: '', category: 'repas', payer: 'Rémi',
+    from: 'Elsa', to: 'Rémi',
+    date: todayStr,
+  };
+  const otherPayer = (p) => PAYERS.find(x => x !== p) || PAYERS[0];
+  const initialKind = initial.kind === 'settlement' ? 'settlement' : 'shared';
 
   el = document.createElement('div');
   el.id = 'expense-sheet';
@@ -4384,18 +4434,25 @@ function openExpenseSheet(expenseId) {
       <div class="sheet__handle"></div>
       <button class="sheet__close" type="button" data-act="expense-close" aria-label="Fermer">×</button>
       <div class="sheet__head">
-        <div class="sheet__kicker">${expense ? 'Modifier la dépense' : 'Nouvelle dépense'}</div>
+        <div class="sheet__kicker" data-kicker>${(expense ? 'Modifier' : 'Nouvelle') + ' ' + (initialKind === 'settlement' ? 'régularisation' : 'dépense')}</div>
       </div>
-      <form class="expense-form" id="expense-form">
+      <form class="expense-form" id="expense-form" data-kind="${initialKind}">
+        <div class="expense-field">
+          <span>Type</span>
+          <div class="expense-chips" role="radiogroup">
+            <button type="button" class="expense-chip ${initialKind === 'shared' ? 'is-active' : ''}" data-act="kind" data-id="shared">Dépense partagée</button>
+            <button type="button" class="expense-chip ${initialKind === 'settlement' ? 'is-active' : ''}" data-act="kind" data-id="settlement">Régularisation</button>
+          </div>
+        </div>
         <label class="expense-field">
           <span>Montant</span>
           <input type="number" name="amount" step="0.01" min="0" inputmode="decimal" required value="${initial.amount}" placeholder="0">
         </label>
-        <label class="expense-field">
+        <label class="expense-field" data-mode="shared">
           <span>Description</span>
-          <input type="text" name="label" maxlength="80" placeholder="Petit-déjeuner, péage, musée…" value="${escapeHtml(initial.label)}">
+          <input type="text" name="label" maxlength="80" placeholder="Petit-déjeuner, péage, musée…" value="${escapeHtml(initial.label || '')}">
         </label>
-        <div class="expense-field">
+        <div class="expense-field" data-mode="shared">
           <span>Catégorie</span>
           <div class="expense-chips" role="radiogroup">
             ${CATEGORIES.map(c => `
@@ -4405,13 +4462,22 @@ function openExpenseSheet(expenseId) {
             `).join('')}
           </div>
         </div>
-        <div class="expense-field">
+        <div class="expense-field" data-mode="shared">
           <span>Payeur</span>
           <div class="expense-chips" role="radiogroup">
             ${PAYERS.map(p => `
               <button type="button" class="expense-chip ${initial.payer === p ? 'is-active' : ''}" data-act="payer" data-id="${p}">${p}</button>
             `).join('')}
           </div>
+        </div>
+        <div class="expense-field" data-mode="settlement">
+          <span>De</span>
+          <div class="expense-chips" role="radiogroup">
+            ${PAYERS.map(p => `
+              <button type="button" class="expense-chip ${(initial.from || 'Elsa') === p ? 'is-active' : ''}" data-act="from" data-id="${p}">${p}</button>
+            `).join('')}
+          </div>
+          <small class="expense-field__hint">→ vers <strong data-settlement-to>${otherPayer(initial.from || 'Elsa')}</strong></small>
         </div>
         <label class="expense-field">
           <span>Date</span>
@@ -4426,12 +4492,27 @@ function openExpenseSheet(expenseId) {
   `;
 
   // State + handlers
+  let kind = initialKind;
   let category = initial.category;
   let payer = initial.payer;
+  let from = initial.from || 'Elsa';
+  const form = el.querySelector('#expense-form');
+  const kicker = el.querySelector('[data-kicker]');
+  const updateKicker = () => {
+    if (kicker) kicker.textContent = (expense ? 'Modifier' : 'Nouvelle') + ' ' + (kind === 'settlement' ? 'régularisation' : 'dépense');
+  };
 
   el.addEventListener('click', (e) => {
     if (e.target === el || e.target.closest('[data-act="expense-close"]')) closeExpenseSheet();
   });
+  el.querySelectorAll('[data-act="kind"]').forEach(b =>
+    b.addEventListener('click', () => {
+      kind = b.dataset.id;
+      form.setAttribute('data-kind', kind);
+      el.querySelectorAll('[data-act="kind"]').forEach(x => x.classList.toggle('is-active', x.dataset.id === kind));
+      updateKicker();
+    })
+  );
   el.querySelectorAll('[data-act="cat"]').forEach(b =>
     b.addEventListener('click', () => {
       category = b.dataset.id;
@@ -4444,8 +4525,18 @@ function openExpenseSheet(expenseId) {
       el.querySelectorAll('[data-act="payer"]').forEach(x => x.classList.toggle('is-active', x.dataset.id === payer));
     })
   );
+  el.querySelectorAll('[data-act="from"]').forEach(b =>
+    b.addEventListener('click', () => {
+      from = b.dataset.id;
+      el.querySelectorAll('[data-act="from"]').forEach(x => x.classList.toggle('is-active', x.dataset.id === from));
+      const toEl = el.querySelector('[data-settlement-to]');
+      if (toEl) toEl.textContent = otherPayer(from);
+    })
+  );
   el.querySelector('[data-act="expense-delete"]')?.addEventListener('click', async () => {
-    if (!expense || !confirm('Supprimer cette dépense ?')) return;
+    if (!expense) return;
+    const msg = initialKind === 'settlement' ? 'Supprimer cette régularisation ?' : 'Supprimer cette dépense ?';
+    if (!confirm(msg)) return;
     try { await deleteDoc(doc(db, 'expenses', expense.id)); closeExpenseSheet(); }
     catch (err) { console.error(err); flashError(err.message); }
   });
@@ -4453,13 +4544,20 @@ function openExpenseSheet(expenseId) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const amount = parseFloat(fd.get('amount'));
-    const label = (fd.get('label') || '').toString().trim();
     const date = fd.get('date');
     if (!Number.isFinite(amount) || amount <= 0) return;
-    const data = { amount, label, category, payer, date, updatedAt: serverTimestamp() };
+    let data;
+    if (kind === 'settlement') {
+      data = { kind: 'settlement', amount, from, to: otherPayer(from), date, updatedAt: serverTimestamp() };
+    } else {
+      const label = (fd.get('label') || '').toString().trim();
+      data = { kind: 'shared', amount, label, category, payer, date, updatedAt: serverTimestamp() };
+    }
     try {
       if (expense) {
-        await updateDoc(doc(db, 'expenses', expense.id), data);
+        // setDoc plutôt qu'updateDoc : remplace entièrement → pas de champs orphelins quand le kind change.
+        data.createdAt = expense.createdAt || serverTimestamp();
+        await setDoc(doc(db, 'expenses', expense.id), data);
       } else {
         data.createdAt = serverTimestamp();
         await addDoc(collection(db, 'expenses'), data);
