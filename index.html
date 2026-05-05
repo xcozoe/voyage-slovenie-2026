@@ -2185,6 +2185,22 @@
     flex-shrink: 0;
   }
 
+  /* Item « à venir » : icône en pointillé + montant en corail */
+  .budget__item--upcoming .budget__item-btn {
+    background: rgba(251, 246, 233, 0.02);
+    border-style: dashed;
+    border-color: var(--line-strong);
+  }
+  .budget__item-icon--upcoming {
+    background: transparent !important;
+    color: var(--cat-color, var(--ink-faint)) !important;
+    border: 1.5px dashed var(--cat-color, var(--ink-faint));
+    opacity: 0.85;
+  }
+  .budget__item-amount--upcoming {
+    color: var(--coral);
+  }
+
   /* Expense sheet — formulaire */
   .expense-form { display: flex; flex-direction: column; gap: 16px; }
   .expense-field {
@@ -4122,33 +4138,97 @@ function paintBudget() {
     <div class="budget__total">Total avancé&nbsp;: <strong>${Math.round(total)} €</strong></div>
   `;
 
-  // Liste des dépenses manuelles
+  // Construit la liste unifiée : dépenses manuelles + paiements stays
+  // (faits + à venir)
+  const stayItems = [];
+  for (const s of Object.values(STATE.staysById)) {
+    const pb = s.paymentBreakdown;
+    if (!pb) continue;
+    if (pb.paid && pb.paid > 0) {
+      stayItems.push({
+        _kind: 'paid', _stayId: s.id,
+        amount: pb.paid,
+        label: s.name || s.city,
+        category: 'hebergement',
+        payer: s.bookedBy,
+        date: pb.paidDate || s.arrival,
+        _meta: pb.paymentMethod || '',
+      });
+    }
+    if (pb.remaining && pb.remaining > 0) {
+      const dueIso = pb.remainingDue && /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue) ? pb.remainingDue : null;
+      stayItems.push({
+        _kind: 'upcoming', _stayId: s.id,
+        amount: pb.remaining,
+        label: s.name || s.city,
+        category: 'hebergement',
+        payer: s.bookedBy,
+        date: dueIso || s.arrival,
+        _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
+      });
+    }
+  }
+  const manualItems = EXPENSES.map(e => ({ ...e, _kind: 'manual' }));
+  const allItems = [...manualItems, ...stayItems].sort((a, b) => {
+    const ad = a.date || '';
+    const bd = b.date || '';
+    return bd.localeCompare(ad);
+  });
+
   const list = document.getElementById('budget-list');
-  if (!EXPENSES.length) {
-    list.innerHTML = `<p class="budget__empty">Aucune dépense ajoutée.<br>Les paiements d'hébergements sont comptabilisés automatiquement ci-dessus.</p>`;
+  if (!allItems.length) {
+    list.innerHTML = `<p class="budget__empty">Aucune dépense pour le moment.</p>`;
     return;
   }
   list.innerHTML = `
-    <h2 class="budget__list-title">${EXPENSES.length} dépense${EXPENSES.length > 1 ? 's' : ''}</h2>
+    <h2 class="budget__list-title">${allItems.length} ligne${allItems.length > 1 ? 's' : ''}</h2>
     <ul class="budget__items">
-      ${EXPENSES.map(renderExpenseItem).join('')}
+      ${allItems.map(renderExpenseItem).join('')}
     </ul>
   `;
   list.querySelectorAll('[data-act="edit-expense"]').forEach(b =>
     b.addEventListener('click', () => openExpenseSheet(b.dataset.id))
   );
+  list.querySelectorAll('[data-act="open-stay"]').forEach(b =>
+    b.addEventListener('click', () => { location.hash = `#/hebergements/${b.dataset.stayId}`; })
+  );
 }
 
 function renderExpenseItem(e) {
   const cat = CATEGORIES.find(c => c.id === e.category) || CATEGORIES[4];
+  const isUpcoming = e._kind === 'upcoming';
+  const isStay     = e._kind === 'paid' || e._kind === 'upcoming';
   const dateStr = e.date ? formatExpenseDate(e.date) : '';
+
+  const meta = isUpcoming
+    ? `${cat.label} · ${escapeHtml(e.payer || '?')} · à venir ${escapeHtml(e._dueLabel || '')}`
+    : `${cat.label} · ${escapeHtml(e.payer || '?')} · ${dateStr}${e._meta ? ' · ' + escapeHtml(e._meta) : ''}`;
+
+  const itemCls = `budget__item${isUpcoming ? ' budget__item--upcoming' : ''}`;
+  const iconCls = `budget__item-icon${isUpcoming ? ' budget__item-icon--upcoming' : ''}`;
+
+  if (isStay) {
+    return `
+      <li class="${itemCls}">
+        <button class="budget__item-btn" data-act="open-stay" data-stay-id="${e._stayId}">
+          <span class="${iconCls}" style="${isUpcoming ? `--cat-color:${cat.color}` : `background:${cat.color}1f; color:${cat.color}`}">${cat.icon}</span>
+          <span class="budget__item-text">
+            <span class="budget__item-label">${escapeHtml(e.label)}</span>
+            <small>${meta}</small>
+          </span>
+          <span class="budget__item-amount${isUpcoming ? ' budget__item-amount--upcoming' : ''}">${Math.round(Number(e.amount) || 0)} €</span>
+        </button>
+      </li>
+    `;
+  }
+
   return `
-    <li class="budget__item">
+    <li class="${itemCls}">
       <button class="budget__item-btn" data-act="edit-expense" data-id="${e.id}">
-        <span class="budget__item-icon" style="background:${cat.color}1f; color:${cat.color}">${cat.icon}</span>
+        <span class="${iconCls}" style="background:${cat.color}1f; color:${cat.color}">${cat.icon}</span>
         <span class="budget__item-text">
           <span class="budget__item-label">${escapeHtml(e.label || cat.label)}</span>
-          <small>${cat.label} · ${escapeHtml(e.payer || '?')} · ${dateStr}</small>
+          <small>${meta}</small>
         </span>
         <span class="budget__item-amount">${Math.round(Number(e.amount) || 0)} €</span>
       </button>
