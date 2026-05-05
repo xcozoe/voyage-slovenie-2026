@@ -2204,7 +2204,28 @@
     font-size: 16px;
     padding: 12px 14px;
   }
-  .expense-field input:focus { outline: none; border-color: var(--coral); }
+  .expense-field textarea {
+    width: 100%;
+    resize: vertical;
+    background: rgba(212, 165, 116, 0.08);
+    border: 1px solid var(--line-strong);
+    border-left: 2px solid var(--sand);
+    border-radius: 0 6px 6px 0;
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.55;
+    padding: 14px 16px;
+    min-height: 90px;
+  }
+  .expense-field textarea::placeholder {
+    color: var(--ink-mute);
+    font-style: italic;
+  }
+  .expense-field input:focus,
+  .expense-field textarea:focus { outline: none; border-color: var(--coral); }
+  .expense-field textarea:focus { border-left-color: var(--coral); }
   .expense-chips {
     display: flex;
     gap: 6px;
