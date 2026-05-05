@@ -2046,15 +2046,6 @@
     margin-left: 2px;
     font-style: italic;
   }
-  .budget__advance-auto {
-    display: block;
-    margin-top: 6px;
-    font-family: 'Inter', sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: var(--ink-mute);
-    font-style: italic;
-  }
   .budget__advance-echeance {
     margin-top: 10px;
     padding-top: 10px;
@@ -2093,6 +2084,27 @@
     font-size: 20px;
   }
   .budget__balance-who { font-weight: 500; }
+  .budget__balance-future {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink-mute);
+  }
+  .budget__balance-future strong {
+    font-size: 16px;
+  }
+  .budget__balance-future-label {
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-right: 6px;
+  }
   .budget__balance.is-due {
     background: rgba(233, 141, 88, 0.12);
     border: 1px solid rgba(233, 141, 88, 0.30);
@@ -4120,32 +4132,20 @@ const CATEGORIES = [
 const PAYERS = ['Rémi', 'Elsa'];
 
 function paintBudget() {
-  // Avances depuis stays.json (paiements déjà effectués)
-  const autoAdvances = { 'Rémi': 0, 'Elsa': 0 };
+  // Avances : paiements stays + dépenses manuelles
+  const advances = { 'Rémi': 0, 'Elsa': 0 };
   for (const s of Object.values(STATE.staysById)) {
     const p = s.paymentBreakdown?.paid;
     if (p && p > 0 && PAYERS.includes(s.bookedBy)) {
-      autoAdvances[s.bookedBy] += p;
+      advances[s.bookedBy] += p;
     }
   }
-  // Plus dépenses manuelles
-  const advances = { 'Rémi': autoAdvances['Rémi'], 'Elsa': autoAdvances['Elsa'] };
   for (const e of EXPENSES) {
     if (PAYERS.includes(e.payer)) advances[e.payer] += (Number(e.amount) || 0);
   }
   const total = advances['Rémi'] + advances['Elsa'];
-  const halfShare = total / 2;
-  const remiBalance = advances['Rémi'] - halfShare;
+  const remiBalance = advances['Rémi'] - total / 2;
   // Si remiBalance > 0 → Elsa doit ce montant à Rémi
-
-  let balanceLine;
-  if (Math.abs(remiBalance) < 0.5) {
-    balanceLine = `<div class="budget__balance is-even">Tout est équilibré ✓</div>`;
-  } else if (remiBalance > 0) {
-    balanceLine = `<div class="budget__balance is-due"><span class="budget__balance-who">Elsa</span> doit <strong>${Math.round(remiBalance)} €</strong> à <span class="budget__balance-who">Rémi</span></div>`;
-  } else {
-    balanceLine = `<div class="budget__balance is-due"><span class="budget__balance-who">Rémi</span> doit <strong>${Math.round(-remiBalance)} €</strong> à <span class="budget__balance-who">Elsa</span></div>`;
-  }
 
   // Paiements à venir par payeur (basés sur stays.bookedBy + remaining)
   const upcomingByPayer = { 'Rémi': 0, 'Elsa': 0 };
@@ -4157,17 +4157,33 @@ function paintBudget() {
   }
   const upcomingTotal = upcomingByPayer['Rémi'] + upcomingByPayer['Elsa'];
   const totalAtMaturity = total + upcomingTotal;
+  const remiBalanceMaturity = (advances['Rémi'] + upcomingByPayer['Rémi']) - totalAtMaturity / 2;
+
+  const balanceText = (b) => {
+    if (Math.abs(b) < 0.5) return `équilibré ✓`;
+    if (b > 0) return `<span class="budget__balance-who">Elsa</span> doit <strong>${Math.round(b)} €</strong> à <span class="budget__balance-who">Rémi</span>`;
+    return `<span class="budget__balance-who">Rémi</span> doit <strong>${Math.round(-b)} €</strong> à <span class="budget__balance-who">Elsa</span>`;
+  };
+  const evenNow = Math.abs(remiBalance) < 0.5;
+  const evenMaturity = Math.abs(remiBalanceMaturity) < 0.5;
+  const hasUpcoming = upcomingTotal > 0;
+  const balanceCls = (evenNow && (!hasUpcoming || evenMaturity)) ? 'is-even' : 'is-due';
+  const mainText = evenNow ? `Tout est équilibré ✓` : balanceText(remiBalance);
+  const balanceLine = `
+    <div class="budget__balance ${balanceCls}">
+      <div class="budget__balance-main">${mainText}</div>
+      ${hasUpcoming ? `<div class="budget__balance-future"><span class="budget__balance-future-label">à échéance</span> ${balanceText(remiBalanceMaturity)}</div>` : ''}
+    </div>
+  `;
 
   const renderAdvance = (name) => {
     const paid = advances[name];
-    const auto = autoAdvances[name];
     const upc = upcomingByPayer[name];
     const echeance = paid + upc;
     return `
       <div class="budget__advance">
         <div class="budget__advance-name">${name}</div>
         <div class="budget__advance-amount">${Math.round(paid)}<small> €</small></div>
-        ${auto > 0 ? `<small class="budget__advance-auto">dont ${Math.round(auto)} € hébergements</small>` : ''}
         ${upc > 0
           ? `<div class="budget__advance-echeance">à échéance <strong>${Math.round(echeance)} €</strong></div>`
           : ''}
