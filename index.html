@@ -4813,12 +4813,25 @@ async function saveEdit(id, newTitle) {
 }
 
 async function toggleTodo(id, currentStatus) {
-  try {
-    await updateDoc(doc(db, 'actions', id), {
-      status: currentStatus === 'open' ? 'done' : 'open',
-      doneAt: currentStatus === 'open' ? serverTimestamp() : null,
-    });
-  } catch (err) { console.error(err); flashError(err.message); }
+  const newStatus = currentStatus === 'open' ? 'done' : 'open';
+  // Optimiste : on met à jour CURRENT_TODOS et on repaint, sans attendre Firestore
+  const idx = CURRENT_TODOS.findIndex(t => t.id === id);
+  if (idx >= 0) {
+    CURRENT_TODOS[idx] = {
+      ...CURRENT_TODOS[idx],
+      status: newStatus,
+      doneAt: newStatus === 'done' ? new Date() : null,
+    };
+    CURRENT_TODOS.sort(sortTodos);
+    OPEN_ACTIONS_COUNT = CURRENT_TODOS.filter(t => t.status !== 'done').length;
+    updateActionsBadge();
+    paintTodos(CURRENT_TODOS);
+  }
+  // Persiste en arrière-plan
+  updateDoc(doc(db, 'actions', id), {
+    status: newStatus,
+    doneAt: newStatus === 'done' ? serverTimestamp() : null,
+  }).catch(err => { console.error(err); flashError(err.message); });
 }
 
 async function deleteTodo(id) {
