@@ -2678,6 +2678,52 @@
 
   /* Hide focus outlines for mouse, keep for keyboard */
   :focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+  /* Bandeau « hors-ligne » */
+  .offline-banner {
+    position: fixed;
+    left: 50%;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+    transform: translateX(-50%) translateY(24px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    max-width: calc(100vw - 32px);
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(6, 34, 41, 0.92);
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: var(--ink-soft);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-small);
+    font-weight: 600;
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 260ms var(--ease), transform 260ms var(--ease);
+  }
+  body.is-offline .offline-banner {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .offline-banner__dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--coral);
+    box-shadow: 0 0 0 0 rgba(233, 141, 88, 0.5);
+    animation: offline-pulse 2s var(--ease) infinite;
+  }
+  @keyframes offline-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(233, 141, 88, 0.5); }
+    70%  { box-shadow: 0 0 0 7px rgba(233, 141, 88, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(233, 141, 88, 0); }
+  }
 </style>
 </head>
 <body>
@@ -2686,16 +2732,22 @@
   <div class="loader">Chargement…</div>
 </main>
 
+<div class="offline-banner" role="status" aria-live="polite">
+  <span class="offline-banner__dot"></span>
+  Mode hors-ligne · données de la dernière synchro
+</div>
+
 <script type="module">
 // =========================================================
 // FIREBASE (ping seul pour l'instant — données = JSON local)
 // =========================================================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import {
-  initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
-  doc, setDoc, addDoc, updateDoc, deleteDoc, collection, query, orderBy,
-  onSnapshot, serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+// Firebase est chargé dynamiquement (loadFirebase) pour ne JAMAIS bloquer le
+// démarrage : si le module CDN n'est pas joignable (hors-ligne au tout premier
+// lancement), l'app s'ouvre quand même — seules les fonctions collaboratives
+// (notes, budget partagé, à-faire) sont alors indisponibles.
+let initializeApp, initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+    doc, setDoc, addDoc, updateDoc, deleteDoc, collection, query, orderBy,
+    onSnapshot, serverTimestamp;
 
 const firebaseConfig = {
   apiKey: "AIzaSyBnI7hdhZd7yKCxen-c6GBfRu1Mn7iuClk",
@@ -2706,10 +2758,23 @@ const firebaseConfig = {
   appId: "1:411413122851:web:014f6ab7758b3a90aec696"
 };
 
-const fbApp = initializeApp(firebaseConfig);
-const db = initializeFirestore(fbApp, {
-  localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-});
+let db = null;
+async function loadFirebase() {
+  try {
+    ({ initializeApp } = await import("https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js"));
+    ({ initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+       doc, setDoc, addDoc, updateDoc, deleteDoc, collection, query, orderBy,
+       onSnapshot, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js"));
+    const fbApp = initializeApp(firebaseConfig);
+    db = initializeFirestore(fbApp, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    });
+    return true;
+  } catch (e) {
+    console.warn('Firebase indisponible (hors-ligne ?) — fonctions collaboratives désactivées', e);
+    return false;
+  }
+}
 
 async function fbPing() {
   try {
@@ -2839,6 +2904,7 @@ let ACTIONS_UNSUB = null;
 let OPEN_ACTIONS_COUNT = 0;
 
 function startActionsSubscription() {
+  if (!db) return;
   if (ACTIONS_UNSUB) return;
   ACTIONS_UNSUB = onSnapshot(collection(db, 'actions'),
     (snap) => {
@@ -2870,6 +2936,7 @@ let NOTES_BY_DAY = {};
 let NOTE_EDITING_ID = null;
 
 function startNotesSubscription() {
+  if (!db) return;
   if (NOTES_UNSUB) return;
   NOTES_UNSUB = onSnapshot(collection(db, 'notes'),
     (snap) => {
@@ -4490,6 +4557,7 @@ let EXPENSES = [];
 let EXPENSES_UNSUB = null;
 
 function startExpensesSubscription() {
+  if (!db) return;
   if (EXPENSES_UNSUB) return;
   EXPENSES_UNSUB = onSnapshot(collection(db, 'expenses'),
     (snap) => {
@@ -5324,10 +5392,13 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   try {
     await loadData();
     route();
-    fbPing();
-    startActionsSubscription();
-    startNotesSubscription();
-    startExpensesSubscription();
+    // L'app est affichée : Firebase est chargé ensuite, sans bloquer le rendu.
+    if (await loadFirebase()) {
+      fbPing();
+      startActionsSubscription();
+      startNotesSubscription();
+      startExpensesSubscription();
+    }
   } catch (e) {
     console.error(e);
     document.getElementById('app').innerHTML = `
@@ -5341,6 +5412,14 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 // Service Worker — cache offline pour usage en voyage
 // Auto-reload de la page dès qu'un nouveau SW prend la main (post-skipWaiting + claim).
 // Sans ça, l'app standalone iOS reste sur le shell mis en cache par l'ancien SW.
+// Bandeau « hors-ligne » : reflète l'état du réseau en temps réel
+function updateOnlineStatus() {
+  document.body.classList.toggle('is-offline', !navigator.onLine);
+}
+window.addEventListener('online', updateOnlineStatus);
+window.addEventListener('offline', updateOnlineStatus);
+updateOnlineStatus();
+
 if ('serviceWorker' in navigator) {
   let reloadingForSwUpdate = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
