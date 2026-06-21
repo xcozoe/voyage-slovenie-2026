@@ -3037,7 +3037,7 @@ function renderDay(n) {
           <img src="${photoSrc(photoKey, 'mobile')}" alt="" loading="eager" decoding="async">
         </picture>
         <div class="day__topbar">
-          <a class="day__back" href="#/timeline">Itinéraire</a>
+          <a class="day__back" href="#/">Accueil</a>
           <span class="day__counter">Jour ${day.n} / ${STATE.days.length}</span>
         </div>
         <div class="day__hero-text">
@@ -3290,7 +3290,7 @@ function renderTimeline() {
   mount(`
     <section class="page timeline">
       <header class="timeline__head">
-        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
+        <a class="timeline__back" href="#/">Accueil</a>
         <div class="timeline__kicker">L'itinéraire</div>
         <h1 class="timeline__title">18 jours,<br><em>4 chapitres</em></h1>
         <p class="timeline__lead">Du 7 au 24 juillet 2026<br>${STATE.trip.totalKm.toLocaleString('fr-FR')} km · ${STATE.days.length} étapes</p>
