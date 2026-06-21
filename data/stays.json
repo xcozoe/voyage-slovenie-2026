@@ -29,6 +29,7 @@
       "bookedBy": "Elsa",
       "bookedByEmail": "elsa.poixjover@gmail.com",
       "amenities": ["logement entier (3 max)", "détecteur de fumée"],
+      "listing": { "type": "airbnb", "url": "https://www.airbnb.com/l/d7BcH3FD" },
       "notes": "Étape simple : pas de visite, baignade rapide + dîner avec Corentin. Départ tôt le lendemain pour éviter les bouchons Côte d'Azur/Ligurie. Pas d'animaux."
     },
     {
@@ -276,6 +277,7 @@
       "bookedBy": "Elsa",
       "bookedByEmail": "elsa.poixjover@gmail.com",
       "amenities": ["logement entier (4 max)", "à 200 m de la mer"],
+      "listing": { "type": "airbnb", "url": "https://www.airbnb.com/l/6sC5ds3S" },
       "notes": "À Alassio, ville voisine de Laigueglia (~2 km), à 200 m de la mer. Riviera ligure authentique, plage de sable. Calme demandé entre 22h et 8h. Pas d'animaux."
     }
   ],
