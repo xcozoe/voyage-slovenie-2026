@@ -8,9 +8,28 @@
       "arrival": "2026-07-07",
       "departure": "2026-07-08",
       "coords": [43.6968, 7.2839],
-      "status": "tbd",
-      "name": null,
-      "notes": "Étape simple : pas de visite, baignade rapide + dîner avec Corentin. Départ tôt le lendemain pour éviter les bouchons Côte d'Azur/Ligurie."
+      "status": "confirmed",
+      "name": "Espace détente tout confort",
+      "type": "airbnb",
+      "address": "7 Rue Barla, 06300 Nice, France",
+      "host": "Polia",
+      "phone": "+33 6 69 54 77 85",
+      "confirmation": "HMZH58B5DY",
+      "checkin": "après 15h00",
+      "checkout": "avant 12h00",
+      "price": 156.48,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 0,
+        "remaining": 156.48,
+        "remainingDue": "2026-06-28",
+        "paymentMethod": "Visa 1976"
+      },
+      "cancellation": "gratuite jusqu'au 6 juillet 2026 à 15h00",
+      "bookedBy": "Elsa",
+      "bookedByEmail": "elsa.poixjover@gmail.com",
+      "amenities": ["logement entier (3 max)", "détecteur de fumée"],
+      "notes": "Étape simple : pas de visite, baignade rapide + dîner avec Corentin. Départ tôt le lendemain pour éviter les bouchons Côte d'Azur/Ligurie. Pas d'animaux."
     },
     {
       "id": "venise",
@@ -243,10 +262,10 @@
   ],
   "summary": {
     "totalNights": 17,
-    "confirmed": 7,
-    "tbd": 2,
+    "confirmed": 8,
+    "tbd": 1,
     "totalPaid": 1029.98,
-    "totalDueLater": 1308.20,
+    "totalDueLater": 1464.68,
     "totalDueOnSite": 516,
     "currency": "EUR"
   }
