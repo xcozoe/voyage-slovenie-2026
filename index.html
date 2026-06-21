@@ -3446,8 +3446,9 @@ function renderResas(match) {
 function renderResaPageCard(act) {
   const isConfirmed = act.status === 'confirmed';
   const cls = isConfirmed ? 'stay-card--confirmed' : 'stay-card--tbd';
-  const statusLabel = isConfirmed ? 'Réservé' : 'À réserver';
-  const cornerLabel = act.startTime && act.endTime ? `${act.startTime}–${act.endTime}` : 'Activité';
+  const statusLabel = isConfirmed ? 'Réservé' : (act.status === 'requested' ? 'En attente' : 'À réserver');
+  const timeStr = act.startTime && act.endTime ? `${act.startTime} → ${act.endTime}` : (act.startTime || null);
+  const cornerLabel = act.startTime && act.endTime ? `${act.startTime}–${act.endTime}` : (act.startTime || 'Activité');
 
   const mobileSrc = act.photoKey ? photoSrc(act.photoKey, 'mobile') : null;
   const heroSrc   = act.photoKey ? photoSrc(act.photoKey, 'hero')   : null;
@@ -3466,8 +3467,7 @@ function renderResaPageCard(act) {
       <span class="stay-card__status">${statusLabel}</span>
     </figure>` : '';
 
-  const dateLine = [formatDate(act.date), act.startTime && act.endTime ? `${act.startTime} → ${act.endTime}` : null]
-    .filter(Boolean).join(' · ');
+  const dateLine = [formatDate(act.date), timeStr].filter(Boolean).join(' · ');
 
   const head = `
     <header class="stay-card__head">
@@ -3584,7 +3584,7 @@ function openActivityBookingSheet(actId) {
       </div>`);
   }
 
-  const sub = [formatDate(act.date), act.startTime && act.endTime ? `${act.startTime} → ${act.endTime}` : null]
+  const sub = [formatDate(act.date), act.startTime && act.endTime ? `${act.startTime} → ${act.endTime}` : (act.startTime || null)]
     .filter(Boolean).join(' · ');
 
   el = document.createElement('div');
