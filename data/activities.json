@@ -1,0 +1,43 @@
+{
+  "activities": [
+    {
+      "id": "ebike-istria",
+      "title": "Journée vélo électrique",
+      "provider": "E-Bike Istria",
+      "city": "Portorož",
+      "country": "Slovénie",
+      "date": "2026-07-11",
+      "startTime": "10:00",
+      "endTime": "18:00",
+      "status": "confirmed",
+      "meetingPoint": "Fizine 4, 6320 Portorož, Slovénie",
+      "coords": [45.5119, 13.5894],
+      "phone": "+386 41 947 130",
+      "phoneLabel": "WhatsApp",
+      "email": "rentabikeistria@gmail.com",
+      "confirmation": "EBI1782035869651",
+      "price": 135,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 0,
+        "remaining": 135,
+        "remainingDue": "sur place"
+      },
+      "cancellation": "part déjà payée non remboursable (réservation faite plus d'un mois à l'avance)",
+      "bookedBy": "Rémi",
+      "photoKey": "j05-parenzana",
+      "included": ["3 vélos électriques Ghost S/M/L (moteur Bosch)", "casques", "antivols", "bouteille d'eau", "kit de réparation + chambre à air"],
+      "bring": ["pièce d'identité ou passeport", "tenue confortable"],
+      "listing": { "type": "website", "url": "https://ebikeistria.eu" },
+      "notes": "Retrait à 10h, retour à 18h, à Portorož (Fizine). Journée sur la côte slovène et l'Istrie (voie verte Parenzana). Pendant l'étape Piran."
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "confirmed": 1,
+    "totalPaid": 0,
+    "totalDueLater": 0,
+    "totalDueOnSite": 135,
+    "currency": "EUR"
+  }
+}

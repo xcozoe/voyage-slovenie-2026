@@ -2697,6 +2697,7 @@ const STATE = {
   legs: null,
   days: [],
   staysById: {},
+  activitiesById: {},
 };
 
 // Map stay → photo key (la plus représentative de la ville, pour TBD ou fallback)
@@ -2716,14 +2717,16 @@ const STAY_PHOTO = {
 const STAYS_WITH_REAL_PHOTO = new Set(['venise', 'piran', 'postojna', 'ljubljana', 'tolmin', 'bled', 'zelenci']);
 
 async function loadData() {
-  const [days, stays] = await Promise.all([
+  const [days, stays, activities] = await Promise.all([
     fetch('data/days.json').then(r => r.json()),
     fetch('data/stays.json').then(r => r.json()),
+    fetch('data/activities.json').then(r => r.json()).catch(() => ({ activities: [] })),
   ]);
   STATE.trip = days.trip;
   STATE.legs = days.legs;
   STATE.days = days.days;
   STATE.staysById = Object.fromEntries(stays.stays.map(s => [s.id, s]));
+  STATE.activitiesById = Object.fromEntries((activities.activities || []).map(a => [a.id, a]));
 }
 
 // =========================================================
@@ -2788,6 +2791,7 @@ const ROUTES = [
   { match: /^#?\/?$/,                 render: renderCover },
   { match: /^#?\/timeline\/?$/,       render: renderTimeline },
   { match: /^#?\/hebergements(?:\/([\w-]+))?\/?$/, render: renderStays },
+  { match: /^#?\/reservations(?:\/([\w-]+))?\/?$/, render: renderResas },
   { match: /^#?\/activites\/?$/,      render: renderActivities },
   { match: /^#?\/gestion(?:\/([\w-]+))?\/?$/, render: renderGestion },
   { match: /^#?\/a-faire\/?$/,        render: () => renderGestion([null, 'a-faire']) },
@@ -3100,6 +3104,7 @@ function renderCover() {
         <nav class="cover__links">
           <a href="#/timeline">Itinéraire</a>
           <a href="#/hebergements">Hébergements</a>
+          <a href="#/reservations">Réservations</a>
           <a href="#/activites">Activités</a>
           <a href="#/carte">Carte</a>
           <a href="#/gestion" class="cover__link-todo">
@@ -3359,6 +3364,275 @@ function dayForStay(stayId) {
   const d = STATE.days.find(d => d.stay === stayId);
   return d ? d.n : 1;
 }
+
+// =========================================================
+// ACTIVITÉS RÉSERVÉES — page sœur des hébergements
+// =========================================================
+function renderResas(match) {
+  const focusId = match && match[1];
+  const acts = Object.values(STATE.activitiesById);
+
+  if (!acts.length) {
+    mount(`
+      <section class="page stays">
+        <header class="stays__head">
+          <a class="timeline__back" href="#/">Retour</a>
+          <div class="timeline__kicker">Activités réservées</div>
+          <h1 class="timeline__title">Aucune réservation<br><em>pour l'instant</em></h1>
+          <p class="timeline__lead">Les activités réservées (vélo, rafting, visites…) apparaîtront ici.</p>
+        </header>
+      </section>
+    `);
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  let confirmed = 0, paid = 0, toPay = 0;
+  for (const a of acts) {
+    if (a.status === 'confirmed') confirmed++;
+    if (a.paymentBreakdown) {
+      paid  += a.paymentBreakdown.paid      || 0;
+      toPay += a.paymentBreakdown.remaining || 0;
+    }
+  }
+
+  const cards = acts.map(renderResaPageCard).join('');
+
+  mount(`
+    <section class="page stays">
+      <header class="stays__head">
+        <a class="timeline__back" href="#/">Retour</a>
+        <div class="timeline__kicker">Activités réservées</div>
+        <h1 class="timeline__title">${acts.length} activité${acts.length > 1 ? 's' : ''},<br><em>réservée${acts.length > 1 ? 's' : ''}</em></h1>
+        <dl class="stays__summary">
+          <div>
+            <dt>Réservées</dt>
+            <dd>${confirmed}<small>/${acts.length}</small></dd>
+          </div>
+          <div>
+            <dt>Payé</dt>
+            <dd>${Math.round(paid)}<small> €</small></dd>
+          </div>
+          <div>
+            <dt>À régler</dt>
+            <dd>${Math.round(toPay)}<small> €</small></dd>
+          </div>
+        </dl>
+      </header>
+
+      <div class="stays__list">${cards}</div>
+    </section>
+  `);
+
+  const scrollToCard = () => {
+    const el = document.getElementById('resa-card-' + focusId);
+    const container = document.querySelector('.stays');
+    if (!el || !container) return;
+    container.scrollTo({ top: el.offsetTop, behavior: 'auto' });
+    el.classList.add('stay-card--focused');
+    setTimeout(() => el.classList.remove('stay-card--focused'), 1800);
+  };
+  if (focusId) {
+    requestAnimationFrame(() => requestAnimationFrame(scrollToCard));
+    setTimeout(scrollToCard, 600);
+  } else {
+    requestAnimationFrame(() => {
+      const c = document.querySelector('.stays');
+      if (c) c.scrollTo({ top: 0, behavior: 'auto' });
+    });
+  }
+}
+
+function renderResaPageCard(act) {
+  const isConfirmed = act.status === 'confirmed';
+  const cls = isConfirmed ? 'stay-card--confirmed' : 'stay-card--tbd';
+  const statusLabel = isConfirmed ? 'Réservé' : 'À réserver';
+  const cornerLabel = act.startTime && act.endTime ? `${act.startTime}–${act.endTime}` : 'Activité';
+
+  const mobileSrc = act.photoKey ? photoSrc(act.photoKey, 'mobile') : null;
+  const heroSrc   = act.photoKey ? photoSrc(act.photoKey, 'hero')   : null;
+
+  const listingPill = act.listing && act.listing.url
+    ? `<a class="stay-card__listing is-website" href="${escapeHtml(act.listing.url)}" target="_blank" rel="noopener">Site ↗</a>`
+    : '';
+
+  const photoHtml = mobileSrc ? `
+    <figure class="stay-card__photo">
+      <picture>
+        <source media="(min-width: 768px)" srcset="${heroSrc}">
+        <img src="${mobileSrc}" alt="" loading="lazy" decoding="async">
+      </picture>
+      <span class="stay-card__nights">${escapeHtml(cornerLabel)}</span>
+      <span class="stay-card__status">${statusLabel}</span>
+    </figure>` : '';
+
+  const dateLine = [formatDate(act.date), act.startTime && act.endTime ? `${act.startTime} → ${act.endTime}` : null]
+    .filter(Boolean).join(' · ');
+
+  const head = `
+    <header class="stay-card__head">
+      <div class="stay-card__city-row">
+        <span class="stay-card__city">${escapeHtml(act.city)} · ${escapeHtml(act.country)}</span>
+        ${listingPill}
+      </div>
+      <h2 class="stay-card__name">${escapeHtml(act.title || 'Activité')}</h2>
+      <p class="stay-card__dates">${escapeHtml(dateLine)}</p>
+    </header>
+  `;
+
+  const meta = [];
+  if (act.provider) meta.push({ k: 'Prestataire', v: escapeHtml(act.provider) });
+  if (act.phone) {
+    const tel = telLink(act.phone);
+    meta.push({ k: act.phoneLabel || 'Téléphone', v: `<a class="stay-card__link" href="${tel}">${escapeHtml(act.phone)}</a>` });
+  }
+  if (act.meetingPoint) {
+    const dir = act.coords
+      ? `https://www.google.com/maps/dir/?api=1&destination=${act.coords[0]},${act.coords[1]}`
+      : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.meetingPoint)}`;
+    meta.push({
+      k: 'Point de RDV',
+      v: `<a class="stay-card__link stay-card__link-block" href="${escapeHtml(dir)}" target="_blank" rel="noopener">${escapeHtml(act.meetingPoint)}</a>`,
+      full: true,
+    });
+  }
+  const metaHtml = meta.length
+    ? `<dl class="stay-card__meta">${meta.map(d => `<div${d.full ? ' class="stay-card__meta-full"' : ''}><dt>${d.k}</dt><dd>${d.v}</dd></div>`).join('')}</dl>`
+    : '';
+
+  let bookingBtnHtml = '';
+  if (act.price || act.paymentBreakdown || act.confirmation) {
+    const pb = act.paymentBreakdown || {};
+    const summary = [];
+    if (act.price) summary.push(`${Math.round(act.price)} €`);
+    if (pb.remaining > 0) summary.push(`${Math.round(pb.remaining)} € à régler`);
+    else if (pb.paid > 0 && (!pb.remaining || pb.remaining === 0)) summary.push('payé');
+    bookingBtnHtml = `
+      <button type="button" class="stay-card__booking" data-act="open-activity-booking" data-act-id="${act.id}">
+        <span class="stay-card__booking-text">
+          <span class="stay-card__booking-label">Réservation</span>
+          <span class="stay-card__booking-summary">${summary.join(' · ') || 'Voir le détail'}</span>
+        </span>
+        <span class="stay-card__booking-arrow">→</span>
+      </button>
+    `;
+  }
+
+  const notesHtml = act.notes ? `<p class="stay-card__notes">${escapeHtml(act.notes)}</p>` : '';
+
+  return `
+    <article class="stay-card ${cls}" id="resa-card-${act.id}" data-act-id="${act.id}">
+      <a class="stay-card__back" href="#/" aria-label="Retour à l'accueil">←</a>
+      ${photoHtml}
+      <div class="stay-card__body">
+        ${head}
+        ${metaHtml}
+        ${notesHtml}
+        ${bookingBtnHtml}
+      </div>
+    </article>
+  `;
+}
+
+// Bottom sheet « Réservation » d'une activité (réutilisée par la card et le budget)
+function openActivityBookingSheet(actId) {
+  let el = document.getElementById('activity-sheet');
+  if (el) el.remove();
+  const act = STATE.activitiesById[actId];
+  if (!act) return;
+
+  const pb = act.paymentBreakdown || {};
+  const details = [];
+  if (act.confirmation) details.push(['Référence', act.confirmation]);
+  if (act.bookedBy)     details.push(['Réservé par', act.bookedBy]);
+  if (act.included && act.included.length) details.push(['Inclus', act.included.join(', ')]);
+  if (act.bring && act.bring.length)       details.push(['À apporter', act.bring.join(', ')]);
+  if (act.cancellation) details.push(['Annulation', act.cancellation]);
+
+  const payments = [];
+  if (pb.paid && pb.paid > 0) {
+    const note = [pb.paidDate ? formatDueDate(pb.paidDate) : null, pb.paymentMethod || null].filter(Boolean).join(' · ');
+    payments.push(`
+      <div class="sheet__payment is-paid">
+        <span class="sheet__payment-icon">✓</span>
+        <div>
+          <div class="sheet__payment-main">${Math.round(pb.paid)} € payé</div>
+          ${note ? `<small>${escapeHtml(note)}</small>` : ''}
+        </div>
+      </div>`);
+  }
+  if (pb.remaining && pb.remaining > 0) {
+    const due = pb.remainingDue;
+    const dueLabel = !due ? 'à payer'
+      : due === 'sur place' ? 'à payer sur place'
+      : /^\d{4}-\d{2}-\d{2}$/.test(due) ? formatDueDate(due)
+      : due;
+    payments.push(`
+      <div class="sheet__payment is-due">
+        <span class="sheet__payment-icon">⏳</span>
+        <div>
+          <div class="sheet__payment-main">${Math.round(pb.remaining)} € à régler</div>
+          <small>${escapeHtml(dueLabel)}</small>
+        </div>
+      </div>`);
+  }
+  if (pb.extras) {
+    payments.push(`
+      <div class="sheet__payment is-info">
+        <span class="sheet__payment-icon">ℹ︎</span>
+        <div><div class="sheet__payment-main">${escapeHtml(pb.extras)}</div></div>
+      </div>`);
+  }
+
+  const sub = [formatDate(act.date), act.startTime && act.endTime ? `${act.startTime} → ${act.endTime}` : null]
+    .filter(Boolean).join(' · ');
+
+  el = document.createElement('div');
+  el.id = 'activity-sheet';
+  el.className = 'sheet-backdrop';
+  document.body.appendChild(el);
+  el.innerHTML = `
+    <div class="sheet" role="dialog" aria-modal="true">
+      <div class="sheet__handle-zone" data-act="sheet-handle"></div>
+      <div class="sheet__handle"></div>
+      <button class="sheet__close" type="button" data-act="activity-close" aria-label="Fermer">×</button>
+      <div class="sheet__head">
+        <div class="sheet__kicker">Réservation</div>
+        <h2 class="sheet__title">${escapeHtml(act.title || act.provider)}</h2>
+        <p class="sheet__sub">${escapeHtml(act.provider || '')}${act.provider ? ' · ' : ''}${escapeHtml(sub)}</p>
+      </div>
+      ${details.length ? `<dl class="sheet__details">${details.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
+      ${act.price ? `<div class="sheet__total"><span>Montant total</span><strong>${Math.round(act.price)} €</strong></div>` : ''}
+      ${payments.length ? `<div class="sheet__payments">${payments.join('')}</div>` : ''}
+      <a class="sheet__listing sheet__listing--website" href="#/reservations/${act.id}" data-act="activity-go-card">Voir la fiche complète →</a>
+    </div>
+  `;
+  document.body.classList.add('sheet-open');
+  el.addEventListener('click', (e) => {
+    if (e.target === el || e.target.closest('[data-act="activity-close"]')) closeActivityBookingSheet();
+    if (e.target.closest('[data-act="activity-go-card"]')) closeActivityBookingSheet();
+  });
+  const sheetEl = el.querySelector('.sheet');
+  const handleZone = el.querySelector('[data-act="sheet-handle"]');
+  if (sheetEl && handleZone) attachSheetSwipeGeneric(sheetEl, handleZone, closeActivityBookingSheet);
+}
+function closeActivityBookingSheet() {
+  const el = document.getElementById('activity-sheet');
+  if (!el) return;
+  el.classList.add('is-closing');
+  document.body.classList.remove('sheet-open');
+  setTimeout(() => el.remove(), 220);
+}
+window.addEventListener('hashchange', closeActivityBookingSheet);
+
+// Délégation : tap sur le bouton « Réservation » d'une card activité
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-act="open-activity-booking"]');
+  if (btn) {
+    e.preventDefault();
+    openActivityBookingSheet(btn.dataset.actId);
+  }
+});
 
 // =========================================================
 // BOTTOM SHEET RÉSERVATION
@@ -4155,6 +4429,12 @@ function paintBudget() {
       advances[s.bookedBy] += p;
     }
   }
+  for (const a of Object.values(STATE.activitiesById)) {
+    const p = a.paymentBreakdown?.paid;
+    if (p && p > 0 && PAYERS.includes(a.bookedBy)) {
+      advances[a.bookedBy] += p;
+    }
+  }
   for (const e of EXPENSES) {
     if (e.kind === 'settlement') continue;
     if (PAYERS.includes(e.payer)) advances[e.payer] += (Number(e.amount) || 0);
@@ -4169,6 +4449,12 @@ function paintBudget() {
     const r = s.paymentBreakdown?.remaining;
     if (r && r > 0 && PAYERS.includes(s.bookedBy)) {
       upcomingByPayer[s.bookedBy] += r;
+    }
+  }
+  for (const a of Object.values(STATE.activitiesById)) {
+    const r = a.paymentBreakdown?.remaining;
+    if (r && r > 0 && PAYERS.includes(a.bookedBy)) {
+      upcomingByPayer[a.bookedBy] += r;
     }
   }
   const upcomingTotal = upcomingByPayer['Rémi'] + upcomingByPayer['Elsa'];
@@ -4257,8 +4543,36 @@ function paintBudget() {
       });
     }
   }
+  const activityItems = [];
+  for (const a of Object.values(STATE.activitiesById)) {
+    const pb = a.paymentBreakdown;
+    if (!pb) continue;
+    if (pb.paid && pb.paid > 0) {
+      activityItems.push({
+        _kind: 'paid', _actId: a.id,
+        amount: pb.paid,
+        label: a.title || a.provider,
+        category: 'activite',
+        payer: a.bookedBy,
+        date: pb.paidDate || a.date,
+        _meta: pb.paymentMethod || '',
+      });
+    }
+    if (pb.remaining && pb.remaining > 0) {
+      const dueIso = pb.remainingDue && /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue) ? pb.remainingDue : null;
+      activityItems.push({
+        _kind: 'upcoming', _actId: a.id,
+        amount: pb.remaining,
+        label: a.title || a.provider,
+        category: 'activite',
+        payer: a.bookedBy,
+        date: dueIso || a.date,
+        _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
+      });
+    }
+  }
   const manualItems = EXPENSES.map(e => ({ ...e, _kind: 'manual' }));
-  const allItems = [...manualItems, ...stayItems].sort((a, b) => {
+  const allItems = [...manualItems, ...stayItems, ...activityItems].sort((a, b) => {
     const ad = a.date || '';
     const bd = b.date || '';
     return bd.localeCompare(ad);
@@ -4363,6 +4677,7 @@ function renderExpenseItem(e) {
 
   const cat = CATEGORIES.find(c => c.id === e.category) || CATEGORIES[4];
   const isUpcoming = e._kind === 'upcoming';
+  const isActivity = !!e._actId;
   const isStay     = e._kind === 'paid' || e._kind === 'upcoming';
 
   const meta = isUpcoming
@@ -4373,9 +4688,12 @@ function renderExpenseItem(e) {
   const iconCls = `budget__item-icon${isUpcoming ? ' budget__item-icon--upcoming' : ''}`;
 
   if (isStay) {
+    const btnAttrs = isActivity
+      ? `data-act="open-activity-booking" data-act-id="${e._actId}"`
+      : `data-act="open-stay-expense" data-stay-id="${e._stayId}" data-kind="${e._kind}"`;
     return `
       <li class="${itemCls}">
-        <button class="budget__item-btn" data-act="open-stay-expense" data-stay-id="${e._stayId}" data-kind="${e._kind}">
+        <button class="budget__item-btn" ${btnAttrs}>
           <span class="${iconCls}" style="${isUpcoming ? `--cat-color:${cat.color}` : `background:${cat.color}1f; color:${cat.color}`}">${cat.icon}</span>
           <span class="budget__item-text">
             <span class="budget__item-label">${escapeHtml(e.label)}</span>

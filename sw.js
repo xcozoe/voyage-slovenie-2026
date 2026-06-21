@@ -3,12 +3,13 @@
 // - Cache-first pour assets stables (photos, polices) → instantané + offline
 // - Bypass Firebase (Firestore en réseau direct)
 
-const CACHE = 'voyage-slovenie-v64';
+const CACHE = 'voyage-slovenie-v65';
 const SHELL = [
   './',
   './index.html',
   './data/days.json',
   './data/stays.json',
+  './data/activities.json',
 ];
 
 self.addEventListener('install', (e) => {
