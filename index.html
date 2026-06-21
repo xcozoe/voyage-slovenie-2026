@@ -1636,6 +1636,32 @@
     color: var(--ink-soft);
     letter-spacing: 0.06em;
   }
+  .sheet__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 22px;
+    padding: 15px 20px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--olive);
+    color: #06231f;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: opacity 180ms var(--ease);
+  }
+  .sheet__action:active { opacity: 0.85; }
+  .sheet__action--ghost {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-soft);
+  }
+
   .sheet__listing {
     display: flex;
     align-items: center;
@@ -3704,7 +3730,19 @@ function openActivityBookingSheet(actId) {
         </div>
       </div>`);
   }
-  if (pb.remaining && pb.remaining > 0) {
+  const actMarked = pb.remaining > 0 && isPaidOverride('act', actId);
+  if (pb.remaining && pb.remaining > 0 && actMarked) {
+    const pd = paidOverrideDate('act', actId);
+    const note = pd ? `${formatDueDate(pd)} · pointé` : 'pointé';
+    payments.push(`
+      <div class="sheet__payment is-paid">
+        <span class="sheet__payment-icon">✓</span>
+        <div>
+          <div class="sheet__payment-main">${Math.round(pb.remaining)} € payé</div>
+          <small>${escapeHtml(note)}</small>
+        </div>
+      </div>`);
+  } else if (pb.remaining && pb.remaining > 0) {
     const due = pb.remainingDue;
     const dueLabel = !due ? 'à payer'
       : due === 'sur place' ? 'à payer sur place'
@@ -3730,6 +3768,12 @@ function openActivityBookingSheet(actId) {
   const sub = [formatDate(act.date), act.startTime && act.endTime ? `${act.startTime} → ${act.endTime}` : (act.startTime || null)]
     .filter(Boolean).join(' · ');
 
+  const actActionHtml = (pb.remaining && pb.remaining > 0)
+    ? (actMarked
+        ? `<button type="button" class="sheet__action sheet__action--ghost" data-act="mark-paid" data-pay-type="act" data-pay-id="${act.id}" data-paid="0">Annuler le pointage</button>`
+        : `<button type="button" class="sheet__action" data-act="mark-paid" data-pay-type="act" data-pay-id="${act.id}" data-paid="1">✓ Marquer comme payé</button>`)
+    : '';
+
   el = document.createElement('div');
   el.id = 'activity-sheet';
   el.className = 'sheet-backdrop';
@@ -3747,6 +3791,7 @@ function openActivityBookingSheet(actId) {
       ${details.length ? `<dl class="sheet__details">${details.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
       ${act.price ? `<div class="sheet__total"><span>Montant total</span><strong>${Math.round(act.price)} €</strong></div>` : ''}
       ${payments.length ? `<div class="sheet__payments">${payments.join('')}</div>` : ''}
+      ${actActionHtml}
       <a class="sheet__listing sheet__listing--website" href="#/reservations/${act.id}" data-act="activity-go-card">Voir la fiche complète →</a>
     </div>
   `;
@@ -4562,6 +4607,11 @@ function startExpensesSubscription() {
   EXPENSES_UNSUB = onSnapshot(collection(db, 'expenses'),
     (snap) => {
       EXPENSES = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      // Reconstruit les pointages « payé » (kind:'paidmark') à part
+      PAID_OVERRIDES = {};
+      for (const e of EXPENSES) {
+        if (e.kind === 'paidmark' && e.ref) PAID_OVERRIDES[e.ref] = e;
+      }
       EXPENSES.sort((a, b) => {
         const am = a.createdAt?.toMillis?.() ?? 0;
         const bm = b.createdAt?.toMillis?.() ?? 0;
@@ -4572,6 +4622,41 @@ function startExpensesSubscription() {
     (err) => { console.error(err); flashError('Sync budget : ' + err.code); }
   );
 }
+
+// Pointage des paiements « à venir » comme réglés (partagé via Firestore).
+// Stocké dans la collection `expenses` (déjà autorisée) avec kind:'paidmark',
+// id déterministe `paidmark-<type>-<id>`. Reconstruit dans PAID_OVERRIDES par
+// la souscription expenses. Un « à venir » pointé bascule en « payé ».
+let PAID_OVERRIDES = {};
+
+function payKey(type, id) { return `${type}-${id}`; }
+function isPaidOverride(type, id) { return !!PAID_OVERRIDES[payKey(type, id)]; }
+function paidOverrideDate(type, id) { return PAID_OVERRIDES[payKey(type, id)]?.paidDate || null; }
+
+async function setPaymentPaid(type, id, paid) {
+  if (!db) { flashError('Indisponible hors-ligne'); return; }
+  const ref = payKey(type, id);
+  try {
+    if (paid) {
+      const d = new Date();
+      const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      await setDoc(doc(db, 'expenses', `paidmark-${ref}`),
+        { kind: 'paidmark', ref, refType: type, refId: id, paidDate: today, createdAt: serverTimestamp() });
+    } else {
+      await deleteDoc(doc(db, 'expenses', `paidmark-${ref}`));
+    }
+  } catch (err) { console.error(err); flashError(err.message); }
+}
+
+// Délégation : boutons « pointer / annuler le pointage » d'un paiement
+document.addEventListener('click', (e) => {
+  const mb = e.target.closest('[data-act="mark-paid"]');
+  if (!mb) return;
+  e.preventDefault();
+  setPaymentPaid(mb.dataset.payType, mb.dataset.payId, mb.dataset.paid === '1');
+  closeStayExpenseSheet();
+  closeActivityBookingSheet();
+});
 
 const CATEGORIES = [
   { id: 'hebergement', label: 'Hébergement', icon: '🛏', color: '#7a9657' },
@@ -4586,19 +4671,21 @@ function paintBudget() {
   // Avances : paiements stays + dépenses manuelles
   const advances = { 'Rémi': 0, 'Elsa': 0 };
   for (const s of Object.values(STATE.staysById)) {
-    const p = s.paymentBreakdown?.paid;
-    if (p && p > 0 && PAYERS.includes(s.bookedBy)) {
-      advances[s.bookedBy] += p;
-    }
+    const pb = s.paymentBreakdown || {};
+    if (!PAYERS.includes(s.bookedBy)) continue;
+    let paid = pb.paid || 0;
+    if ((pb.remaining || 0) > 0 && isPaidOverride('stay', s.id)) paid += pb.remaining; // « à venir » pointé
+    if (paid > 0) advances[s.bookedBy] += paid;
   }
   for (const a of Object.values(STATE.activitiesById)) {
-    const p = a.paymentBreakdown?.paid;
-    if (p && p > 0 && PAYERS.includes(a.bookedBy)) {
-      advances[a.bookedBy] += p;
-    }
+    const pb = a.paymentBreakdown || {};
+    if (!PAYERS.includes(a.bookedBy)) continue;
+    let paid = pb.paid || 0;
+    if ((pb.remaining || 0) > 0 && isPaidOverride('act', a.id)) paid += pb.remaining;
+    if (paid > 0) advances[a.bookedBy] += paid;
   }
   for (const e of EXPENSES) {
-    if (e.kind === 'settlement') continue;
+    if (e.kind === 'settlement' || e.kind === 'paidmark') continue;
     if (PAYERS.includes(e.payer)) advances[e.payer] += (Number(e.amount) || 0);
   }
   const total = advances['Rémi'] + advances['Elsa'];
@@ -4609,13 +4696,13 @@ function paintBudget() {
   const upcomingByPayer = { 'Rémi': 0, 'Elsa': 0 };
   for (const s of Object.values(STATE.staysById)) {
     const r = s.paymentBreakdown?.remaining;
-    if (r && r > 0 && PAYERS.includes(s.bookedBy)) {
+    if (r && r > 0 && !isPaidOverride('stay', s.id) && PAYERS.includes(s.bookedBy)) {
       upcomingByPayer[s.bookedBy] += r;
     }
   }
   for (const a of Object.values(STATE.activitiesById)) {
     const r = a.paymentBreakdown?.remaining;
-    if (r && r > 0 && PAYERS.includes(a.bookedBy)) {
+    if (r && r > 0 && !isPaidOverride('act', a.id) && PAYERS.includes(a.bookedBy)) {
       upcomingByPayer[a.bookedBy] += r;
     }
   }
@@ -4694,15 +4781,28 @@ function paintBudget() {
     }
     if (pb.remaining && pb.remaining > 0) {
       const dueIso = pb.remainingDue && /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue) ? pb.remainingDue : null;
-      stayItems.push({
-        _kind: 'upcoming', _stayId: s.id,
-        amount: pb.remaining,
-        label: s.name || s.city,
-        category: 'hebergement',
-        payer: s.bookedBy,
-        date: dueIso || s.arrival,
-        _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
-      });
+      if (isPaidOverride('stay', s.id)) {
+        const pd = paidOverrideDate('stay', s.id);
+        stayItems.push({
+          _kind: 'marked', _stayId: s.id,
+          amount: pb.remaining,
+          label: s.name || s.city,
+          category: 'hebergement',
+          payer: s.bookedBy,
+          date: pd || dueIso || s.arrival,
+          _meta: 'pointé',
+        });
+      } else {
+        stayItems.push({
+          _kind: 'upcoming', _stayId: s.id,
+          amount: pb.remaining,
+          label: s.name || s.city,
+          category: 'hebergement',
+          payer: s.bookedBy,
+          date: dueIso || s.arrival,
+          _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
+        });
+      }
     }
   }
   const activityItems = [];
@@ -4722,18 +4822,31 @@ function paintBudget() {
     }
     if (pb.remaining && pb.remaining > 0) {
       const dueIso = pb.remainingDue && /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue) ? pb.remainingDue : null;
-      activityItems.push({
-        _kind: 'upcoming', _actId: a.id,
-        amount: pb.remaining,
-        label: a.title || a.provider,
-        category: 'activite',
-        payer: a.bookedBy,
-        date: dueIso || a.date,
-        _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
-      });
+      if (isPaidOverride('act', a.id)) {
+        const pd = paidOverrideDate('act', a.id);
+        activityItems.push({
+          _kind: 'marked', _actId: a.id,
+          amount: pb.remaining,
+          label: a.title || a.provider,
+          category: 'activite',
+          payer: a.bookedBy,
+          date: pd || dueIso || a.date,
+          _meta: 'pointé',
+        });
+      } else {
+        activityItems.push({
+          _kind: 'upcoming', _actId: a.id,
+          amount: pb.remaining,
+          label: a.title || a.provider,
+          category: 'activite',
+          payer: a.bookedBy,
+          date: dueIso || a.date,
+          _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
+        });
+      }
     }
   }
-  const manualItems = EXPENSES.map(e => ({ ...e, _kind: 'manual' }));
+  const manualItems = EXPENSES.filter(e => e.kind !== 'paidmark').map(e => ({ ...e, _kind: 'manual' }));
   const allItems = [...manualItems, ...stayItems, ...activityItems].sort((a, b) => {
     const ad = a.date || '';
     const bd = b.date || '';
@@ -4767,19 +4880,29 @@ function openStayExpenseSheet(stayId, kind) {
   if (!stay) return;
   const pb = stay.paymentBreakdown || {};
   const isUpcoming = kind === 'upcoming';
-  const amount = isUpcoming ? pb.remaining : pb.paid;
+  const isMarked = kind === 'marked';
+  const amount = (isUpcoming || isMarked) ? pb.remaining : pb.paid;
+  const overrideDate = isMarked ? paidOverrideDate('stay', stayId) : null;
   const dateLabel = isUpcoming
     ? (pb.remainingDue && /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue)
         ? formatDueDate(pb.remainingDue)
         : (pb.remainingDue || 'à payer'))
-    : (pb.paidDate ? formatDueDate(pb.paidDate) : '');
+    : isMarked
+      ? (overrideDate ? formatDueDate(overrideDate) : '')
+      : (pb.paidDate ? formatDueDate(pb.paidDate) : '');
 
   const details = [];
   details.push(['Montant', `${Math.round(amount || 0)} €`]);
   if (stay.bookedBy)  details.push(['Payeur', stay.bookedBy]);
-  if (dateLabel)      details.push([isUpcoming ? 'Échéance' : 'Date', dateLabel]);
-  if (!isUpcoming && pb.paymentMethod) details.push(['Moyen', pb.paymentMethod]);
-  if (isUpcoming && pb.extras)         details.push(['Note', pb.extras]);
+  if (dateLabel)      details.push([isUpcoming ? 'Échéance' : isMarked ? 'Pointé le' : 'Date', dateLabel]);
+  if (kind === 'paid' && pb.paymentMethod) details.push(['Moyen', pb.paymentMethod]);
+  if (isUpcoming && pb.extras)             details.push(['Note', pb.extras]);
+
+  const actionHtml = isUpcoming
+    ? `<button type="button" class="sheet__action" data-act="mark-paid" data-pay-type="stay" data-pay-id="${stay.id}" data-paid="1">✓ Marquer comme payé</button>`
+    : isMarked
+      ? `<button type="button" class="sheet__action sheet__action--ghost" data-act="mark-paid" data-pay-type="stay" data-pay-id="${stay.id}" data-paid="0">Annuler le pointage</button>`
+      : '';
 
   el = document.createElement('div');
   el.id = 'stay-expense-sheet';
@@ -4791,13 +4914,14 @@ function openStayExpenseSheet(stayId, kind) {
       <div class="sheet__handle"></div>
       <button class="sheet__close" type="button" data-act="stay-exp-close" aria-label="Fermer">×</button>
       <div class="sheet__head">
-        <div class="sheet__kicker">${isUpcoming ? 'Paiement à venir' : 'Paiement effectué'}</div>
+        <div class="sheet__kicker">${isUpcoming ? 'Paiement à venir' : isMarked ? 'Paiement réglé (pointé)' : 'Paiement effectué'}</div>
         <h2 class="sheet__title">${escapeHtml(stay.name || stay.city)}</h2>
         <p class="sheet__sub">${escapeHtml(stay.city)} · ${formatRange(stay.arrival, stay.departure)}</p>
       </div>
       <dl class="sheet__details">
         ${details.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}
       </dl>
+      ${actionHtml}
       <a class="sheet__listing sheet__listing--website" href="#/hebergements/${stay.id}" data-act="stay-exp-go-card">Voir la fiche complète →</a>
     </div>
   `;
@@ -4840,7 +4964,7 @@ function renderExpenseItem(e) {
   const cat = CATEGORIES.find(c => c.id === e.category) || CATEGORIES[4];
   const isUpcoming = e._kind === 'upcoming';
   const isActivity = !!e._actId;
-  const isStay     = e._kind === 'paid' || e._kind === 'upcoming';
+  const isStay     = e._kind === 'paid' || e._kind === 'upcoming' || e._kind === 'marked';
 
   const meta = isUpcoming
     ? `${cat.label} · ${escapeHtml(e.payer || '?')} · à venir ${escapeHtml(e._dueLabel || '')}`
