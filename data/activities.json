@@ -109,13 +109,41 @@
       "photoKey": "j14-rafting",
       "listing": { "type": "website", "url": "https://www.socarider.com" },
       "notes": "⚠️ Demande envoyée, en attente de confirmation par l'agence (tarif et créneau à confirmer). Souhait : 20 juillet vers 9h45, demi-journée, 2 adultes + 1 étudiant (15-24 ans). Pendant l'étape Tolmin."
+    },
+    {
+      "id": "tolmin-gorges",
+      "title": "Gorges de Tolmin",
+      "provider": "Dolina Soče",
+      "city": "Tolmin",
+      "country": "Slovénie",
+      "date": "2026-07-20",
+      "startTime": "17:00",
+      "endTime": "18:00",
+      "status": "confirmed",
+      "meetingPoint": "Guichet des gorges de Tolmin, Zatolmin 27, 5220 Tolmin, Slovénie",
+      "coords": [46.1872, 13.7227],
+      "email": "info@socavalley.com",
+      "confirmation": "YVGL-210626",
+      "price": 30.90,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 30.90,
+        "remaining": 0,
+        "paidDate": "2026-06-21",
+        "paymentMethod": "Mastercard 0748"
+      },
+      "bookedBy": "Rémi",
+      "photoKey": "j15-canyoning",
+      "included": ["2 entrées adultes", "1 entrée jeune"],
+      "listing": { "type": "website", "url": "https://www.socavalley.com" },
+      "notes": "Créneau d'entrée 17h-18h. Échanger la confirmation au guichet (Ticket office) contre un billet QR avant d'entrer. 2 adultes + 1 jeune. Pendant l'étape Tolmin (même jour que le rafting)."
     }
   ],
   "summary": {
-    "total": 4,
-    "confirmed": 3,
+    "total": 5,
+    "confirmed": 4,
     "requested": 1,
-    "totalPaid": 202,
+    "totalPaid": 232.90,
     "totalDueLater": 0,
     "totalDueOnSite": 135,
     "currency": "EUR"
