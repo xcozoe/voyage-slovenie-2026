@@ -3189,7 +3189,7 @@ function renderTimeline() {
   mount(`
     <section class="page timeline">
       <header class="timeline__head">
-        <a class="timeline__back" href="#/">Retour</a>
+        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
         <div class="timeline__kicker">L'itinéraire</div>
         <h1 class="timeline__title">18 jours,<br><em>4 chapitres</em></h1>
         <p class="timeline__lead">Du 7 au 24 juillet 2026<br>${STATE.trip.totalKm.toLocaleString('fr-FR')} km · ${STATE.days.length} étapes</p>
@@ -3240,7 +3240,7 @@ function renderStays(match) {
   mount(`
     <section class="page stays">
       <header class="stays__head">
-        <a class="timeline__back" href="#/">Retour</a>
+        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
         <div class="timeline__kicker">Les hébergements</div>
         <h1 class="timeline__title">${totalNights} nuits,<br><em>${stays.length} étapes</em></h1>
         <dl class="stays__summary">
@@ -3418,7 +3418,7 @@ function renderResas(match) {
     mount(`
       <section class="page stays">
         <header class="stays__head">
-          <a class="timeline__back" href="#/">Retour</a>
+          <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
           <div class="timeline__kicker">Activités réservées</div>
           <h1 class="timeline__title">Aucune réservation<br><em>pour l'instant</em></h1>
           <p class="timeline__lead">Les activités réservées (vélo, rafting, visites…) apparaîtront ici.</p>
@@ -3443,7 +3443,7 @@ function renderResas(match) {
   mount(`
     <section class="page stays">
       <header class="stays__head">
-        <a class="timeline__back" href="#/">Retour</a>
+        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
         <div class="timeline__kicker">Activités réservées</div>
         <h1 class="timeline__title">${acts.length} activité${acts.length > 1 ? 's' : ''},<br><em>réservée${acts.length > 1 ? 's' : ''}</em></h1>
         <dl class="stays__summary">
@@ -4027,7 +4027,7 @@ async function loadKmlFeatures() {
 async function renderMap() {
   mount(`
     <section class="page map-view">
-      <a class="map-back" href="#/">Retour</a>
+      <a class="map-back" href="#/" data-act="go-back">Retour</a>
       <a class="map-external" href="${MY_MAPS_URL}" target="_blank" rel="noopener" title="Ouvrir dans Google Maps">Google Maps ↗</a>
       <div id="leaflet-map" class="leaflet-map" aria-label="Carte du voyage">
         <div class="map-loader">Chargement de la carte…</div>
@@ -4272,7 +4272,7 @@ function renderActivities() {
   mount(`
     <section class="page activities">
       <header class="activities__head">
-        <a class="timeline__back" href="#/">Retour</a>
+        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
         <div class="timeline__kicker">Au programme</div>
         <h1 class="timeline__title">${totalItems} activités,<br><em>${days.length} journées</em></h1>
         <p class="timeline__lead">Le programme jour par jour.<br>Les activités réservées renvoient vers leur fiche 🎟.</p>
@@ -4322,7 +4322,7 @@ function renderGestion(match) {
   mount(`
     <section class="page gestion">
       <header class="gestion__head">
-        <a class="timeline__back" href="#/">Retour</a>
+        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
         <div class="timeline__kicker">Gestion</div>
         <nav class="gestion__tabs">
           <a class="gestion__tab ${tab === 'a-faire' ? 'is-active' : ''}" href="#/gestion/a-faire">
@@ -5002,7 +5002,7 @@ function renderTodos() {
   mount(`
     <section class="page todos">
       <header class="todos__head">
-        <a class="timeline__back" href="#/">Retour</a>
+        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
         <div class="timeline__kicker">Préparatifs &amp; voyage</div>
         <h1 class="timeline__title">À faire,<br><em id="todos-counter">…</em></h1>
         <p class="timeline__lead">Liste partagée entre les téléphones.<br>Synchronisée Firestore, dispo offline.</p>
