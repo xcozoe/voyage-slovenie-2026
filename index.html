@@ -1350,6 +1350,35 @@
   }
   .activities__day-title a:active { border-bottom-color: var(--coral); }
 
+  .activities__resa {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -6px 0 18px;
+  }
+  .activities__resa-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(212, 165, 116, 0.14);
+    border: 1px solid rgba(212, 165, 116, 0.35);
+    color: var(--sand);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-small);
+    font-weight: 600;
+    line-height: 1;
+    transition: background 200ms var(--ease);
+  }
+  .activities__resa-link:active { background: rgba(212, 165, 116, 0.26); }
+  .activities__resa-link.is-pending {
+    background: rgba(251, 246, 233, 0.05);
+    border-color: var(--line-strong);
+    color: var(--ink-faint);
+  }
+  .activities__resa-arrow { opacity: 0.7; }
+
   .activities__items {
     display: flex;
     flex-direction: column;
@@ -4188,6 +4217,23 @@ function renderActivities() {
   const days = STATE.days.filter(d => d.schedule && d.schedule.length);
   const totalItems = days.reduce((n, d) => n + d.schedule.length, 0);
 
+  // Activités réservées indexées par date → reliées aux journées du programme
+  const resaByDate = {};
+  for (const a of Object.values(STATE.activitiesById)) {
+    (resaByDate[a.date] = resaByDate[a.date] || []).push(a);
+  }
+  const resaChips = (date) => {
+    const resas = resaByDate[date] || [];
+    if (!resas.length) return '';
+    return `<div class="activities__resa">${resas.map(a => {
+      const pending = a.status !== 'confirmed';
+      return `<a class="activities__resa-link${pending ? ' is-pending' : ''}" href="#/reservations/${a.id}">
+        <span>${pending ? '⏳' : '🎟'}</span> ${escapeHtml(a.title)}
+        <span class="activities__resa-arrow">→</span>
+      </a>`;
+    }).join('')}</div>`;
+  };
+
   const sections = days.map(d => `
     <section class="activities__day">
       <header class="activities__day-head">
@@ -4197,6 +4243,7 @@ function renderActivities() {
       <h2 class="activities__day-title">
         <a href="#/jour/${d.n}">${escapeHtml(d.title)}</a>
       </h2>
+      ${resaChips(d.date)}
       <ol class="activities__items">
         ${d.schedule.map(item => `
           <li class="activities__item">
@@ -4215,7 +4262,7 @@ function renderActivities() {
         <a class="timeline__back" href="#/">Retour</a>
         <div class="timeline__kicker">Au programme</div>
         <h1 class="timeline__title">${totalItems} activités,<br><em>${days.length} journées</em></h1>
-        <p class="timeline__lead">Vue brute du programme par jour.<br>À étoffer (réservations, contacts, infos pratiques).</p>
+        <p class="timeline__lead">Le programme jour par jour.<br>Les activités réservées renvoient vers leur fiche 🎟.</p>
       </header>
       <div class="activities__list">${sections}</div>
     </section>
