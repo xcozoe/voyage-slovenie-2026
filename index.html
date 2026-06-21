@@ -2903,6 +2903,19 @@ function route() {
 
 window.addEventListener('hashchange', route);
 
+// Navigation « retour » : revient à la page précédente si on a déjà
+// navigué dans l'app, sinon retombe sur l'accueil (cas d'un lien profond).
+let NAV_DEPTH = 0;
+window.addEventListener('hashchange', () => { NAV_DEPTH++; });
+function goBack(fallback = '#/') {
+  if (NAV_DEPTH > 0) history.back();
+  else location.hash = fallback;
+}
+document.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-act="go-back"]');
+  if (b) { e.preventDefault(); goBack(); }
+});
+
 // =========================================================
 // VUE JOUR (immersive — focus principal v2)
 // =========================================================
@@ -3376,7 +3389,7 @@ function renderStayPageCard(stay) {
 
   return `
     <article class="stay-card ${cls}" id="stay-card-${stay.id}" data-stay-id="${stay.id}">
-      <a class="stay-card__back" href="#/" aria-label="Retour à l'accueil">←</a>
+      <a class="stay-card__back" href="#/" data-act="go-back" aria-label="Retour">←</a>
       ${photoHtml}
       <div class="stay-card__body">
         ${head}
@@ -3551,7 +3564,7 @@ function renderResaPageCard(act) {
 
   return `
     <article class="stay-card ${cls}" id="resa-card-${act.id}" data-act-id="${act.id}">
-      <a class="stay-card__back" href="#/" aria-label="Retour à l'accueil">←</a>
+      <a class="stay-card__back" href="#/" data-act="go-back" aria-label="Retour">←</a>
       ${photoHtml}
       <div class="stay-card__body">
         ${head}
