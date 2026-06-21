@@ -249,23 +249,42 @@
     },
     {
       "id": "laigueglia",
-      "city": "Laigueglia",
+      "city": "Alassio",
       "country": "Italie",
       "nights": 2,
       "arrival": "2026-07-22",
       "departure": "2026-07-24",
-      "coords": [43.9750, 8.1631],
-      "status": "tbd",
-      "name": null,
-      "notes": "Riviera ligure authentique, plage de sable 3 km. Hôtels recommandés : Hotel Windsor (boutique design), Hotel Splendid Mare (charme historique, ancien monastère), Hotel Villa Giulia (familial)."
+      "coords": [43.9885, 8.1727],
+      "status": "confirmed",
+      "name": "RELAX a 200 metri dal mare",
+      "type": "airbnb",
+      "address": "Via Flavio Gioia 3, 17021 Alassio SV, Italie",
+      "host": "Roberta",
+      "phone": "+39 340 896 1283",
+      "confirmation": "HMRXQ2DHMD",
+      "checkin": "après 14h00",
+      "checkout": "avant 10h00",
+      "price": 476.76,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 0,
+        "remaining": 476.76,
+        "remainingDue": "2026-07-13",
+        "paymentMethod": "Visa 1976"
+      },
+      "cancellation": "gratuite jusqu'au 21 juillet 2026 à 14h00 (remboursement partiel ensuite)",
+      "bookedBy": "Elsa",
+      "bookedByEmail": "elsa.poixjover@gmail.com",
+      "amenities": ["logement entier (4 max)", "à 200 m de la mer"],
+      "notes": "À Alassio, ville voisine de Laigueglia (~2 km), à 200 m de la mer. Riviera ligure authentique, plage de sable. Calme demandé entre 22h et 8h. Pas d'animaux."
     }
   ],
   "summary": {
     "totalNights": 17,
-    "confirmed": 8,
-    "tbd": 1,
+    "confirmed": 9,
+    "tbd": 0,
     "totalPaid": 1029.98,
-    "totalDueLater": 1464.68,
+    "totalDueLater": 1941.44,
     "totalDueOnSite": 516,
     "currency": "EUR"
   }
