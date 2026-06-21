@@ -350,6 +350,7 @@
     font-size: 18px;
     line-height: 1;
   }
+  .day__activities .stay + .stay { margin-top: 10px; }
   .stay__status {
     display: inline-block;
     font-size: var(--fz-micro);
@@ -2959,6 +2960,7 @@ function renderDay(n) {
     </section>`;
 
   const stayHtml = stay ? renderStayCard(stay) : '';
+  const dayActivitiesHtml = renderDayActivities(day);
 
   const html = `
     <article class="page day" data-day="${day.n}">
@@ -2989,6 +2991,7 @@ function renderDay(n) {
             <h2 class="section-title">Programme</h2>
             <ol class="schedule">${scheduleHtml}</ol>
           </section>` : ''}
+        ${dayActivitiesHtml}
         ${stayHtml}
         ${tipsHtml}
         ${notesHtml}
@@ -3037,6 +3040,37 @@ function renderStayCard(stay) {
         }
         ${meta.length ? `<dl class="stay__meta">${meta.map(([k,v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
       </a>
+    </section>
+  `;
+}
+
+// Encart « Activité(s) réservée(s) » du jour → renvoie vers les fiches réservation
+function renderDayActivities(day) {
+  const acts = Object.values(STATE.activitiesById).filter(a => a.date === day.date);
+  if (!acts.length) return '';
+
+  const cards = acts.map(a => {
+    const confirmed = a.status === 'confirmed';
+    const statusLabel = confirmed ? 'Réservé' : (a.status === 'requested' ? 'En attente' : 'À réserver');
+    const cls = confirmed ? 'stay--confirmed' : 'stay--tbd';
+    const time = a.startTime && a.endTime ? `${a.startTime} → ${a.endTime}` : (a.startTime || null);
+    const meta = [];
+    if (time)            meta.push(['Horaire', time]);
+    if (a.meetingPoint)  meta.push(['Lieu', a.meetingPoint]);
+    return `
+      <a class="stay ${cls}" href="#/reservations/${a.id}" aria-label="Voir la réservation">
+        <span class="stay__status">${statusLabel}</span>
+        <h3 class="stay__name">${escapeHtml(a.title)}</h3>
+        ${a.provider ? `<p class="stay__city">${escapeHtml(a.provider)}</p>` : ''}
+        ${meta.length ? `<dl class="stay__meta">${meta.map(([k,v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
+      </a>`;
+  }).join('');
+
+  const title = acts.length > 1 ? 'Activités réservées' : 'Activité réservée';
+  return `
+    <section class="day__stay day__activities">
+      <h2 class="section-title">${title}</h2>
+      ${cards}
     </section>
   `;
 }
