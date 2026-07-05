@@ -2690,6 +2690,98 @@
   .todo__reorder-btn--ok:active { opacity: 0.85; }
 
   /* =========================================================
+     CHECK-LIST — bagages & préparatifs
+     ========================================================= */
+  .pack__progress {
+    margin: 20px var(--pad-x) 0;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(251, 246, 233, 0.12);
+    overflow: hidden;
+  }
+  .pack__progress-bar {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: var(--coral);
+    transition: width 400ms var(--ease), background 400ms var(--ease);
+  }
+  .pack__progress-bar.is-complete { background: var(--olive); }
+
+  .pack__section { margin-top: 34px; }
+  .pack__section:first-child { margin-top: 10px; }
+  .pack__section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .pack__section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sand);
+  }
+  .pack__section-count {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  .pack__section-count.is-complete { color: var(--olive); }
+
+  .pack__label {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    text-align: left;
+    border-radius: 4px;
+    transition: background 180ms var(--ease);
+  }
+  .pack__label:active { background: rgba(251, 246, 233, 0.06); }
+  .pack__name {
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink);
+    word-wrap: break-word;
+    transition: color 200ms var(--ease);
+  }
+  .pack__hint {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--ink-faint);
+  }
+  .todo--done .pack__name {
+    color: var(--ink-faint);
+    text-decoration: line-through;
+    text-decoration-color: rgba(251, 246, 233, 0.35);
+  }
+  .todo--done .pack__hint { opacity: 0.55; }
+
+  .pack__del {
+    width: 40px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    color: var(--ink-mute);
+    font-size: 15px;
+    border-radius: 4px;
+    transition: color 200ms var(--ease), background 200ms var(--ease);
+  }
+  .pack__del:active {
+    color: var(--coral);
+    background: rgba(233, 141, 88, 0.08);
+  }
+
+  /* =========================================================
      LOADER & STATUS
      ========================================================= */
   .loader {
@@ -2916,6 +3008,7 @@ const ROUTES = [
   { match: /^#?\/activites\/?$/,      render: renderActivities },
   { match: /^#?\/gestion(?:\/([\w-]+))?\/?$/, render: renderGestion },
   { match: /^#?\/a-faire\/?$/,        render: () => renderGestion([null, 'a-faire']) },
+  { match: /^#?\/checklist\/?$/,      render: renderChecklist },
   { match: /^#?\/carte\/?$/,          render: renderMap },
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
 ];
@@ -2972,8 +3065,14 @@ function startNotesSubscription() {
         const bm = b.createdAt?.toMillis?.() ?? 0;
         return am - bm;
       });
+      // Docs de la check-list bagages — rangés dans `notes` (collection déjà
+      // autorisée côté règles Firestore) avec un `kind` dédié, sans dayN.
+      PACK_MARKS = new Set(items.filter(n => n.kind === 'packmark').map(n => n.item));
+      PACK_CUSTOM = items.filter(n => n.kind === 'packitem');
+      if (/^#?\/checklist/.test(location.hash)) paintChecklist();
       NOTES_BY_DAY = {};
       for (const n of items) {
+        if (n.kind) continue;
         const k = n.dayN;
         if (k == null) continue;
         (NOTES_BY_DAY[k] ||= []).push(n);
@@ -3275,6 +3374,7 @@ function renderCover() {
           <a href="#/hebergements">Hébergements</a>
           <a href="#/reservations">Réservations</a>
           <a href="#/activites">Activités</a>
+          <a href="#/checklist">Check-list</a>
           <a href="#/carte">Carte</a>
           <a href="#/gestion" class="cover__link-todo">
             Gestion
@@ -5497,6 +5597,242 @@ async function moveAction(id, direction) {
 
 function flashError(msg) {
   console.warn('flashError:', msg);
+}
+
+// =========================================================
+// CHECK-LIST BAGAGES — pré-remplie pour ce voyage, partagée Firestore
+// Coches : docs `notes/packmark-<item>` (kind:'packmark').
+// Objets ajoutés : docs `notes` avec kind:'packitem'.
+// =========================================================
+const PACK_SECTIONS = [
+  { id: 'papiers', icon: '📄', label: 'Papiers & documents', items: [
+    { id: 'papiers-cni',      label: 'Cartes d’identité ×3', hint: 'Vérifier les dates de validité' },
+    { id: 'papiers-permis',   label: 'Permis de conduire (les deux)' },
+    { id: 'papiers-voiture',  label: 'Carte grise + attestation d’assurance' },
+    { id: 'papiers-constat',  label: 'Constat amiable dans la boîte à gants' },
+    { id: 'papiers-cb',       label: 'Cartes bancaires + un peu d’espèces', hint: 'Venise : 516 € à régler sur place + taxe de séjour' },
+    { id: 'papiers-ceam',     label: 'Cartes européennes d’assurance maladie ×3', hint: 'Gratuites sur ameli.fr — compter ~15 jours de délai' },
+    { id: 'papiers-vitale',   label: 'Cartes vitale' },
+    { id: 'papiers-resas',    label: 'Confirmations de résa accessibles', hint: 'Dans l’app + mails hors-ligne' },
+  ]},
+  { id: 'voiture', icon: '🚗', label: 'Voiture & route', items: [
+    { id: 'voiture-vignette', label: 'E-vignette Slovénie', hint: 'evinjeta.dars.si — 12 jours sur place : mensuelle, ou 2 hebdo' },
+    { id: 'voiture-peages',   label: 'Péages Italie : CB sans plafond atteint', hint: 'Le badge télépéage français ne passe pas en Italie' },
+    { id: 'voiture-gilets',   label: 'Gilets jaunes ×3 + triangle', hint: 'Gilets dans l’habitacle, pas dans le coffre' },
+    { id: 'voiture-controle', label: 'Contrôle voiture avant départ', hint: 'Niveaux, pneus, roue de secours, clim' },
+    { id: 'voiture-chargeur', label: 'Chargeur voiture + câbles' },
+    { id: 'voiture-support',  label: 'Support téléphone (GPS)' },
+    { id: 'voiture-glaciere', label: 'Glacière + eau pour la route' },
+    { id: 'voiture-ado',      label: 'Snacks + occupations ado', hint: 'Deux journées à ~6-7 h de route' },
+  ]},
+  { id: 'vetements', icon: '👕', label: 'Vêtements', items: [
+    { id: 'vet-tshirts',   label: 'T-shirts + shorts', hint: 'Chaleur en ville et sur la côte en juillet' },
+    { id: 'vet-polaire',   label: 'Polaire ou pull chacun', hint: 'Soirées fraîches à Bled, col Vršič à 1 611 m' },
+    { id: 'vet-kway',      label: 'Veste imperméable chacun', hint: 'Orages fréquents l’été dans les Alpes Juliennes' },
+    { id: 'vet-pantalons', label: 'Pantalons légers' },
+    { id: 'vet-sousvet',   label: 'Sous-vêtements & chaussettes ≈ 8 jours', hint: 'Lessives possibles dans les Airbnbs' },
+    { id: 'vet-maillots',  label: 'Maillots de bain ×2 par personne', hint: 'Piran, Bled, Bohinj, Laigueglia… ça baigne' },
+    { id: 'vet-chapeaux',  label: 'Casquettes / chapeaux' },
+    { id: 'vet-habille',   label: 'Une tenue un peu habillée', hint: 'Restos à Venise, Ljubljana' },
+    { id: 'vet-pyjamas',   label: 'Pyjamas' },
+  ]},
+  { id: 'chaussures', icon: '👟', label: 'Chaussures', items: [
+    { id: 'ch-baskets',  label: 'Baskets confortables (villes)' },
+    { id: 'ch-rando',    label: 'Chaussures de rando', hint: 'Vintgar, Bohinj, Zajamniki, cascade Kozjak' },
+    { id: 'ch-sandales', label: 'Sandales / tongs' },
+    { id: 'ch-eau',      label: 'Chaussons d’eau', hint: 'Galets à Nice & Laigueglia, rivières de la Soča' },
+  ]},
+  { id: 'rando', icon: '🥾', label: 'Rando & activités', items: [
+    { id: 'rando-sac',       label: 'Sac à dos de journée' },
+    { id: 'rando-gourdes',   label: 'Gourdes (1 par personne)' },
+    { id: 'rando-batons',    label: 'Bâtons de marche (optionnel)' },
+    { id: 'rando-serviettes',label: 'Serviettes microfibre' },
+    { id: 'rando-etanche',   label: 'Sac étanche', hint: 'Rafting Soča, paddle Ljubljanica, vélo Parenzana' },
+    { id: 'rando-rafting',   label: 'Tenue qui sèche vite pour le rafting', hint: 'Combinaisons et casques fournis par le centre' },
+    { id: 'rando-tubas',     label: 'Masques & tubas', hint: 'Piran, Laigueglia' },
+    { id: 'rando-jumelles',  label: 'Jumelles (optionnel)' },
+  ]},
+  { id: 'electronique', icon: '🔌', label: 'Électronique', items: [
+    { id: 'elec-tel',       label: 'Téléphones + chargeurs' },
+    { id: 'elec-batterie',  label: 'Batterie externe (chargée)' },
+    { id: 'elec-multiprise',label: 'Multiprise légère', hint: 'Prises souvent rares dans les Airbnbs' },
+    { id: 'elec-adaptateur',label: 'Adaptateur prises Italie (type L)', hint: 'Utile à Venise & Laigueglia' },
+    { id: 'elec-photo',     label: 'Appareil photo + cartes + chargeur' },
+    { id: 'elec-ecouteurs', label: 'Écouteurs / tablette ado pour la route' },
+    { id: 'elec-app',       label: 'App voyage installée sur les 2 téléphones', hint: 'Testée en mode avion avant de partir' },
+    { id: 'elec-maps',      label: 'Cartes Google Maps hors-ligne', hint: 'Slovénie + Italie du Nord téléchargées' },
+  ]},
+  { id: 'pharmacie', icon: '💊', label: 'Pharmacie & toilette', items: [
+    { id: 'pharma-trousses',  label: 'Trousses de toilette ×3' },
+    { id: 'pharma-medocs',    label: 'Médicaments perso + ordonnances' },
+    { id: 'pharma-douleur',   label: 'Doliprane / ibuprofène (adulte + ado)' },
+    { id: 'pharma-transport', label: 'Comprimés mal des transports', hint: '50 lacets au col Vršič' },
+    { id: 'pharma-pansements',label: 'Pansements + désinfectant + Compeed' },
+    { id: 'pharma-tiques',    label: 'Tire-tique', hint: 'Tiques présentes dans les forêts slovènes' },
+    { id: 'pharma-moustiques',label: 'Anti-moustiques' },
+    { id: 'pharma-solaire',   label: 'Crème solaire + après-soleil' },
+    { id: 'pharma-divers',    label: 'Antihistaminique + anti-diarrhéique' },
+    { id: 'pharma-gel',       label: 'Gel hydroalcoolique + mouchoirs' },
+  ]},
+  { id: 'divers', icon: '🧳', label: 'Divers', items: [
+    { id: 'div-lessive',   label: 'Lessive (pods) + petite corde à linge' },
+    { id: 'div-salelinge', label: 'Sacs à linge sale' },
+    { id: 'div-totes',     label: 'Tote bags (courses, plage)' },
+    { id: 'div-parapluie', label: 'Parapluie compact' },
+    { id: 'div-bouchons',  label: 'Bouchons d’oreilles + masque de nuit' },
+    { id: 'div-oreiller',  label: 'Oreiller de voyage (ado)' },
+    { id: 'div-jeux',      label: 'Jeu de cartes / jeux de voyage' },
+    { id: 'div-cles',      label: 'Double des clés de la voiture', hint: 'Dans un autre sac que l’original' },
+    { id: 'div-maison',    label: 'Maison avant de partir', hint: 'Frigo, poubelles, volets, clés au voisin' },
+  ]},
+];
+
+let PACK_MARKS = new Set();
+let PACK_CUSTOM = [];
+
+function renderChecklist() {
+  mount(`
+    <section class="page todos pack">
+      <header class="todos__head">
+        <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
+        <div class="timeline__kicker">Préparatifs</div>
+        <h1 class="timeline__title">Check-list,<br><em id="pack-counter">…</em></h1>
+        <p class="timeline__lead">Bagages &amp; départ, pensés pour ce voyage.<br>Partagée entre les téléphones, dispo offline.</p>
+      </header>
+      <div class="pack__progress"><div class="pack__progress-bar" id="pack-progress"></div></div>
+
+      <div id="pack-list" class="todos__list" aria-live="polite"></div>
+
+      <form class="todos__add" id="pack-add" autocomplete="off">
+        <input id="pack-input" type="text" placeholder="Ajouter un objet…" maxlength="80" required>
+        <button type="submit" aria-label="Ajouter">Ajouter</button>
+      </form>
+    </section>
+  `);
+  window.scrollTo(0, 0);
+
+  const form  = document.getElementById('pack-add');
+  const input = document.getElementById('pack-input');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const label = input.value.trim();
+    if (!label) return;
+    if (!db) { flashError('Indisponible hors-ligne'); return; }
+    input.value = '';
+    input.disabled = true;
+    try {
+      await addDoc(collection(db, 'notes'), {
+        kind: 'packitem',
+        label,
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.error(err);
+      input.value = label;
+      flashError(err.message);
+    } finally {
+      input.disabled = false;
+      input.focus();
+    }
+  });
+
+  paintChecklist();
+}
+
+function paintChecklist() {
+  const listEl = document.getElementById('pack-list');
+  if (!listEl) return;
+
+  const custom = PACK_CUSTOM.map(c => ({ id: c.id, label: c.label }));
+  const total = PACK_SECTIONS.reduce((n, s) => n + s.items.length, 0) + custom.length;
+  const done  = PACK_SECTIONS.reduce((n, s) => n + s.items.filter(i => PACK_MARKS.has(i.id)).length, 0)
+              + custom.filter(i => PACK_MARKS.has(i.id)).length;
+
+  const counter = document.getElementById('pack-counter');
+  if (counter) {
+    const left = total - done;
+    counter.textContent =
+      left === 0 ? 'tout est bouclé' :
+      done === 0 ? `${total} choses à ne pas oublier` :
+      `reste ${left} chose${left > 1 ? 's' : ''}`;
+  }
+  const bar = document.getElementById('pack-progress');
+  if (bar) {
+    bar.style.width = total ? `${Math.round(done / total * 100)}%` : '0%';
+    bar.classList.toggle('is-complete', total > 0 && done === total);
+  }
+
+  const sectionHtml = (title, count, items, isCustom) => `
+    <div class="pack__section">
+      <div class="pack__section-head">
+        <span class="pack__section-title">${title}</span>
+        <span class="pack__section-count ${count.done === count.total && count.total > 0 ? 'is-complete' : ''}">${count.done}/${count.total}</span>
+      </div>
+      <ul class="todos__group">
+        ${items.map(i => renderPackRow(i, isCustom)).join('')}
+      </ul>
+    </div>
+  `;
+
+  let html = PACK_SECTIONS.map(s => {
+    const d = s.items.filter(i => PACK_MARKS.has(i.id)).length;
+    return sectionHtml(`${s.icon} ${escapeHtml(s.label)}`, { done: d, total: s.items.length }, s.items, false);
+  }).join('');
+
+  if (custom.length) {
+    const d = custom.filter(i => PACK_MARKS.has(i.id)).length;
+    html += sectionHtml('✚ Ajoutés', { done: d, total: custom.length }, custom, true);
+  }
+
+  listEl.innerHTML = html;
+
+  listEl.querySelectorAll('[data-act="pack-toggle"]').forEach(b =>
+    b.addEventListener('click', () => togglePackItem(b.dataset.id))
+  );
+  listEl.querySelectorAll('[data-act="pack-del"]').forEach(b =>
+    b.addEventListener('click', (e) => { e.stopPropagation(); deletePackItem(b.dataset.id); })
+  );
+}
+
+function renderPackRow(item, isCustom) {
+  const done = PACK_MARKS.has(item.id);
+  return `
+    <li class="todo ${done ? 'todo--done' : ''}" data-id="${item.id}">
+      <button class="todo__check-btn" data-act="pack-toggle" data-id="${item.id}" aria-label="${done ? 'Décocher' : 'Cocher'}">
+        <span class="todo__check ${done ? 'is-done' : ''}" aria-hidden="true">${done ? '✓' : ''}</span>
+      </button>
+      <button class="pack__label" data-act="pack-toggle" data-id="${item.id}">
+        <span class="pack__name">${escapeHtml(item.label)}</span>
+        ${item.hint ? `<span class="pack__hint">${escapeHtml(item.hint)}</span>` : ''}
+      </button>
+      ${isCustom ? `<button class="pack__del" data-act="pack-del" data-id="${item.id}" aria-label="Supprimer">✕</button>` : ''}
+    </li>
+  `;
+}
+
+function togglePackItem(id) {
+  const wasDone = PACK_MARKS.has(id);
+  // Optimiste : état local + repaint immédiat, persistance en arrière-plan
+  if (wasDone) PACK_MARKS.delete(id); else PACK_MARKS.add(id);
+  paintChecklist();
+  if (!db) { flashError('Indisponible hors-ligne'); return; }
+  const ref = doc(db, 'notes', `packmark-${id}`);
+  const op = wasDone
+    ? deleteDoc(ref)
+    : setDoc(ref, { kind: 'packmark', item: id, createdAt: serverTimestamp() });
+  op.catch(err => { console.error(err); flashError(err.message); });
+}
+
+async function deletePackItem(id) {
+  if (!confirm('Supprimer cet objet ?')) return;
+  PACK_CUSTOM = PACK_CUSTOM.filter(c => c.id !== id);
+  PACK_MARKS.delete(id);
+  paintChecklist();
+  if (!db) { flashError('Indisponible hors-ligne'); return; }
+  try {
+    await deleteDoc(doc(db, 'notes', id));
+    await deleteDoc(doc(db, 'notes', `packmark-${id}`));
+  } catch (err) { console.error(err); flashError(err.message); }
 }
 
 // =========================================================
