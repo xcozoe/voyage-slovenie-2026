@@ -100,15 +100,28 @@
       "date": "2026-07-20",
       "startTime": "09:45",
       "endTime": null,
-      "status": "requested",
-      "meetingPoint": "Industrijska cona 4a, 5230 Bovec, Slovénie",
+      "status": "confirmed",
+      "meetingPoint": "Base rafting Soča Rider, derrière le restaurant Nono, 150 m avant l'entrée de Bovec (Industrijska cona 4a, 5230 Bovec)",
       "coords": [46.3380, 13.5520],
       "phone": "+386 41 596 104",
       "email": "info@socarider.com",
+      "confirmation": "Confirmé par mail (Petra)",
+      "price": 181,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 30,
+        "remaining": 151,
+        "paidDate": "2026-07-05",
+        "paymentMethod": "CB en ligne (Bankart 3D Secure)",
+        "remainingDue": "en espèces uniquement, au bureau avant le tour",
+        "extras": "Permis de rivière en sus, non inclus : 21 €/pers soit 63 € pour 3 — à acheter en ligne auprès de la municipalité (instructions envoyées par l'agence)"
+      },
       "bookedBy": "Rémi",
       "photoKey": "j14-rafting",
+      "included": ["tout l'équipement (combinaison, casque, gilet, pagaie)", "guide professionnel", "transfert Bovec ↔ rivière", "photos du tour offertes"],
+      "bring": ["maillot de bain", "serviette"],
       "listing": { "type": "website", "url": "https://www.socarider.com" },
-      "notes": "⚠️ Demande envoyée, en attente de confirmation par l'agence (tarif et créneau à confirmer). Souhait : 20 juillet vers 9h45, demi-journée, 2 adultes + 1 étudiant (15-24 ans). Pendant l'étape Tolmin."
+      "notes": "RDV 9h30 (15 min avant le départ) à la base Soča Rider. 3 h à 3 h 30 au total dont 1 h 30 sur l'eau, sur la section la plus fun de la Soča : sauts de rochers, glissades sur le boudin, baignade. Tarif : 62 €/adulte ×2 + 57 €/étudiant. 8 pers max par raft (6-7 si eau basse). Savoir nager obligatoire. Pendant l'étape Tolmin (gorges de Tolmin à 17 h le même jour)."
     },
     {
       "id": "tolmin-gorges",
@@ -141,11 +154,11 @@
   ],
   "summary": {
     "total": 5,
-    "confirmed": 4,
-    "requested": 1,
-    "totalPaid": 232.90,
+    "confirmed": 5,
+    "requested": 0,
+    "totalPaid": 262.90,
     "totalDueLater": 0,
-    "totalDueOnSite": 135,
+    "totalDueOnSite": 286,
     "currency": "EUR"
   }
 }
