@@ -1,6 +1,23 @@
 {
   "activities": [
     {
+      "id": "salette-nice",
+      "title": "Dîner chez Salette",
+      "provider": "Salette",
+      "city": "Nice",
+      "country": "France",
+      "date": "2026-07-07",
+      "startTime": "19:45",
+      "endTime": null,
+      "status": "confirmed",
+      "meetingPoint": "Salette, 35 Rue Bonaparte, 06300 Nice",
+      "phone": "+33 6 17 77 83 23",
+      "confirmation": "Confirmée par mail — table pour 5",
+      "bookedBy": "Rémi",
+      "photoKey": "j01-nice",
+      "notes": "Dîner avec Corentin et Sena, le soir de l'arrivée à Nice (J1). Table pour 5 à 19h45, quartier du Port, à deux pas de la place Garibaldi."
+    },
+    {
       "id": "ebike-istria",
       "title": "Journée vélo électrique",
       "provider": "E-Bike Istria",
@@ -153,8 +170,8 @@
     }
   ],
   "summary": {
-    "total": 5,
-    "confirmed": 5,
+    "total": 6,
+    "confirmed": 6,
     "requested": 0,
     "totalPaid": 262.90,
     "totalDueLater": 0,
