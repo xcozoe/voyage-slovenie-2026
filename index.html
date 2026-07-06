@@ -2782,6 +2782,140 @@
   }
 
   /* =========================================================
+     EXPORT — snapshot PDF / JSON
+     ========================================================= */
+  .export { padding: calc(env(safe-area-inset-top, 0px) + 28px) 0 60px; }
+
+  .export__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 24px var(--pad-x) 10px;
+  }
+  .export__btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px 20px;
+    border-radius: 999px;
+    background: var(--coral);
+    color: var(--bg-deep);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-micro);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: opacity 200ms var(--ease), transform 180ms var(--ease);
+  }
+  .export__btn:active { transform: scale(0.98); opacity: 0.9; }
+  .export__btn--ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+  }
+  .export__hint {
+    margin: 4px var(--pad-x) 26px;
+    font-size: var(--fz-small);
+    line-height: 1.55;
+    color: var(--ink-faint);
+  }
+  .export__hint a { color: var(--teal-light); text-decoration: underline; }
+
+  /* Le document lui-même — clair, pensé pour le papier */
+  .export-doc {
+    background: #ffffff;
+    color: #1c2a2e;
+    margin: 0 var(--pad-x);
+    padding: 28px 24px 34px;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .export-doc h1 {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.15;
+    margin: 0 0 2px;
+  }
+  .export-doc h2 {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8a6d3b;
+    margin: 30px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #1c2a2e;
+  }
+  .export-doc h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    margin: 18px 0 4px;
+  }
+  .export-doc p { margin: 0 0 8px; }
+  .export-doc .x-meta { color: #5c6b6f; font-size: 12px; margin-bottom: 4px; }
+  .export-doc .x-block { break-inside: avoid; }
+  .export-doc table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 8px 0;
+  }
+  .export-doc th, .export-doc td {
+    text-align: left;
+    padding: 4px 8px 4px 0;
+    border-bottom: 1px solid #d8dedf;
+    vertical-align: top;
+  }
+  .export-doc th {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #5c6b6f;
+  }
+  .export-doc td.x-num { text-align: right; white-space: nowrap; }
+  .export-doc ul { margin: 4px 0 10px; padding-left: 18px; }
+  .export-doc li { margin: 2px 0; }
+  .export-doc ul.x-checks { list-style: none; padding-left: 2px; }
+  .export-doc .x-kv { margin: 0 0 2px; }
+  .export-doc .x-kv b { font-weight: 600; }
+  .export-doc .x-note {
+    background: #f2f0e9;
+    border-left: 3px solid #8a6d3b;
+    padding: 6px 10px;
+    margin: 6px 0;
+    border-radius: 0 4px 4px 0;
+  }
+  .export-doc .x-foot {
+    margin-top: 30px;
+    padding-top: 10px;
+    border-top: 1px solid #d8dedf;
+    font-size: 11px;
+    color: #5c6b6f;
+  }
+
+  @media print {
+    body { background: #fff !important; }
+    /* Bandeaux, sheets et autres éléments hors app */
+    body > *:not(#app) { display: none !important; }
+    .export { padding: 0; }
+    .export__chrome { display: none !important; }
+    .export-doc {
+      margin: 0;
+      padding: 0;
+      border-radius: 0;
+      font-size: 11.5px;
+    }
+    .export-doc h2 { break-after: avoid; }
+    .export-doc .x-block { break-inside: avoid; }
+    .export-doc a { color: inherit; text-decoration: none; }
+  }
+  @page { margin: 13mm; }
+
+  /* =========================================================
      LOADER & STATUS
      ========================================================= */
   .loader {
@@ -3009,6 +3143,7 @@ const ROUTES = [
   { match: /^#?\/gestion(?:\/([\w-]+))?\/?$/, render: renderGestion },
   { match: /^#?\/a-faire\/?$/,        render: () => renderGestion([null, 'a-faire']) },
   { match: /^#?\/checklist\/?$/,      render: renderChecklist },
+  { match: /^#?\/export\/?$/,         render: renderExport },
   { match: /^#?\/carte\/?$/,          render: renderMap },
   { match: /^#?\/jour\/(\d+)\/?$/,    render: (m) => renderDay(parseInt(m[1], 10)) },
 ];
@@ -3380,6 +3515,7 @@ function renderCover() {
             Gestion
             <span class="cover__badge" data-actions-badge hidden></span>
           </a>
+          <a href="#/export">Export</a>
         </nav>
       </div>
     </section>
@@ -5833,6 +5969,284 @@ async function deletePackItem(id) {
     await deleteDoc(doc(db, 'notes', id));
     await deleteDoc(doc(db, 'notes', `packmark-${id}`));
   } catch (err) { console.error(err); flashError(err.message); }
+}
+
+// =========================================================
+// EXPORT — snapshot complet imprimable (→ PDF) + sauvegarde JSON
+// Tout est généré localement depuis STATE + les caches Firestore
+// (notes, actions, dépenses, check-list) : fonctionne hors-ligne.
+// =========================================================
+function renderExport() {
+  const today = new Date();
+  const stamp = `${today.getDate()} ${MONTHS[today.getMonth()]} ${today.getFullYear()}`;
+
+  mount(`
+    <section class="page todos export">
+      <div class="export__chrome">
+        <header class="todos__head">
+          <a class="timeline__back" href="#/" data-act="go-back">Retour</a>
+          <div class="timeline__kicker">Sauvegarde</div>
+          <h1 class="timeline__title">Export,<br><em>tout le voyage</em></h1>
+          <p class="timeline__lead">Snapshot complet de l'app : programme, hébergements,<br>réservations, budget, notes et check-list.</p>
+        </header>
+        <div class="export__actions">
+          <button type="button" class="export__btn" data-act="export-print">Enregistrer en PDF / Imprimer</button>
+          <button type="button" class="export__btn export__btn--ghost" data-act="export-json">Télécharger les données (JSON)</button>
+        </div>
+        <p class="export__hint">
+          Le PDF passe par l'écran d'impression du téléphone (choisir « Enregistrer en PDF »).
+          Depuis l'app installée sur l'écran d'accueil, si rien ne s'ouvre :
+          <a href="index.html#/export" target="_blank" rel="noopener">ouvrir cette page dans le navigateur</a>.
+          Le JSON sauvegarde les données partagées (notes, à-faire, dépenses, coches) — à garder précieusement.
+        </p>
+      </div>
+      <article class="export-doc" id="export-doc">${buildExportDoc(stamp)}</article>
+    </section>
+  `);
+  window.scrollTo(0, 0);
+
+  document.querySelector('[data-act="export-print"]').addEventListener('click', () => {
+    const prevTitle = document.title;
+    document.title = exportFileName();
+    const restore = () => { document.title = prevTitle; window.removeEventListener('afterprint', restore); };
+    window.addEventListener('afterprint', restore);
+    setTimeout(restore, 4000);
+    window.print();
+  });
+  document.querySelector('[data-act="export-json"]').addEventListener('click', downloadExportJson);
+}
+
+function exportFileName() {
+  const d = new Date();
+  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return `voyage-slovenie-snapshot-${iso}`;
+}
+
+function xEsc(s) { return escapeHtml(s); }
+function xKv(label, value) {
+  return value ? `<p class="x-kv"><b>${xEsc(label)} :</b> ${xEsc(value)}</p>` : '';
+}
+
+function buildExportDoc(stamp) {
+  const trip = STATE.trip || {};
+  let h = `
+    <header class="x-block">
+      <h1>Voyage ${xEsc(trip.title || 'Slovénie')} 2026</h1>
+      <p class="x-meta">${xEsc(trip.subtitle || '')} · ${xEsc(trip.travelers || '')} · ${(trip.totalKm || 0).toLocaleString('fr-FR')} km</p>
+      <p class="x-meta">Snapshot de l'app généré le ${xEsc(stamp)}</p>
+    </header>
+  `;
+
+  // --- 1. Itinéraire ---
+  h += `<h2>Itinéraire</h2><table><tr><th>Jour</th><th>Date</th><th>Étape</th><th>Trajet</th></tr>`;
+  for (const d of STATE.days) {
+    const drive = d.drive ? `${d.drive.km} km · ${d.drive.hours}` : '—';
+    h += `<tr><td>J${d.n}</td><td>${xEsc(d.weekday)} ${xEsc(formatDate(d.date))}</td><td>${xEsc(d.title)}</td><td>${xEsc(drive)}</td></tr>`;
+  }
+  h += `</table>`;
+
+  // --- 2. Jour par jour ---
+  h += `<h2>Jour par jour</h2>`;
+  for (const d of STATE.days) {
+    h += `<div class="x-block"><h3>J${d.n} — ${xEsc(d.title)}</h3>`;
+    h += `<p class="x-meta">${xEsc(d.weekday)} ${xEsc(formatDate(d.date))}${d.subtitle ? ' · ' + xEsc(d.subtitle) : ''}${d.drive ? ` · ${d.drive.km} km (${xEsc(d.drive.hours)})` : ''}</p>`;
+    if (d.intro) h += `<p>${xEsc(d.intro)}</p>`;
+    if (d.schedule?.length) {
+      h += `<ul>`;
+      for (const s of d.schedule) h += `<li><b>${xEsc(s.time)} — ${xEsc(s.title)}.</b> ${xEsc(s.desc || '')}</li>`;
+      h += `</ul>`;
+    }
+    if (d.tips?.length) h += `<p class="x-meta">Conseils : ${d.tips.map(xEsc).join(' · ')}</p>`;
+    const acts = Object.values(STATE.activitiesById).filter(a => a.date === d.date);
+    for (const a of acts) {
+      h += `<p class="x-kv"><b>Réservation :</b> ${xEsc(a.title)}${a.startTime ? ' à ' + xEsc(a.startTime) : ''} (${a.status === 'confirmed' ? 'confirmée' : 'en attente'})</p>`;
+    }
+    const notes = NOTES_BY_DAY[d.n] || [];
+    for (const n of notes) h += `<div class="x-note">${xEsc(n.text)}</div>`;
+    h += `</div>`;
+  }
+
+  // --- 3. Hébergements ---
+  h += `<h2>Hébergements</h2>`;
+  const staysSorted = Object.values(STATE.staysById).sort((a, b) => (a.arrival || '').localeCompare(b.arrival || ''));
+  for (const s of staysSorted) {
+    h += `<div class="x-block"><h3>${xEsc(s.city)} — ${xEsc(s.name || 'à réserver')}</h3>`;
+    h += `<p class="x-meta">${xEsc(formatRange(s.arrival, s.departure))} · ${s.nights} nuit${s.nights > 1 ? 's' : ''}${s.type ? ' · ' + xEsc(s.type) : ''}${s.status !== 'confirmed' ? ' · À RÉSERVER' : ''}</p>`;
+    h += xKv('Adresse', s.address);
+    h += xKv('Hôte', s.host);
+    h += xKv('Téléphone', s.phone);
+    h += xKv('Confirmation', s.confirmation);
+    if (s.checkin || s.checkout) h += xKv('Check-in / out', [s.checkin, s.checkout].filter(Boolean).join(' — '));
+    if (s.price) h += xKv('Prix', `${s.price} €${paymentText(s.paymentBreakdown)}`);
+    h += xKv('Annulation', s.cancellation);
+    if (s.notes) h += `<p class="x-meta">${xEsc(s.notes)}</p>`;
+    h += `</div>`;
+  }
+
+  // --- 4. Réservations & activités ---
+  h += `<h2>Réservations &amp; activités</h2>`;
+  const actsSorted = Object.values(STATE.activitiesById).sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  for (const a of actsSorted) {
+    h += `<div class="x-block"><h3>${xEsc(a.title)}</h3>`;
+    h += `<p class="x-meta">${xEsc(formatDate(a.date))}${a.startTime ? ' · ' + xEsc(a.startTime) : ''}${a.endTime ? ' → ' + xEsc(a.endTime) : ''} · ${xEsc(a.provider || '')} · ${a.status === 'confirmed' ? 'confirmée' : 'en attente'}</p>`;
+    h += xKv('Lieu', a.meetingPoint);
+    h += xKv('Téléphone', a.phone);
+    h += xKv('Confirmation', a.confirmation);
+    if (a.price) h += xKv('Prix', `${a.price} €${paymentText(a.paymentBreakdown)}`);
+    if (a.paymentBreakdown?.extras) h += xKv('À noter', a.paymentBreakdown.extras);
+    if (a.included?.length) h += xKv('Inclus', a.included.join(', '));
+    if (a.bring?.length) h += xKv('À apporter', a.bring.join(', '));
+    if (a.notes) h += `<p class="x-meta">${xEsc(a.notes)}</p>`;
+    h += `</div>`;
+  }
+
+  // --- 5. Budget ---
+  h += buildExportBudget();
+
+  // --- 6. À faire ---
+  h += `<h2>À faire</h2>`;
+  const open = CURRENT_TODOS.filter(t => t.status !== 'done');
+  const doneT = CURRENT_TODOS.filter(t => t.status === 'done');
+  if (!CURRENT_TODOS.length) h += `<p class="x-meta">Aucune action (ou données non synchronisées au moment de l'export).</p>`;
+  if (open.length) {
+    h += `<ul class="x-checks">${open.map(t => `<li>☐ ${xEsc(t.title)}${t.description ? ` <span class="x-meta">— ${xEsc(t.description)}</span>` : ''}</li>`).join('')}</ul>`;
+  }
+  if (doneT.length) {
+    h += `<p class="x-meta">Faites :</p><ul class="x-checks">${doneT.map(t => `<li>☑ ${xEsc(t.title)}</li>`).join('')}</ul>`;
+  }
+
+  // --- 7. Check-list bagages ---
+  h += `<h2>Check-list bagages</h2>`;
+  for (const s of PACK_SECTIONS) {
+    const dn = s.items.filter(i => PACK_MARKS.has(i.id)).length;
+    h += `<div class="x-block"><h3>${xEsc(s.label)} <span class="x-meta">(${dn}/${s.items.length})</span></h3><ul class="x-checks">`;
+    for (const i of s.items) {
+      h += `<li>${PACK_MARKS.has(i.id) ? '☑' : '☐'} ${xEsc(i.label)}${i.hint ? ` <span class="x-meta">— ${xEsc(i.hint)}</span>` : ''}</li>`;
+    }
+    h += `</ul></div>`;
+  }
+  if (PACK_CUSTOM.length) {
+    h += `<div class="x-block"><h3>Ajoutés</h3><ul class="x-checks">`;
+    for (const c of PACK_CUSTOM) h += `<li>${PACK_MARKS.has(c.id) ? '☑' : '☐'} ${xEsc(c.label)}</li>`;
+    h += `</ul></div>`;
+  }
+
+  h += `<p class="x-foot">Voyage Slovénie 2026 · snapshot du ${xEsc(stamp)} · généré par l'app.
+    Les données partagées (notes, à-faire, budget, coches) reflètent l'état synchronisé au moment de l'export.</p>`;
+  return h;
+}
+
+function paymentText(pb) {
+  if (!pb) return '';
+  const parts = [];
+  if (pb.paid > 0) parts.push(`${pb.paid} € payés${pb.paidDate ? ' ' + formatDueDate(pb.paidDate) : ''}`);
+  if (pb.remaining > 0) {
+    const due = pb.remainingDue
+      ? (/^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue) ? formatDueDate(pb.remainingDue) : pb.remainingDue)
+      : 'à payer';
+    parts.push(`${pb.remaining} € restants (${due})`);
+  }
+  return parts.length ? ` — ${parts.join(' ; ')}` : '';
+}
+
+// Reprend les règles de paintBudget (avances, pointages, régularisations)
+// dans une version compacte, purement calculatoire.
+function buildExportBudget() {
+  const advances = { 'Rémi': 0, 'Elsa': 0 };
+  const upcomingByPayer = { 'Rémi': 0, 'Elsa': 0 };
+  const rows = [];
+
+  const collect = (type, obj, label, cat) => {
+    const pb = obj.paymentBreakdown;
+    if (!pb || !PAYERS.includes(obj.bookedBy)) return;
+    if (pb.paid > 0) {
+      advances[obj.bookedBy] += pb.paid;
+      rows.push({ date: pb.paidDate || '', label, cat, payer: obj.bookedBy, amount: pb.paid, state: 'payé' });
+    }
+    if (pb.remaining > 0) {
+      if (isPaidOverride(type, obj.id)) {
+        advances[obj.bookedBy] += pb.remaining;
+        rows.push({ date: paidOverrideDate(type, obj.id) || '', label, cat, payer: obj.bookedBy, amount: pb.remaining, state: 'payé (pointé)' });
+      } else {
+        upcomingByPayer[obj.bookedBy] += pb.remaining;
+        rows.push({ date: /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue || '') ? pb.remainingDue : '', label, cat, payer: obj.bookedBy, amount: pb.remaining, state: 'à venir' });
+      }
+    }
+  };
+  for (const s of Object.values(STATE.staysById))     collect('stay', s, `${s.city} — ${s.name || 'hébergement'}`, 'Hébergement');
+  for (const a of Object.values(STATE.activitiesById)) collect('act', a, a.title || a.provider, 'Activité');
+
+  let settlementsHtml = '';
+  for (const e of EXPENSES) {
+    if (e.kind === 'paidmark' || e.kind === 'packmark' || e.kind === 'packitem') continue;
+    if (e.kind === 'settlement') {
+      settlementsHtml += `<p class="x-kv"><b>Régularisation :</b> ${xEsc(e.from || '?')} → ${xEsc(e.to || '?')}, ${Math.round(Number(e.amount) || 0)} €${e.date ? ' (' + xEsc(formatDueDate(e.date)) + ')' : ''}</p>`;
+      continue;
+    }
+    if (!PAYERS.includes(e.payer)) continue;
+    advances[e.payer] += Number(e.amount) || 0;
+    const cat = (CATEGORIES.find(c => c.id === e.category) || CATEGORIES[4]).label;
+    rows.push({ date: e.date || '', label: e.label || 'Dépense', cat, payer: e.payer, amount: Number(e.amount) || 0, state: 'payé' });
+  }
+
+  const total = advances['Rémi'] + advances['Elsa'];
+  const upcomingTotal = upcomingByPayer['Rémi'] + upcomingByPayer['Elsa'];
+  let remiBalance = advances['Rémi'] - total / 2;
+  let remiBalanceMaturity = (advances['Rémi'] + upcomingByPayer['Rémi']) - (total + upcomingTotal) / 2;
+  for (const e of EXPENSES) {
+    if (e.kind !== 'settlement') continue;
+    const amt = Number(e.amount) || 0;
+    if (e.from === 'Elsa') { remiBalance -= amt; remiBalanceMaturity -= amt; }
+    else if (e.from === 'Rémi') { remiBalance += amt; remiBalanceMaturity += amt; }
+  }
+  const balanceTxt = (b) => Math.abs(b) < 0.5 ? 'équilibré'
+    : (b > 0 ? `Elsa doit ${Math.round(b)} € à Rémi` : `Rémi doit ${Math.round(-b)} € à Elsa`);
+
+  rows.sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
+
+  let h = `<h2>Budget</h2><div class="x-block">`;
+  h += xKv('Avances Rémi', `${Math.round(advances['Rémi'])} €`);
+  h += xKv('Avances Elsa', `${Math.round(advances['Elsa'])} €`);
+  h += xKv('Total payé', `${Math.round(total)} €`);
+  if (upcomingTotal > 0) h += xKv('Total à échéance', `${Math.round(total + upcomingTotal)} €`);
+  h += xKv('Solde', balanceTxt(remiBalance) + (upcomingTotal > 0 ? ` — à échéance : ${balanceTxt(remiBalanceMaturity)}` : ''));
+  h += settlementsHtml;
+  h += `</div><table><tr><th>Date</th><th>Libellé</th><th>Catégorie</th><th>Payeur</th><th>État</th><th>€</th></tr>`;
+  for (const r of rows) {
+    h += `<tr><td>${r.date ? xEsc(formatDate(r.date)) : '—'}</td><td>${xEsc(r.label)}</td><td>${xEsc(r.cat)}</td><td>${xEsc(r.payer || '?')}</td><td>${xEsc(r.state)}</td><td class="x-num">${Math.round(r.amount)}</td></tr>`;
+  }
+  h += `</table>`;
+  return h;
+}
+
+function downloadExportJson() {
+  const replacer = (k, v) => (v && typeof v === 'object' && typeof v.toMillis === 'function')
+    ? new Date(v.toMillis()).toISOString()
+    : v;
+  const snapshot = {
+    exportedAt: new Date().toISOString(),
+    app: 'voyage-slovenie-2026',
+    trip: STATE.trip,
+    days: STATE.days,
+    stays: Object.values(STATE.staysById),
+    activities: Object.values(STATE.activitiesById),
+    firestore: {
+      actions: CURRENT_TODOS,
+      notesByDay: NOTES_BY_DAY,
+      expenses: EXPENSES,
+      packMarks: [...PACK_MARKS],
+      packCustom: PACK_CUSTOM,
+    },
+  };
+  const blob = new Blob([JSON.stringify(snapshot, replacer, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${exportFileName()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
 }
 
 // =========================================================
