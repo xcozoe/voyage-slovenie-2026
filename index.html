@@ -3593,8 +3593,11 @@ function renderStays(match) {
   for (const s of stays) {
     if (s.status === 'confirmed') confirmed++;
     if (s.paymentBreakdown) {
-      paid  += s.paymentBreakdown.paid      || 0;
-      toPay += s.paymentBreakdown.remaining || 0;
+      const r = s.paymentBreakdown.remaining || 0;
+      paid += s.paymentBreakdown.paid || 0;
+      // Un solde pointé dans le budget compte comme payé
+      if (r > 0 && isPaidOverride('stay', s.id)) paid += r;
+      else toPay += r;
     }
   }
 
@@ -3724,11 +3727,9 @@ function renderStayPageCard(stay) {
   // Bouton « Réservation » → ouvre la bottom sheet avec le détail paiement
   let bookingBtnHtml = '';
   if (isConfirmed && (stay.price || stay.paymentBreakdown || stay.confirmation)) {
-    const pb = stay.paymentBreakdown || {};
-    const summary = [];
-    if (stay.price) summary.push(`${Math.round(stay.price)} €`);
-    if (pb.remaining > 0) summary.push(`${Math.round(pb.remaining)} € à régler`);
-    else if (pb.paid > 0 && (!pb.remaining || pb.remaining === 0)) summary.push('payé');
+    // Montant total uniquement — le reste à payer se gère dans le
+    // détail (sheet) et dans le budget, où les pointages sont pris en compte.
+    const summary = stay.price ? [`${Math.round(stay.price)} €`] : [];
     bookingBtnHtml = `
       <button type="button" class="stay-card__booking" data-act="open-booking" data-stay-id="${stay.id}">
         <span class="stay-card__booking-text">
@@ -3796,8 +3797,11 @@ function renderResas(match) {
   for (const a of acts) {
     if (a.status === 'confirmed') confirmed++;
     if (a.paymentBreakdown) {
-      paid  += a.paymentBreakdown.paid      || 0;
-      toPay += a.paymentBreakdown.remaining || 0;
+      const r = a.paymentBreakdown.remaining || 0;
+      paid += a.paymentBreakdown.paid || 0;
+      // Un solde pointé dans le budget compte comme payé
+      if (r > 0 && isPaidOverride('act', a.id)) paid += r;
+      else toPay += r;
     }
   }
 
@@ -3907,11 +3911,9 @@ function renderResaPageCard(act) {
 
   let bookingBtnHtml = '';
   if (act.price || act.paymentBreakdown || act.confirmation) {
-    const pb = act.paymentBreakdown || {};
-    const summary = [];
-    if (act.price) summary.push(`${Math.round(act.price)} €`);
-    if (pb.remaining > 0) summary.push(`${Math.round(pb.remaining)} € à régler`);
-    else if (pb.paid > 0 && (!pb.remaining || pb.remaining === 0)) summary.push('payé');
+    // Montant total uniquement — le reste à payer se gère dans le
+    // détail (sheet) et dans le budget, où les pointages sont pris en compte.
+    const summary = act.price ? [`${Math.round(act.price)} €`] : [];
     bookingBtnHtml = `
       <button type="button" class="stay-card__booking" data-act="open-activity-booking" data-act-id="${act.id}">
         <span class="stay-card__booking-text">
@@ -6077,7 +6079,7 @@ function buildExportDoc(stamp) {
     h += xKv('Téléphone', s.phone);
     h += xKv('Confirmation', s.confirmation);
     if (s.checkin || s.checkout) h += xKv('Check-in / out', [s.checkin, s.checkout].filter(Boolean).join(' — '));
-    if (s.price) h += xKv('Prix', `${s.price} €${paymentText(s.paymentBreakdown)}`);
+    if (s.price) h += xKv('Prix', `${s.price} €${paymentText(s.paymentBreakdown, 'stay', s.id)}`);
     h += xKv('Annulation', s.cancellation);
     if (s.notes) h += `<p class="x-meta">${xEsc(s.notes)}</p>`;
     h += `</div>`;
@@ -6092,7 +6094,7 @@ function buildExportDoc(stamp) {
     h += xKv('Lieu', a.meetingPoint);
     h += xKv('Téléphone', a.phone);
     h += xKv('Confirmation', a.confirmation);
-    if (a.price) h += xKv('Prix', `${a.price} €${paymentText(a.paymentBreakdown)}`);
+    if (a.price) h += xKv('Prix', `${a.price} €${paymentText(a.paymentBreakdown, 'act', a.id)}`);
     if (a.paymentBreakdown?.extras) h += xKv('À noter', a.paymentBreakdown.extras);
     if (a.included?.length) h += xKv('Inclus', a.included.join(', '));
     if (a.bring?.length) h += xKv('À apporter', a.bring.join(', '));
@@ -6136,15 +6138,20 @@ function buildExportDoc(stamp) {
   return h;
 }
 
-function paymentText(pb) {
+function paymentText(pb, type, id) {
   if (!pb) return '';
   const parts = [];
   if (pb.paid > 0) parts.push(`${pb.paid} € payés${pb.paidDate ? ' ' + formatDueDate(pb.paidDate) : ''}`);
   if (pb.remaining > 0) {
-    const due = pb.remainingDue
-      ? (/^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue) ? formatDueDate(pb.remainingDue) : pb.remainingDue)
-      : 'à payer';
-    parts.push(`${pb.remaining} € restants (${due})`);
+    if (type && isPaidOverride(type, id)) {
+      const pd = paidOverrideDate(type, id);
+      parts.push(`${pb.remaining} € payés${pd ? ' ' + formatDueDate(pd) : ''} (pointé)`);
+    } else {
+      const due = pb.remainingDue
+        ? (/^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue) ? formatDueDate(pb.remainingDue) : pb.remainingDue)
+        : 'à payer';
+      parts.push(`${pb.remaining} € restants (${due})`);
+    }
   }
   return parts.length ? ` — ${parts.join(' ; ')}` : '';
 }
