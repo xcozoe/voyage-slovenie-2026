@@ -75,12 +75,12 @@
       "photo": "j03-venise-canal",
       "drive": null,
       "stay": "venise",
-      "intro": "Premier vrai jour de Venise. La clé : se lever tôt pour profiter du Grand Canal avant la chaleur et l'affluence touristique.",
+      "intro": "Premier vrai jour de Venise : la traversée du Grand Canal en vaporetto depuis Piazzale Roma, puis toute la journée autour de Saint-Marc (basilique à 10h30, Palais des Doges à midi).",
       "schedule": [
         {
-          "time": "Tôt le matin",
-          "title": "Rialto et Grand Canal",
-          "desc": "Pont du Rialto à 7h30 (presque vide), marché aux poissons en activité. Vaporetto Ligne 1 sur le Grand Canal pour la traversée la plus belle au monde, jusqu'à San Marco."
+          "time": "9h30",
+          "title": "Grand Canal en vaporetto — Ligne 1",
+          "desc": "Embarquer à Piazzale Roma, Ligne 1 direction Lido, descendre à San Marco-Vallaresso : la traversée complète du Grand Canal (Rialto, Ca' d'Oro, la Salute) en ~45 min depuis le bateau. Départ 9h30 max pour être à la basilique à 10h30. Plan B si l'horaire est juste : Ligne 2, même trajet avec moins d'arrêts."
         },
         {
           "time": "10h30",
