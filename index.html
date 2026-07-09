@@ -3483,6 +3483,17 @@ function renderCover() {
   else if (dLeft >= -17) countdown = `Jour ${1 - dLeft} / 18`;
   else                  countdown = 'Souvenirs';
 
+  // CTA : pendant le voyage, on atterrit sur le jour en cours
+  const currentDayN = 1 - dLeft;
+  let ctaHref = '#/jour/1';
+  let ctaLabel = 'Commencer le voyage';
+  if (dLeft <= 0 && currentDayN <= STATE.days.length) {
+    ctaHref = `#/jour/${currentDayN}`;
+    ctaLabel = `Aujourd'hui · Jour ${currentDayN}`;
+  } else if (dLeft < 0) {
+    ctaLabel = 'Revivre le voyage';
+  }
+
   mount(`
     <section class="page cover">
       <picture class="cover__photo">
@@ -3503,7 +3514,7 @@ function renderCover() {
       </div>
 
       <div class="cover__bottom stagger">
-        <a class="cover__cta" href="#/jour/1">Commencer le voyage</a>
+        <a class="cover__cta" href="${ctaHref}">${ctaLabel}</a>
         <nav class="cover__links">
           <a href="#/timeline">Itinéraire</a>
           <a href="#/hebergements">Hébergements</a>
