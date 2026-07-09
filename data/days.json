@@ -100,7 +100,7 @@
         {
           "time": "Soirée",
           "title": "Dernière soirée vénitienne",
-          "desc": "Cicchetti dans un bacaro de Cannaregio (Al Timon, La Cantina). Coucher de soleil depuis le pont de l'Académie ou les Zattere. Demain matin, départ tôt pour la côte slovène."
+          "desc": "Cicchetti dans un bacaro de Cannaregio (Al Timon déjà validé hier — La Cantina en alternative). Coucher de soleil depuis le pont de l'Académie ou les Zattere. Demain, matinée tranquille puis départ vers 10h pour la côte slovène."
         }
       ]
     },
@@ -114,8 +114,18 @@
       "photo": "j04-piran",
       "drive": { "km": 202, "hours": "2h30", "from": "Venise", "to": "Piran" },
       "stay": "piran",
-      "intro": "Trajet court et fluide jusqu'à la côte adriatique slovène. 2 nuits à Piran.",
+      "intro": "Matinée douce à Venise, sans réveil aux aurores, puis départ vers 10h. Trajet court et fluide jusqu'à la côte adriatique slovène. 2 nuits à Piran.",
       "schedule": [
+        {
+          "time": "Matin",
+          "title": "Matinée tranquille à Venise",
+          "desc": "Pas de lever tôt aujourd'hui : petit-déjeuner tranquille et derniers regards sur les canaux. Check-out du Palazzo Odoni avant 10h30."
+        },
+        {
+          "time": "10h00",
+          "title": "Départ de Venise",
+          "desc": "Récupérer la voiture et prendre la route de la côte slovène — 202 km, environ 2h30. Arrivée à Piran en début d'après-midi."
+        },
         {
           "time": "Début d'après-midi",
           "title": "Arrivée à Piran",
