@@ -18,6 +18,33 @@
       "notes": "Dîner avec Corentin et Sena, le soir de l'arrivée à Nice (J1). Table pour 5 à 19h45, quartier du Port, à deux pas de la place Garibaldi."
     },
     {
+      "id": "san-marco",
+      "title": "Basilique Saint-Marc — Pala d'Oro & Loggia",
+      "provider": "Procuratoria di San Marco",
+      "city": "Venise",
+      "country": "Italie",
+      "date": "2026-07-09",
+      "startTime": "10:30",
+      "endTime": null,
+      "status": "confirmed",
+      "meetingPoint": "Basilique Saint-Marc, Piazza San Marco, 30124 Venise",
+      "coords": [45.4345, 12.3396],
+      "confirmation": "Commande 171-YJPGCPU · conf. SPS2USEWJ3F2",
+      "price": 75,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 75,
+        "remaining": 0,
+        "paidDate": "2026-07-08",
+        "paymentMethod": "CB en ligne (Procuratoria)"
+      },
+      "bookedBy": "Rémi",
+      "photoKey": "j03-venise-canal",
+      "included": ["2 entrées adultes (30 €)", "1 entrée jeune 11-18 ans (15 €)", "basilique + Pala d'Oro", "musée + Loggia dei Cavalli"],
+      "bring": ["billets PDF sur les téléphones", "tenue adaptée au lieu de culte (épaules et genoux couverts)"],
+      "notes": "Entrée entre 10h30 et 11h00 précises (tolérance 5 min) — être ponctuels. Visite conseillée 60-90 min. Campanile non inclus (billet séparé). Audioguides à louer juste après les tourniquets. Sacs max 40×30×20 cm, pas de valises. Billets ni modifiables ni remboursables. Réfs billets 2547616633/634/635. Pendant l'étape Venise (J3)."
+    },
+    {
       "id": "ebike-istria",
       "title": "Journée vélo électrique",
       "provider": "E-Bike Istria",
@@ -170,10 +197,10 @@
     }
   ],
   "summary": {
-    "total": 6,
-    "confirmed": 6,
+    "total": 7,
+    "confirmed": 7,
     "requested": 0,
-    "totalPaid": 262.90,
+    "totalPaid": 337.90,
     "totalDueLater": 0,
     "totalDueOnSite": 286,
     "currency": "EUR"
