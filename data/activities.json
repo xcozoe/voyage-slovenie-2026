@@ -45,6 +45,27 @@
       "notes": "Entrée entre 10h30 et 11h00 précises (tolérance 5 min) — être ponctuels. Visite conseillée 60-90 min. Campanile non inclus (billet séparé). Audioguides à louer juste après les tourniquets. Sacs max 40×30×20 cm, pas de valises. Billets ni modifiables ni remboursables. Réfs billets 2547616633/634/635. Pendant l'étape Venise (J3)."
     },
     {
+      "id": "palais-doges",
+      "title": "Palais des Doges & musées San Marco",
+      "provider": "Venezia Unica · via GetYourGuide",
+      "city": "Venise",
+      "country": "Italie",
+      "date": "2026-07-09",
+      "startTime": "12:00",
+      "endTime": null,
+      "status": "confirmed",
+      "meetingPoint": "Palais des Doges, Piazza San Marco 1, 30124 Venise",
+      "coords": [45.4337, 12.3401],
+      "confirmation": "PNR LIY94YJ",
+      "price": 85,
+      "currency": "EUR",
+      "bookedBy": "Elsa",
+      "photoKey": "j03-venise-canal",
+      "included": ["2 billets plein tarif (35 €) + 1 réduit −26 ans (15 €)", "Palais des Doges (coupe-file)", "Museo Correr + Musée archéologique + Biblioteca Marciana", "guides numériques Saint-Marc (anglais)"],
+      "bring": ["billets (code-barres) dans l'app GetYourGuide ou en PDF"],
+      "notes": "Entrée au Palais des Doges valable UNIQUEMENT le 9 juillet, entre 12h et 19h. Les 3 autres musées (accès par le Museo Correr, une seule entrée combinée) sont utilisables sous 3 mois — en pratique dans la foulée. Guides numériques à activer sur venipedia.it/codex (codes VVU sur les billets). Payé 85 € par Elsa le 8/7 — dépense déjà enregistrée dans le budget (pas de double comptage ici). Pendant l'étape Venise (J3), après la basilique du matin."
+    },
+    {
       "id": "ebike-istria",
       "title": "Journée vélo électrique",
       "provider": "E-Bike Istria",
@@ -197,8 +218,8 @@
     }
   ],
   "summary": {
-    "total": 7,
-    "confirmed": 7,
+    "total": 8,
+    "confirmed": 8,
     "requested": 0,
     "totalPaid": 337.90,
     "totalDueLater": 0,
