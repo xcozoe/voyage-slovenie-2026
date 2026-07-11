@@ -243,6 +243,30 @@
     margin-bottom: 20px;
   }
 
+  /* MINI-CARTE fiche jour ----------------------------------- */
+  .day-map {
+    height: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--bg-deep);
+    border: 1px solid var(--line);
+  }
+  .day-map .map-loader {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: var(--ink-faint);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 15px;
+  }
+  .day-map__legend {
+    margin-top: 10px;
+    font-size: var(--fz-small);
+    line-height: 1.5;
+    color: var(--ink-faint);
+  }
+
   /* INTRO -------------------------------------------------- */
   .day__intro {
     font-family: 'Fraunces', serif;
@@ -3289,6 +3313,13 @@ function renderDay(n) {
   const stayHtml = stay ? renderStayCard(stay) : '';
   const dayActivitiesHtml = renderDayActivities(day);
 
+  const mapHtml = day.map ? `
+    <section class="day__map">
+      <h2 class="section-title">${escapeHtml(day.map.title || 'Le circuit')}</h2>
+      <div id="day-map" class="day-map"><div class="map-loader">Chargement du plan…</div></div>
+      ${day.map.legend ? `<p class="day-map__legend">${escapeHtml(day.map.legend)}</p>` : ''}
+    </section>` : '';
+
   const html = `
     <article class="page day" data-day="${day.n}">
       <header class="day__hero">
@@ -3318,6 +3349,7 @@ function renderDay(n) {
             <h2 class="section-title">Programme</h2>
             <ol class="schedule">${scheduleHtml}</ol>
           </section>` : ''}
+        ${mapHtml}
         ${dayActivitiesHtml}
         ${stayHtml}
         ${tipsHtml}
@@ -3332,6 +3364,41 @@ function renderDay(n) {
   window.scrollTo(0, 0);
   preloadNeighborPhotos(day.n);
   paintNotes(day.n);
+  if (day.map) initDayMap(day.map);
+}
+
+// Mini-carte d'une fiche jour (trajets + points, data-driven depuis days.json)
+async function initDayMap(cfg) {
+  try {
+    await ensureLeaflet();
+    const el = document.getElementById('day-map');
+    if (!el) return; // navigation entre-temps
+    el.innerHTML = '';
+    const map = L.map(el, { zoomControl: false, attributionControl: true, scrollWheelZoom: false });
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 17,
+    }).addTo(map);
+    const group = L.featureGroup().addTo(map);
+    (cfg.routes || []).forEach(r => {
+      L.polyline(r.coords, {
+        color: r.color || '#e98d58', weight: 4, opacity: 0.9,
+        dashArray: r.dashed ? '6 8' : null, lineJoin: 'round',
+      }).bindPopup(`<b>${escapeHtml(r.name || '')}</b>`).addTo(group);
+    });
+    (cfg.markers || []).forEach(m => {
+      L.circleMarker(m.coords, {
+        radius: 6, color: '#fbf6e9', weight: 1.5,
+        fillColor: '#e98d58', fillOpacity: 0.95,
+      }).bindPopup(`<b>${escapeHtml(m.name || '')}</b>`).addTo(group);
+    });
+    if (group.getLayers().length) map.fitBounds(group.getBounds().pad(0.12));
+  } catch (err) {
+    console.error(err);
+    const el = document.getElementById('day-map');
+    if (el) el.innerHTML = '<div class="map-loader">Plan indisponible hors-ligne</div>';
+  }
 }
 
 function preloadNeighborPhotos(n) {
@@ -3424,6 +3491,8 @@ function attachSwipe(currentN) {
   const VERTICAL_LOCK = 12;
 
   function onStart(e) {
+    // Pas de swipe de jour quand le geste commence sur la mini-carte
+    if (e.target && e.target.closest && e.target.closest('.day-map')) { tracking = false; return; }
     const t = e.touches ? e.touches[0] : e;
     startX = t.clientX;
     startY = t.clientY;

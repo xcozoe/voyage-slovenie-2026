@@ -4,7 +4,7 @@
 // - Photos pré-cachées dès l'installation (cache séparé stable) → hors-ligne complet
 // - Bypass Firebase (Firestore gère sa propre persistance côté app)
 
-const CACHE = 'voyage-slovenie-v78';     // shell + données JSON, versionné
+const CACHE = 'voyage-slovenie-v79';     // shell + données JSON, versionné
 const PHOTO_CACHE = 'voyage-photos-v1';  // photos, stable entre versions du shell
 const SHELL = [
   './',

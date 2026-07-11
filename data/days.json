@@ -169,9 +169,34 @@
           "desc": "Plage de Bele Skale à Strunjan (eau turquoise au pied des falaises blanches), pause glace à Izola, Moon Bay pour la baignade."
         }
       ],
+      "map": {
+        "title": "Le circuit du jour",
+        "legend": "En corail : le circuit principal Portorož → Koper et retour (~40 km). En turquoise pointillé : l'option salines de Sečovlje + spa Lepa Vida (+12 km A/R).",
+        "routes": [
+          {
+            "name": "Circuit Parenzana : Portorož → Koper (A/R)",
+            "color": "#e98d58",
+            "coords": [[45.5119, 13.5894], [45.5152, 13.5952], [45.5190, 13.6000], [45.5235, 13.6030], [45.5270, 13.6055], [45.5296, 13.6130], [45.5315, 13.6280], [45.5345, 13.6450], [45.5386, 13.6600], [45.5432, 13.6760], [45.5470, 13.6940], [45.5495, 13.7120], [45.5481, 13.7302]]
+          },
+          {
+            "name": "Option : salines de Sečovlje",
+            "color": "#6cb6c4",
+            "dashed": true,
+            "coords": [[45.5119, 13.5894], [45.5078, 13.5955], [45.5045, 13.6020], [45.4960, 13.6015], [45.4880, 13.5990], [45.4830, 13.5965]]
+          }
+        ],
+        "markers": [
+          { "name": "E-Bike Istria — départ & retour (10h / 18h)", "coords": [45.5119, 13.5894] },
+          { "name": "Tunnel de Valeta", "coords": [45.5190, 13.6000] },
+          { "name": "Strunjan — baignade (Bele Skale, Moon Bay)", "coords": [45.5270, 13.6055] },
+          { "name": "Izola — pause glace", "coords": [45.5386, 13.6600] },
+          { "name": "Koper — déjeuner place Tito", "coords": [45.5481, 13.7302] },
+          { "name": "Salines de Sečovlje & spa Lepa Vida", "coords": [45.4830, 13.5965] }
+        ]
+      },
       "tips": [
-        "VAE vivement recommandé pour les petites côtes : 35-45€/pers en VAE livré",
-        "Loueurs : E-Bike Istria (ebikeistria.eu), KoperTours (kopertours.eu)"
+        "Beaucoup d'eau et crème solaire : peu d'ombre sur la côte",
+        "Antivols fournis — cadenasser pendant les baignades ; CNI si détour côté croate"
       ]
     },
     {
