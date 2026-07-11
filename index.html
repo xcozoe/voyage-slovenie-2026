@@ -3943,7 +3943,7 @@ function renderResaPageCard(act) {
   const heroSrc   = act.photoKey ? photoSrc(act.photoKey, 'hero')   : null;
 
   const listingPill = act.listing && act.listing.url
-    ? `<a class="stay-card__listing is-website" href="${escapeHtml(act.listing.url)}" target="_blank" rel="noopener">Site ↗</a>`
+    ? `<a class="stay-card__listing is-website" href="${escapeHtml(act.listing.url)}" target="_blank" rel="noopener">${escapeHtml(act.listing.label || 'Site')} ↗</a>`
     : '';
 
   const photoHtml = mobileSrc ? `

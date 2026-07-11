@@ -122,7 +122,8 @@
       "photoKey": "j06-predjama",
       "included": ["2 adultes (49,90 €) + 1 enfant 6-15 ans (29,90 €)", "grotte de Postojna — visite à 17h00", "château de Predjama — entrée flexible 9h-18h30", "audioguide du château à télécharger (19 langues)"],
       "bring": ["billets QR sur les téléphones", "pièces d'identité", "polaires (10 °C dans la grotte)", "chaussures confortables"],
-      "notes": "Grotte : arriver au parc à 16h30 (30 min avant la visite), embarquement du train à 16h45 précises, visite ~1h30 à 10 °C. Château à 9 km, transport non inclus — le visiter AVANT la grotte (dernière entrée 18h00). Télécharger l'audioguide de Predjama avant d'arriver (location physique : +2,90 € au guichet). Pas de gros sacs ni valises dans les sites. Changement d'horaire : gratuit jusqu'à 24h avant, sinon 2 à 5 €/billet. L'Airbnb de Bukovje est à 5 min du château."
+      "listing": { "type": "website", "label": "Audioguide FR", "url": "https://www.nub.art/#audioguide?mt=f58383fb351b3d-67c07b5c57cdb409241ca225&lg=fr" },
+      "notes": "Grotte : arriver au parc à 16h30 (30 min avant la visite), embarquement du train à 16h45 précises, visite ~1h30 à 10 °C. Château à 9 km, transport non inclus — le visiter AVANT la grotte (dernière entrée 18h00). Audioguide du château en français : pastille « Audioguide FR » en haut de la fiche, à ouvrir/télécharger avant d'arriver, idéalement en wifi (location physique : +2,90 € au guichet). Pas de gros sacs ni valises dans les sites. Changement d'horaire : gratuit jusqu'à 24h avant, sinon 2 à 5 €/billet. L'Airbnb de Bukovje est à 5 min du château."
     },
     {
       "id": "sup-ljubljana",
