@@ -97,6 +97,34 @@
       "notes": "Retrait à 10h, retour à 18h, à Portorož (Fizine). Journée sur la côte slovène et l'Istrie (voie verte Parenzana). Pendant l'étape Piran."
     },
     {
+      "id": "postojna-predjama",
+      "title": "Grotte de Postojna + château de Predjama",
+      "provider": "Park Postojnska jama",
+      "city": "Postojna",
+      "country": "Slovénie",
+      "date": "2026-07-12",
+      "startTime": "17:00",
+      "endTime": null,
+      "status": "confirmed",
+      "meetingPoint": "Parc de la grotte de Postojna, Jamska cesta 28, 6230 Postojna — RDV 16h30, embarquement du train 16h45",
+      "coords": [45.7830, 14.2036],
+      "phone": "+386 5 7000 100",
+      "confirmation": "Commande 835098 · facture WEB-WEB-61109",
+      "price": 129.70,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 129.70,
+        "remaining": 0,
+        "paidDate": "2026-07-11",
+        "paymentMethod": "CB en ligne (postojnska-jama.eu)"
+      },
+      "bookedBy": "Elsa",
+      "photoKey": "j06-predjama",
+      "included": ["2 adultes (49,90 €) + 1 enfant 6-15 ans (29,90 €)", "grotte de Postojna — visite à 17h00", "château de Predjama — entrée flexible 9h-18h30", "audioguide du château à télécharger (19 langues)"],
+      "bring": ["billets QR sur les téléphones", "pièces d'identité", "polaires (10 °C dans la grotte)", "chaussures confortables"],
+      "notes": "Grotte : arriver au parc à 16h30 (30 min avant la visite), embarquement du train à 16h45 précises, visite ~1h30 à 10 °C. Château à 9 km, transport non inclus — le visiter AVANT la grotte (dernière entrée 18h00). Télécharger l'audioguide de Predjama avant d'arriver (location physique : +2,90 € au guichet). Pas de gros sacs ni valises dans les sites. Changement d'horaire : gratuit jusqu'à 24h avant, sinon 2 à 5 €/billet. L'Airbnb de Bukovje est à 5 min du château."
+    },
+    {
       "id": "sup-ljubljana",
       "title": "Urban SUP tour",
       "provider": "Bananaway",
@@ -218,10 +246,10 @@
     }
   ],
   "summary": {
-    "total": 8,
-    "confirmed": 8,
+    "total": 9,
+    "confirmed": 9,
     "requested": 0,
-    "totalPaid": 337.90,
+    "totalPaid": 467.60,
     "totalDueLater": 0,
     "totalDueOnSite": 286,
     "currency": "EUR"

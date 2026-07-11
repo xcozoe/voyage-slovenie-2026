@@ -209,7 +209,7 @@
       "photo": "j06-predjama",
       "drive": { "km": 73, "hours": "1h", "from": "Piran", "to": "Postojna" },
       "stay": "postojna",
-      "intro": "Demi-journée tranquille pour conclure l'étape côtière, puis bascule vers le plateau du Karst en début d'après-midi. Court trajet de 1h pour rejoindre Predjama.",
+      "intro": "Demi-journée tranquille pour conclure l'étape côtière, puis bascule vers le plateau du Karst : château de Predjama vers 14h30 et grotte de Postojna à 17h (billets combinés réservés).",
       "schedule": [
         {
           "time": "Matin",
@@ -222,14 +222,19 @@
           "desc": "Si l'envie est là et que le spa est ouvert, possibilité d'un bain de saumure d'1h30 (réservation lepavida.si) avant la route."
         },
         {
-          "time": "Après-midi",
+          "time": "Début d'après-midi",
           "title": "Route Piran → Predjama (1h)",
-          "desc": "Petite route à travers les collines slovènes, agréable et fluide. Charger la voiture après le déjeuner et basculer vers le Karst. Arrivée à Predjama vers 15h-16h."
+          "desc": "Petite route à travers les collines slovènes, agréable et fluide. Charger la voiture après le déjeuner et basculer vers le Karst. Viser une arrivée à Predjama vers 14h30."
         },
         {
-          "time": "Fin d'après-midi",
-          "title": "Château de Predjama",
-          "desc": "Forteresse construite dans une falaise rocheuse, à 123 m de haut. Audioguide en français. Histoire d'Erasmus de Predjama. Ouvert 9h-19h en juillet. Arriver en fin d'après-midi évite la grosse affluence."
+          "time": "14h30",
+          "title": "Château de Predjama (billet combiné)",
+          "desc": "Forteresse construite dans une falaise, à 123 m de haut. Histoire d'Erasmus de Predjama. Billets en poche (QR) — télécharger l'audioguide avant d'arriver. Compter ~1h de visite, puis 9 km de route vers la grotte."
+        },
+        {
+          "time": "17h00",
+          "title": "Grotte de Postojna (billets réservés)",
+          "desc": "Arriver au parc à 16h30, embarquement du train à 16h45 précises. Visite ~1h30 à 10 °C : polaires obligatoires, chaussures confortables, pas de gros sacs. Ensuite check-in à l'Airbnb de Bukovje (sauna !), à 10 min."
         }
       ]
     },
