@@ -126,6 +126,35 @@
       "notes": "Grotte : arriver au parc à 16h30 (30 min avant la visite), embarquement du train à 16h45 précises, visite ~1h30 à 10 °C. Château à 9 km, transport non inclus — le visiter AVANT la grotte (dernière entrée 18h00). Audioguide du château en français : pastille « Audioguide FR » en haut de la fiche, à ouvrir/télécharger avant d'arriver, idéalement en wifi (location physique : +2,90 € au guichet). Pas de gros sacs ni valises dans les sites. Changement d'horaire : gratuit jusqu'à 24h avant, sinon 2 à 5 €/billet. L'Airbnb de Bukovje est à 5 min du château."
     },
     {
+      "id": "skocjan",
+      "title": "Grottes de Škocjan",
+      "provider": "Park Škocjanske jame",
+      "city": "Divača",
+      "country": "Slovénie",
+      "date": "2026-07-13",
+      "startTime": "09:00",
+      "endTime": null,
+      "status": "confirmed",
+      "meetingPoint": "Centre d'accueil du parc, Škocjan 2, 6215 Divača — RDV 8h30 (30 min avant)",
+      "coords": [45.6633, 13.9930],
+      "phone": "+386 5 7082 110",
+      "email": "info@psj.si",
+      "confirmation": "Facture VST-WEB-23133 · commande 26-WEB-023133",
+      "price": 60.50,
+      "currency": "EUR",
+      "paymentBreakdown": {
+        "paid": 60.50,
+        "remaining": 0,
+        "paidDate": "2026-07-11",
+        "paymentMethod": "Visa (en ligne)"
+      },
+      "bookedBy": "Elsa",
+      "photoKey": "j07-skocjan",
+      "included": ["2 adultes (24 €)", "1 jeune −18 ans (12,50 €)", "visite guidée (~2h)"],
+      "bring": ["billets QR sur les téléphones", "petite laine (12 °C)", "chaussures qui accrochent (~500 marches, passerelles humides)"],
+      "notes": "Être au centre d'accueil à 8h30 impérativement (départ de Bukovje vers 8h, ~35 min). Billets valables uniquement le 13/7 à 9h00, ni échangeables ni remboursables. Photos interdites dans la grotte. Après la visite, route courte vers Ljubljana (45 min). Pendant l'étape Postojna → Ljubljana (J7)."
+    },
+    {
       "id": "sup-ljubljana",
       "title": "Urban SUP tour",
       "provider": "Bananaway",
@@ -247,10 +276,10 @@
     }
   ],
   "summary": {
-    "total": 9,
-    "confirmed": 9,
+    "total": 10,
+    "confirmed": 10,
     "requested": 0,
-    "totalPaid": 467.60,
+    "totalPaid": 528.10,
     "totalDueLater": 0,
     "totalDueOnSite": 286,
     "currency": "EUR"

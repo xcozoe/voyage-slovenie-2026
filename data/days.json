@@ -248,12 +248,17 @@
       "photo": "j07-skocjan",
       "drive": { "km": 53, "hours": "45 min", "from": "Postojna", "to": "Ljubljana" },
       "stay": "ljubljana",
-      "intro": "Matin consacré à Škocjan, puis route très courte vers Ljubljana. 2 nuits sur place.",
+      "intro": "Visite de Škocjan à 9h (billets réservés), puis route très courte vers Ljubljana. 2 nuits sur place.",
       "schedule": [
         {
-          "time": "Matin",
-          "title": "Grottes de Škocjan (UNESCO)",
-          "desc": "L'un des plus grands canyons souterrains au monde, plus impressionnant que Postojna. Visite guidée obligatoire de 2h, environ 500 marches. Ponts vertigineux. Tickets à réserver en ligne sur park-skocjanske-jame.si."
+          "time": "8h00",
+          "title": "Départ de Bukovje",
+          "desc": "~35 min de route jusqu'au parc de Škocjan (Divača). Être au centre d'accueil à 8h30 : les billets imposent d'y être 30 min avant la visite."
+        },
+        {
+          "time": "9h00",
+          "title": "Grottes de Škocjan (UNESCO) — billets réservés",
+          "desc": "L'un des plus grands canyons souterrains au monde, plus impressionnant que Postojna. Visite guidée de ~2h, environ 500 marches, ponts vertigineux. Billets QR sur les téléphones, valables uniquement à cette heure. Petite laine : 12 °C."
         },
         {
           "time": "Début d'après-midi",
