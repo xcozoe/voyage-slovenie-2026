@@ -4195,7 +4195,19 @@ function paintBookingSheet() {
         </div>
       </div>`);
   }
-  if (pb.remaining && pb.remaining > 0) {
+  const stayMarked = pb.remaining > 0 && isPaidOverride('stay', stay.id);
+  if (pb.remaining && pb.remaining > 0 && stayMarked) {
+    const pd = paidOverrideDate('stay', stay.id);
+    const note = pd ? `${formatDueDate(pd)} · pointé` : 'pointé';
+    payments.push(`
+      <div class="sheet__payment is-paid">
+        <span class="sheet__payment-icon">✓</span>
+        <div>
+          <div class="sheet__payment-main">${Math.round(pb.remaining)} € payé</div>
+          <small>${escapeHtml(note)}</small>
+        </div>
+      </div>`);
+  } else if (pb.remaining && pb.remaining > 0) {
     const due = pb.remainingDue;
     const dueLabel = !due ? 'à payer'
       : due === 'sur place' ? 'à payer sur place'
@@ -4218,6 +4230,13 @@ function paintBookingSheet() {
       </div>`);
   }
 
+  // Pointage du solde depuis la fiche (même mécanisme que budget/activités)
+  const stayActionHtml = (pb.remaining && pb.remaining > 0)
+    ? (stayMarked
+        ? `<button type="button" class="sheet__action sheet__action--ghost" data-act="mark-paid" data-pay-type="stay" data-pay-id="${stay.id}" data-paid="0">Annuler le pointage</button>`
+        : `<button type="button" class="sheet__action" data-act="mark-paid" data-pay-type="stay" data-pay-id="${stay.id}" data-paid="1">✓ Marquer comme payé</button>`)
+    : '';
+
   el.innerHTML = `
     <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
       <div class="sheet__handle-zone" data-act="sheet-handle"></div>
@@ -4231,6 +4250,7 @@ function paintBookingSheet() {
       ${details.length ? `<dl class="sheet__details">${details.map(([k, v]) => `<div><dt>${k}</dt><dd>${escapeHtml(v)}</dd></div>`).join('')}</dl>` : ''}
       ${stay.price ? `<div class="sheet__total"><span>Montant total</span><strong>${Math.round(stay.price)} €</strong></div>` : ''}
       ${payments.length ? `<div class="sheet__payments">${payments.join('')}</div>` : ''}
+      ${stayActionHtml}
     </div>
   `;
   document.body.classList.add('sheet-open');
@@ -4954,10 +4974,13 @@ function paidOverrideDate(type, id) { return PAID_OVERRIDES[payKey(type, id)]?.p
 async function setPaymentPaid(type, id, paid) {
   if (!db) { flashError('Indisponible hors-ligne'); return; }
   const ref = payKey(type, id);
+  const d = new Date();
+  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  // Optimiste : PAID_OVERRIDES à jour tout de suite (le snapshot confirmera)
+  if (paid) PAID_OVERRIDES[ref] = { kind: 'paidmark', ref, paidDate: today };
+  else delete PAID_OVERRIDES[ref];
   try {
     if (paid) {
-      const d = new Date();
-      const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       await setDoc(doc(db, 'expenses', `paidmark-${ref}`),
         { kind: 'paidmark', ref, refType: type, refId: id, paidDate: today, createdAt: serverTimestamp() });
     } else {
@@ -4974,6 +4997,8 @@ document.addEventListener('click', (e) => {
   setPaymentPaid(mb.dataset.payType, mb.dataset.payId, mb.dataset.paid === '1');
   closeStayExpenseSheet();
   closeActivityBookingSheet();
+  // Sheet réservation d'un hébergement : repaint en place (état pointé visible)
+  if (BOOKING_SHEET_ID) paintBookingSheet();
 });
 
 const CATEGORIES = [
