@@ -151,17 +151,17 @@
       "photo": "j05-parenzana",
       "drive": null,
       "stay": "piran",
-      "intro": "Journée vélo sur la Parenzana, ancienne voie ferrée. Astuce : louer en zéro logistique avec shuttle — un loueur de Portorož vient livrer les VAE à votre hôtel le matin, vous shuttle vers Koper, et vous rejoignez Piran à vélo en sens descendant.",
+      "intro": "Journée vélo sur la Parenzana, l'ancienne voie ferrée de la côte istrienne. Retrait des VAE à 10h chez E-Bike Istria (Fizine, Portorož), retour à 18h.",
       "schedule": [
         {
-          "time": "9h",
-          "title": "Livraison des vélos + shuttle",
-          "desc": "Le loueur vient à votre hôtel avec les VAE. Court briefing puis navette jusqu'au point de départ à Koper (15 min)."
+          "time": "10h",
+          "title": "Retrait des vélos chez E-Bike Istria",
+          "desc": "Fizine 4, Portorož. 3 VAE avec casques, antivols et kit de réparation. Pièce d'identité demandée."
         },
         {
           "time": "Journée",
-          "title": "Parenzana : Koper → Izola → Strunjan → Piran",
-          "desc": "~25 km à votre rythme, 4 à 6h avec pauses. Tronçon Koper-Izola plat. Petite côte douce après Izola, puis tunnel rafraîchissant. Descente vers Strunjan, dernier petit raidillon vers Portorož puis longe la mer jusqu'à Piran."
+          "title": "Circuit : Valeta → Strunjan → Izola → Koper et retour",
+          "desc": "Tunnel de Valeta, baignade à Strunjan, glace à Izola, puis l'ancienne route côtière fermée aux voitures jusqu'à Koper (déjeuner place Tito). Retour par le même chemin, option salines de Sečovlje et spa Lepa Vida (+12 km A/R). 40-52 km au total, quasi plat en VAE."
         },
         {
           "time": "Pauses",
