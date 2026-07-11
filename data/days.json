@@ -209,7 +209,7 @@
       "photo": "j06-predjama",
       "drive": { "km": 73, "hours": "1h", "from": "Piran", "to": "Postojna" },
       "stay": "postojna",
-      "intro": "Demi-journée tranquille pour conclure l'étape côtière, puis bascule vers le plateau du Karst : château de Predjama vers 14h30 et grotte de Postojna à 17h (billets combinés réservés).",
+      "intro": "Matinée aux salines, déjeuner à Piran, puis route tranquille vers le Karst : installation à l'appartement vers 15h, pause, château de Predjama puis grotte de Postojna à 17h (billets combinés).",
       "schedule": [
         {
           "time": "Matin",
@@ -217,24 +217,24 @@
           "desc": "Balade dans les marais salants, les plus anciens d'Europe encore exploités selon des méthodes traditionnelles. Lecture des paysages, observation des oiseaux. Musée du sel à l'entrée. Compter 1h30-2h. Apporter chapeau et eau."
         },
         {
-          "time": "Déjeuner (option)",
-          "title": "Pause spa rapide à Lepa Vida",
-          "desc": "Si l'envie est là et que le spa est ouvert, possibilité d'un bain de saumure d'1h30 (réservation lepavida.si) avant la route."
+          "time": "Midi",
+          "title": "Déjeuner à Piran",
+          "desc": "Retour sur Piran pour un dernier déjeuner face à l'Adriatique avant de quitter la côte."
         },
         {
           "time": "Début d'après-midi",
-          "title": "Route Piran → Predjama (1h)",
-          "desc": "Petite route à travers les collines slovènes, agréable et fluide. Charger la voiture après le déjeuner et basculer vers le Karst. Viser une arrivée à Predjama vers 14h30."
+          "title": "Route tranquille vers Bukovje (1h)",
+          "desc": "Petite route à travers les collines slovènes, agréable et fluide. Installation à l'appartement (sauna) vers 15h, puis vraie pause avant les visites."
         },
         {
-          "time": "14h30",
+          "time": "15h45",
           "title": "Château de Predjama (billet combiné)",
-          "desc": "Forteresse construite dans une falaise, à 123 m de haut. Histoire d'Erasmus de Predjama. Billets en poche (QR) — télécharger l'audioguide avant d'arriver. Compter ~1h de visite, puis 9 km de route vers la grotte."
+          "desc": "À 5 min de l'appartement. Forteresse dans la falaise, histoire d'Erasmus — audioguide FR téléchargé, billets QR en poche. ATTENTION : repartir à 16h25 max, l'horaire fixe de 17h c'est la grotte (le château, lui, est en entrée libre jusqu'à 18h)."
         },
         {
-          "time": "17h00",
-          "title": "Grotte de Postojna (billets réservés)",
-          "desc": "Arriver au parc à 16h30, embarquement du train à 16h45 précises. Visite ~1h30 à 10 °C : polaires obligatoires, chaussures confortables, pas de gros sacs. Ensuite check-in à l'Airbnb de Bukovje (sauna !), à 10 min."
+          "time": "16h45",
+          "title": "Embarquement pour la grotte de Postojna",
+          "desc": "9 km depuis le château : être au parc vers 16h35, embarquement du train à 16h45 précises, visite à 17h (~1h30 à 10 °C — polaires, chaussures confortables, pas de gros sacs). Retour à l'appartement ensuite : sauna mérité."
         }
       ]
     },
