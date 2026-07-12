@@ -209,7 +209,7 @@
       "photo": "j06-predjama",
       "drive": { "km": 73, "hours": "1h", "from": "Piran", "to": "Postojna" },
       "stay": "postojna",
-      "intro": "Matinée aux salines, déjeuner à Piran, puis route tranquille vers le Karst : installation à l'appartement vers 15h, pause, château de Predjama puis grotte de Postojna à 17h (billets combinés).",
+      "intro": "Matinée aux salines, déjeuner à Piran, puis le Karst sans courir : château de Predjama à 14h, installation à l'appartement à 15h30, pause, et grotte de Postojna à 17h (billets combinés).",
       "schedule": [
         {
           "time": "8h15",
@@ -219,22 +219,22 @@
         {
           "time": "Midi",
           "title": "Déjeuner à Piran",
-          "desc": "Retour sur Piran pour un dernier déjeuner face à l'Adriatique avant de quitter la côte."
+          "desc": "Dernier déjeuner face à l'Adriatique. Reprendre la route vers 12h45 : ⚠️ travaux près de la sortie d'autoroute Postojna (mail du parc), bouchons possibles — la marge est prévue."
         },
         {
-          "time": "Début d'après-midi",
-          "title": "Route vers Bukovje (1h + marge travaux)",
-          "desc": "⚠️ Mail du parc : travaux près de la sortie d'autoroute Postojna + trafic estival, bouchons possibles. Partir de Piran vers 13h30 pour garder l'arrivée à l'appartement vers 15h. Installation, puis vraie pause avant les visites."
-        },
-        {
-          "time": "15h45",
+          "time": "14h00",
           "title": "Château de Predjama (billet combiné)",
-          "desc": "À 5 min de l'appartement. Forteresse dans la falaise, histoire d'Erasmus — audioguide FR téléchargé, billets QR en poche. ATTENTION : repartir à 16h15 max (marge travaux/trafic), l'horaire fixe de 17h c'est la grotte (le château, lui, est en entrée libre jusqu'à 18h)."
+          "desc": "Arrivée directe depuis la côte (~1h de route). Forteresse dans la falaise, histoire d'Erasmus — audioguide FR téléchargé, billets QR en poche. Entrée libre 9h-18h : visite tranquille d'~1h, aucune pression d'horaire."
         },
         {
-          "time": "16h45",
-          "title": "Embarquement pour la grotte de Postojna",
-          "desc": "9 km depuis le château : être au parc vers 16h35, embarquement du train à 16h45 précises, visite à 17h (~1h30 à 10 °C — polaires, chaussures confortables, pas de gros sacs). Retour à l'appartement ensuite : sauna mérité."
+          "time": "15h30",
+          "title": "Installation à l'appartement (Bukovje)",
+          "desc": "À 5 min du château. Pose des valises, vraie pause — le sauna peut même ouvrir le bal avant la grotte pour les motivés."
+        },
+        {
+          "time": "16h30",
+          "title": "Départ pour la grotte de Postojna",
+          "desc": "10 min de route. Être au parc vers 16h35-16h40, embarquement du train à 16h45 précises, visite à 17h (~1h30 à 10 °C — polaires, chaussures confortables, pas de gros sacs). Retour à l'appartement ensuite."
         }
       ]
     },
