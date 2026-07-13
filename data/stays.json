@@ -202,7 +202,7 @@
       "host": "Bogo",
       "phone": "+49 174 1730406",
       "confirmation": "HMHFHA5QS2",
-      "checkin": "après 15h00 (boîte à clé sécurisée)",
+      "checkin": "après 15h00 — clés dans la boîte à code, PIN envoyé le jour de l'arrivée (après enregistrement en ligne des voyageurs) ; arrivée plus tôt possible sur demande",
       "checkout": "avant 11h00",
       "price": 400,
       "currency": "EUR",
@@ -215,7 +215,7 @@
       },
       "cancellation": "gratuite avant le 14 juillet à 15h00",
       "bookedBy": "Rémi",
-      "notes": "Vallée de la Soča (côté sud, plus calme que Bovec). Accès rafting Bovec-Trnovo, gorges de Tolmin, cascade Kozjak.",
+      "notes": "Vallée de la Soča (côté sud, plus calme que Bovec). Accès rafting Bovec-Trnovo, gorges de Tolmin, cascade Kozjak. ⚠️ Enregistrement en ligne des voyageurs OBLIGATOIRE avant l'arrivée (lien Bentral reçu par mail, données exactes des pièces d'identité) — c'est la condition pour recevoir le code PIN de la boîte à clés. Parking gratuit dans la rue (places rares) ou au Sport Park Brajda, à 300 m.",
       "amenities": ["boîte à clé sécurisée", "animaux acceptés", "logement entier (4 max)"],
       "listing": { "type": "airbnb", "url": "https://www.airbnb.fr/rooms/1216791485484385694" }
     },
