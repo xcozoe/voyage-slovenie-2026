@@ -224,7 +224,7 @@
       "startTime": "09:45",
       "endTime": null,
       "status": "confirmed",
-      "meetingPoint": "Base rafting Soča Rider, derrière le restaurant Nono, 150 m avant l'entrée de Bovec (Industrijska cona 4a, 5230 Bovec)",
+      "meetingPoint": "Base Soča Rider, Industrijska cona 4A, 5230 Bovec — derrière la pizzeria Nono, près de l'hôtel Mangart ; parking en gravier devant l'entrée (clôture verte)",
       "coords": [46.3380, 13.5520],
       "phone": "+386 41 596 104",
       "email": "info@socarider.com",
@@ -236,15 +236,15 @@
         "remaining": 151,
         "paidDate": "2026-07-05",
         "paymentMethod": "CB en ligne (Bankart 3D Secure)",
-        "remainingDue": "en espèces uniquement, au bureau avant le tour",
-        "extras": "Permis de rivière en sus, non inclus : 21 €/pers soit 63 € pour 3 — à acheter en ligne auprès de la municipalité (instructions envoyées par l'agence)"
+        "remainingDue": "en ESPÈCES uniquement, à régler avant le départ du tour",
+        "extras": "Permis de rivière en sus, non inclus : 21 €/pers soit 63 € pour 3 — À ACHETER EN LIGNE À L'AVANCE (CB), instructions pas-à-pas dans le mail de Soča Rider du 12/7"
       },
       "bookedBy": "Rémi",
       "photoKey": "j14-rafting",
-      "included": ["tout l'équipement (combinaison, casque, gilet, pagaie)", "guide professionnel", "transfert Bovec ↔ rivière", "photos du tour offertes"],
-      "bring": ["maillot de bain", "serviette"],
+      "included": ["tout l'équipement pro, par tous les temps (combinaison, casque, gilet, pagaie)", "guide professionnel", "transfert Bovec ↔ rivière", "photos du tour offertes"],
+      "bring": ["maillot de bain DÉJÀ ENFILÉ sous les vêtements", "sous-vêtements secs pour le retour (exigés pour la navette)", "serviette", "cordon pour les lunettes / lunettes de soleil", "espèces pour le solde (151 €)"],
       "listing": { "type": "website", "url": "https://www.socarider.com" },
-      "notes": "RDV 9h30 (15 min avant le départ) à la base Soča Rider. 3 h à 3 h 30 au total dont 1 h 30 sur l'eau, sur la section la plus fun de la Soča : sauts de rochers, glissades sur le boudin, baignade. Tarif : 62 €/adulte ×2 + 57 €/étudiant. 8 pers max par raft (6-7 si eau basse). Savoir nager obligatoire. Pendant l'étape Tolmin (gorges de Tolmin à 17 h le même jour)."
+      "notes": "RDV 9h30 IMPÉRATIF (check-in 15 min avant le départ — ils n'attendent pas les retardataires). Depuis Tolmin : ~45 min en remontant la vallée de la Soča. Le tour est maintenu même sous la pluie. 3 h à 3 h 30 au total dont 1 h 30 sur l'eau : sauts de rochers, glissades sur le boudin, baignade. Tarif : 62 €/adulte ×2 + 57 €/étudiant. Prévenir l'agence si la taille du groupe change. Savoir nager obligatoire. Pendant l'étape Tolmin (gorges de Tolmin à 17 h le même jour)."
     },
     {
       "id": "tolmin-gorges",
