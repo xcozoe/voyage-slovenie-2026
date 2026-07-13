@@ -6,7 +6,11 @@
     "endDate": "2026-07-24",
     "travelers": "2 adultes + 1 ado",
     "totalKm": 2962,
-    "origin": { "name": "Toulouse", "coords": [43.6043, 1.4429] }
+    "origin": { "name": "Toulouse", "coords": [43.6043, 1.4429] },
+    "journal": {
+      "label": "Carnet",
+      "url": "https://www.polarsteps.com/ElsaPoix/26982484-cap-a-l-est?s=a6319d53-745d-40af-b0d4-c99c88a6433d"
+    }
   },
   "legs": {
     "approach": "Vers la mer",

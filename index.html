@@ -3596,6 +3596,7 @@ function renderCover() {
             <span class="cover__badge" data-actions-badge hidden></span>
           </a>
           <a href="#/export">Export</a>
+          ${STATE.trip.journal?.url ? `<a href="${escapeHtml(STATE.trip.journal.url)}" target="_blank" rel="noopener" class="cover__link-ext">${escapeHtml(STATE.trip.journal.label || 'Carnet')} ↗</a>` : ''}
         </nav>
       </div>
     </section>
