@@ -164,7 +164,7 @@
       "startTime": "18:00",
       "endTime": "20:00",
       "status": "confirmed",
-      "meetingPoint": "Point de RDV Bananaway, Ljubljana (rive de la Ljubljanica)",
+      "meetingPoint": "Café Špica (pointe sud de la Ljubljanica) — RDV 17h45 ; ~30 min à pied depuis l'appartement, partir vers 17h-17h15",
       "coords": [46.039832, 14.511450],
       "phone": "+386 51 340 344",
       "phoneLabel": "WhatsApp",
@@ -183,7 +183,7 @@
       "included": ["initiation au SUP", "matériel (board, pagaie, leash)", "guide expérimenté (2h)", "photos de la sortie", "anecdotes locales"],
       "bring": ["vêtements confortables / maillot", "sandales", "protection solaire", "bouteille d'eau", "vêtements de rechange + serviette"],
       "listing": { "type": "website", "url": "https://www.bananaway.si" },
-      "notes": "2 adultes + 1 jeune (10-17 ans). Sortie de 2h en paddle sur la Ljubljanica. Arriver 15 min avant, repérer les boards et le guide en t-shirt jaune. Pendant l'étape Ljubljana."
+      "notes": "2 adultes + 1 jeune (10-17 ans). Sortie de 2h en paddle sur la Ljubljanica. RDV confirmé : café Špica à 17h45 (départ de l'appartement 17h-17h15, ~30 min à pied le long de la rivière). Repérer les boards et le guide en t-shirt jaune. Le match France-Espagne est à 21h : fin du paddle à 20h, timing parfait. Pendant l'étape Ljubljana."
     },
     {
       "id": "vintgar",
