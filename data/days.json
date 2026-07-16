@@ -378,29 +378,72 @@
       "photo": "j11-bohinj",
       "drive": { "km": 25, "hours": "30 min A/R", "from": "Bled", "to": "Bohinj A/R" },
       "stay": "bled",
-      "intro": "Aller-retour à la journée vers Bohinj — plus grand, plus sauvage, beaucoup moins fréquenté que Bled. On rentre dormir à Bled le soir.",
+      "intro": "La journée Bohinj en triathlon doux : vélo jusqu'au lac, baignade, traversée en bateau, retour à pied par la rive nord sauvage, navette pour finir. On rentre dormir à Bled.",
       "schedule": [
         {
-          "time": "Matin",
-          "title": "Route et arrivée au lac",
-          "desc": "30 min de route depuis Bled par la route panoramique qui longe la Sava Bohinjka. Arrivée à Ribčev Laz : église Saint-Jean-Baptiste, pont de pierre médiéval, vue sur le Triglav."
+          "time": "9h30",
+          "title": "Route Bled → Bohinjska Bistrica",
+          "desc": "25 min par la route qui longe la Sava Bohinjka. Parking au village, courses picnic (Mercator/boulangerie), et repérer les horaires du bus retour Ribčev Laz → B. Bistrica à l'arrêt."
         },
         {
-          "time": "Journée",
-          "title": "Lac et baignade",
-          "desc": "Eaux limpides à 18-20°C en juillet. Locations de paddle et bateaux électriques à Ribčev Laz. Tour partiel du lac à pied. Pique-nique au bord de l'eau ou déjeuner au Restaurant Triglav à Stara Fužina."
+          "time": "10h00",
+          "title": "Location des vélos chez Hike & Bike",
+          "desc": "Drop-off à Ribčev Laz confirmé par l'agence — on rend les vélos au lac, pas de retour à faire. Piste cyclable plate de 7 km le long de la rivière (~35 min tranquilles)."
         },
         {
-          "time": "Fin d'après-midi",
-          "title": "Église Saint-Thomas",
-          "desc": "Sur le chemin du retour, petite église perchée au-dessus du lac. L'un des plus beaux spots photo au coucher du soleil. Accès parking + 30 min de marche facile."
+          "time": "11h00",
+          "title": "Ribčev Laz : plage est + picnic",
+          "desc": "Rendu des vélos, photo au pont de pierre et à l'église Sv. Janez, puis baignade sur la plage à l'est du lac (départ du vieux pont, côté église). Eau limpide à 20-22 °C en juillet. Picnic sur place."
         },
         {
-          "time": "Soirée",
-          "title": "Retour à Bled",
-          "desc": "Dîner sur place ou en ville (Vila Prešeren pour la vue lac, Pizzeria Rustika pour du simple et bon)."
+          "time": "13h20",
+          "title": "Traversée du lac en bateau → Ukanc",
+          "desc": "Bateau panoramique électrique toutes les 40 min (9h30-18h10), 30 min de traversée, ~9 €/adulte l'aller. Billets à l'Info Point du ponton ou à bord."
+        },
+        {
+          "time": "14h00",
+          "title": "Ukanc : baignade au calme",
+          "desc": "La plage la plus tranquille du lac, face aux parois du Triglav. Sieste, baignade — option téléphérique Vogel juste à côté si l'envie de vue panoramique prend."
+        },
+        {
+          "time": "15h30",
+          "title": "Retour à pied par la rive nord",
+          "desc": "Ukanc → Ribčev Laz par le sentier sauvage de la rive nord : ~5 km, 1h15-1h30, plat et en partie ombragé. Chaussures fermées conseillées."
+        },
+        {
+          "time": "17h00",
+          "title": "Bus retour + route vers Bled",
+          "desc": "Navette Ribčev Laz → Bohinjska Bistrica (ligne régulière, renforcée l'été), récupération de la voiture et retour à Bled. Dîner en ville (Vila Prešeren pour la vue lac, Pizzeria Rustika pour du simple et bon)."
         }
-      ]
+      ],
+      "map": {
+        "title": "Le circuit du jour",
+        "legend": "Corail : vélo Bohinjska Bistrica → Ribčev Laz (7 km, rendus sur place). Turquoise pointillé : traversée en bateau. Vert : retour à pied par la rive nord (~5 km).",
+        "routes": [
+          {
+            "name": "Vélo : B. Bistrica → Ribčev Laz (7 km)",
+            "color": "#e98d58",
+            "coords": [[46.2732, 13.9555], [46.2745, 13.9450], [46.2735, 13.9330], [46.2725, 13.9200], [46.2722, 13.9070], [46.2740, 13.8960], [46.2778, 13.8878]]
+          },
+          {
+            "name": "Bateau : Ribčev Laz → Ukanc (30 min)",
+            "color": "#6cb6c4",
+            "dashed": true,
+            "coords": [[46.2778, 13.8878], [46.2800, 13.8720], [46.2822, 13.8540], [46.2836, 13.8360]]
+          },
+          {
+            "name": "À pied : rive nord Ukanc → Ribčev Laz (~5 km)",
+            "color": "#7a9657",
+            "coords": [[46.2836, 13.8360], [46.2858, 13.8430], [46.2872, 13.8560], [46.2876, 13.8700], [46.2858, 13.8810], [46.2800, 13.8862], [46.2778, 13.8878]]
+          }
+        ],
+        "markers": [
+          { "name": "Parking + Hike & Bike (10h)", "coords": [46.2732, 13.9555] },
+          { "name": "Ribčev Laz — rendu vélos, plage est, embarcadère", "coords": [46.2778, 13.8878] },
+          { "name": "Plongeoir Skalica (option baignade)", "coords": [46.2757, 13.8755] },
+          { "name": "Ukanc — plage calme + Vogel", "coords": [46.2836, 13.8360] }
+        ]
+      }
     },
     {
       "n": 12,
