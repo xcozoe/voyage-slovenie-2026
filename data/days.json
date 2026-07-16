@@ -349,22 +349,22 @@
       "photo": "j10-vintgar",
       "drive": null,
       "stay": "bled",
-      "intro": "L'incontournable de la Slovénie. La clé absolue : Vintgar tôt le matin pour éviter la foule, lac de Bled l'après-midi.",
+      "intro": "Vintgar tôt le matin avec la boucle du King of Triglav Trail, puis journée douce à Bled : produits locaux, déjeuner et repos à la maison, et grand tour du lac à pied avec baignades.",
       "schedule": [
         {
-          "time": "8h impératif",
-          "title": "Gorges de Vintgar",
-          "desc": "Passerelles en bois suspendues au-dessus de l'eau émeraude. 1h30 de visite. Billet en ligne obligatoire sur vintgar.si avec créneau précis. Casque fourni à l'entrée. Éviter absolument 10h-13h."
+          "time": "8h04",
+          "title": "Gorges de Vintgar + King of Triglav Trail",
+          "desc": "Passerelles en bois au-dessus de l'eau émeraude, puis boucle de retour par le King of Triglav Trail. Fin de la balade vers 10h30 — le créneau matinal a bien évité la foule."
         },
         {
-          "time": "Déjeuner",
-          "title": "Pause kremšnita",
-          "desc": "Hotel Park, terrasse face au lac. Le vrai gâteau de Bled, recette protégée depuis 1953 : couches alternées de pâte feuilletée, crème vanille, chantilly. Indispensable."
+          "time": "11h00",
+          "title": "Produits locaux + déjeuner à la maison",
+          "desc": "Arrêt chez un vendeur de produits locaux sur le chemin du retour, déjeuner à l'appartement et vraie pause jusqu'au milieu d'après-midi."
         },
         {
-          "time": "Après-midi",
-          "title": "Île et château de Bled",
-          "desc": "Traversée en pletna jusqu'à l'île, 99 marches jusqu'à l'église, sonner la cloche des vœux. Puis montée au château perché du XIIe siècle pour la vue carte postale."
+          "time": "15h30",
+          "title": "Tour du lac de Bled à pied",
+          "desc": "Le tour complet (~6 km) entrecoupé de plusieurs baignades, avec la montée au point de vue en hauteur sur le lac — la carte postale gagnée à pied. Retour à la maison à 20h."
         }
       ]
     },
