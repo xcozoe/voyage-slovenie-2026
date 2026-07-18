@@ -437,8 +437,18 @@
       "schedule": [
         {
           "time": "Matin",
-          "title": "Randonnée Planina Zajamniki",
-          "desc": "Départ depuis Rudno Polje. Boucle ou aller-retour facile à moduler (2 à 4h). Niveau facile, dénivelé doux. Vues panoramiques sur la chaîne du Triglav. Pique-nique sur place ou simple café à l'alpage."
+          "title": "Départ du parking de Rudno polje",
+          "desc": "25 min de route depuis Bled (19 km) jusqu'au plateau de Pokljuka. Deux parkings : le parking militaire est GRATUIT, l'autre coûte 7 € en liquide. Sentier balisé rouge-blanc avec panneaux en bois : suivre d'abord « Uskovnica », puis bifurquer vers « Zajamniki »."
+        },
+        {
+          "time": "Rando",
+          "title": "Planina Zajamniki — ~13 km, un peu moins de 3h A/R",
+          "desc": "Chemin carrossable très facile, faisable en baskets, dénivelé minime (~50 m — ça descend doucement à l'aller, donc remonte au retour). Forêt ombragée, puis l'alpage : l'alignement photogénique des maisons de vachers en bois, avec les Alpes Juliennes, le Triglav et le lac de Bohinj en toile de fond. LA photo se prend depuis la petite cabane au sommet de la colline. Variante retour possible par le hameau de Praprotnica."
+        },
+        {
+          "time": "Pique-nique",
+          "title": "À l'alpage",
+          "desc": "Aucun refuge ouvert de façon régulière : emporter le pique-nique (pain + jambon fumé slovène, conseil de l'article). Eau en quantité."
         },
         {
           "time": "Après-midi",
@@ -446,7 +456,23 @@
           "desc": "Retour au lac pour une baignade. Option : Gorges de la Mostnica au départ de Stara Fužina (3h, eau turquoise, marmites de géants) si vous avez de l'énergie."
         }
       ],
+      "map": {
+        "title": "La rando du jour",
+        "legend": "Rudno polje → Planina Zajamniki : ~13 km A/R sur chemin carrossable balisé (Uskovnica puis Zajamniki), dénivelé ~50 m. Tracé indicatif.",
+        "routes": [
+          {
+            "name": "Rudno polje → Zajamniki (~6,5 km)",
+            "color": "#7a9657",
+            "coords": [[46.3453, 13.9235], [46.3420, 13.9190], [46.3390, 13.9150], [46.3355, 13.9130], [46.3325, 13.9105], [46.3295, 13.9085], [46.3280, 13.9070]]
+          }
+        ],
+        "markers": [
+          { "name": "Parking Rudno polje (militaire = gratuit)", "coords": [46.3453, 13.9235] },
+          { "name": "Planina Zajamniki — maisons de vachers + cabane photo", "coords": [46.3280, 13.9070] }
+        ]
+      },
       "tips": [
+        "Source de l'itinéraire : slovenie-secrete.fr (Zajamniki, rando vers un beau village en bois)",
         "Truite de Bohinj grillée à la sauge au Gostilna Mihovc à Stara Fužina"
       ]
     },
