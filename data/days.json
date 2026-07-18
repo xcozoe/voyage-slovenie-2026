@@ -459,6 +459,10 @@
       "map": {
         "title": "La rando du jour",
         "legend": "Rudno polje → Planina Zajamniki : ~13 km A/R sur chemin carrossable balisé (Uskovnica puis Zajamniki), dénivelé ~50 m. Tracé indicatif.",
+        "directions": {
+          "label": "Itinéraire vers le parking de Rudno polje",
+          "url": "https://www.google.com/maps/dir/?api=1&destination=46.3453,13.9235"
+        },
         "routes": [
           {
             "name": "Rudno polje → Zajamniki (~6,5 km)",
