@@ -378,70 +378,48 @@
       "photo": "j11-bohinj",
       "drive": { "km": 25, "hours": "30 min A/R", "from": "Bled", "to": "Bohinj A/R" },
       "stay": "bled",
-      "intro": "La journée Bohinj en triathlon doux : vélo jusqu'au lac, baignade, traversée en bateau, retour à pied par la rive nord sauvage, navette pour finir. On rentre dormir à Bled.",
+      "intro": "Matinée douce à Zasip, puis l'après-midi Bohinj à VAE : la superbe piste cyclable jusqu'au lac, baignades à Ribčev Laz et dans les ruisseaux glacés d'Ukanc, glace au retour. On rentre dormir à Bled.",
       "schedule": [
         {
-          "time": "9h30",
-          "title": "Route Bled → Bohinjska Bistrica",
-          "desc": "25 min par la route qui longe la Sava Bohinjka. Parking au village, courses picnic (Mercator/boulangerie), et repérer les horaires du bus retour Ribčev Laz → B. Bistrica à l'arrêt."
+          "time": "Matin",
+          "title": "Repos + promenade à Zasip",
+          "desc": "Balade dans le village de Zasip et visite de son église. Quelques courses au Mercator du coin, déjeuner à la maison."
         },
         {
-          "time": "10h00",
-          "title": "Location des vélos chez Hike & Bike",
-          "desc": "Drop-off à Ribčev Laz confirmé par l'agence — on rend les vélos au lac, pas de retour à faire. Piste cyclable plate de 7 km le long de la rivière (~35 min tranquilles)."
-        },
-        {
-          "time": "11h00",
-          "title": "Ribčev Laz : plage est + picnic",
-          "desc": "Rendu des vélos, photo au pont de pierre et à l'église Sv. Janez, puis baignade sur la plage à l'est du lac (départ du vieux pont, côté église). Eau limpide à 20-22 °C en juillet. Picnic sur place."
-        },
-        {
-          "time": "13h20",
-          "title": "Traversée du lac en bateau → Ukanc",
-          "desc": "Bateau panoramique électrique toutes les 40 min (9h30-18h10), 30 min de traversée, ~9 €/adulte l'aller. Billets à l'Info Point du ponton ou à bord."
+          "time": "13h00",
+          "title": "Route vers Bohinjska Bistrica + location des VAE",
+          "desc": "25 min de route. Location des vélos électriques au village — pas chez Hike & Bike (plus de vélos disponibles), chez un autre loueur."
         },
         {
           "time": "14h00",
-          "title": "Ukanc : baignade au calme",
-          "desc": "La plage la plus tranquille du lac, face aux parois du Triglav. Sieste, baignade — option téléphérique Vogel juste à côté si l'envie de vue panoramique prend."
+          "title": "Piste cyclable → Ribčev Laz, baignade",
+          "desc": "Piste superbe et très agréable le long de la Sava Bohinjka. Arrivée au lac à Ribčev Laz et première baignade."
         },
         {
-          "time": "15h30",
-          "title": "Retour à pied par la rive nord",
-          "desc": "Ukanc → Ribčev Laz par le sentier sauvage de la rive nord : ~5 km, 1h15-1h30, plat et en partie ombragé. Chaussures fermées conseillées."
+          "time": "Après-midi",
+          "title": "Rive sud jusqu'à Ukanc — baignade glacée",
+          "desc": "À VAE par la route de la rive sud jusqu'au bout du lac. Re-baignade dans les ruisseaux d'Ukanc : eau cristalline… et très très froide."
         },
         {
-          "time": "17h00",
-          "title": "Bus retour + route vers Bled",
-          "desc": "Navette Ribčev Laz → Bohinjska Bistrica (ligne régulière, renforcée l'été), récupération de la voiture et retour à Bled. Dîner en ville (Vila Prešeren pour la vue lac, Pizzeria Rustika pour du simple et bon)."
+          "time": "17h30",
+          "title": "Retour par la même route",
+          "desc": "Arrêt glace au bord de l'eau à Ribčev Laz, près du pont, puis piste cyclable jusqu'à Bohinjska Bistrica. Retour à la maison à 18h30."
         }
       ],
       "map": {
         "title": "Le circuit du jour",
-        "legend": "Corail : vélo Bohinjska Bistrica → Ribčev Laz (7 km, rendus sur place). Turquoise pointillé : traversée en bateau. Vert : retour à pied par la rive nord (~5 km).",
+        "legend": "Circuit VAE aller-retour (~28 km, plat) : Bohinjska Bistrica → Ribčev Laz → rive sud → ruisseaux d'Ukanc, et retour par le même chemin.",
         "routes": [
           {
-            "name": "Vélo : B. Bistrica → Ribčev Laz (7 km)",
+            "name": "VAE : B. Bistrica → Ribčev Laz → Ukanc (A/R ~28 km)",
             "color": "#e98d58",
-            "coords": [[46.2732, 13.9555], [46.2745, 13.9450], [46.2735, 13.9330], [46.2725, 13.9200], [46.2722, 13.9070], [46.2740, 13.8960], [46.2778, 13.8878]]
-          },
-          {
-            "name": "Bateau : Ribčev Laz → Ukanc (30 min)",
-            "color": "#6cb6c4",
-            "dashed": true,
-            "coords": [[46.2778, 13.8878], [46.2800, 13.8720], [46.2822, 13.8540], [46.2836, 13.8360]]
-          },
-          {
-            "name": "À pied : rive nord Ukanc → Ribčev Laz (~5 km)",
-            "color": "#7a9657",
-            "coords": [[46.2836, 13.8360], [46.2858, 13.8430], [46.2872, 13.8560], [46.2876, 13.8700], [46.2858, 13.8810], [46.2800, 13.8862], [46.2778, 13.8878]]
+            "coords": [[46.2732, 13.9555], [46.2745, 13.9450], [46.2735, 13.9330], [46.2725, 13.9200], [46.2722, 13.9070], [46.2740, 13.8960], [46.2778, 13.8878], [46.2770, 13.8800], [46.2757, 13.8755], [46.2750, 13.8680], [46.2748, 13.8600], [46.2758, 13.8520], [46.2775, 13.8450], [46.2800, 13.8395], [46.2828, 13.8350]]
           }
         ],
         "markers": [
-          { "name": "Parking + Hike & Bike (10h)", "coords": [46.2732, 13.9555] },
-          { "name": "Ribčev Laz — rendu vélos, plage est, embarcadère", "coords": [46.2778, 13.8878] },
-          { "name": "Plongeoir Skalica (option baignade)", "coords": [46.2757, 13.8755] },
-          { "name": "Ukanc — plage calme + Vogel", "coords": [46.2836, 13.8360] }
+          { "name": "Location des VAE — Bohinjska Bistrica (13h30)", "coords": [46.2732, 13.9555] },
+          { "name": "Ribčev Laz — baignade + glace au retour", "coords": [46.2778, 13.8878] },
+          { "name": "Ruisseaux d'Ukanc — eau cristalline (et glacée !)", "coords": [46.2828, 13.8350] }
         ]
       }
     },
