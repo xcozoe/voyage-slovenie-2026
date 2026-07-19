@@ -524,22 +524,37 @@
       "photo": "j14-rafting",
       "drive": null,
       "stay": "tolmin",
-      "intro": "Premier vrai jour sportif dans la Soča le matin, puis visite des spectaculaires gorges de Tolmin l'après-midi.",
+      "intro": "Le grand jour sportif : rafting sur la Soča le matin avec Soča Rider, pause à Bovec, puis les gorges de Tolmin à 17h (tout est réservé).",
       "schedule": [
         {
-          "time": "Matin",
-          "title": "Rafting demi-journée",
-          "desc": "Section Bovec-Trnovo, niveau 2-3, accessible à partir de 12 ans. Combinaison, casque, gilet et guide fournis. Environ 50€/pers, durée 2h sur l'eau. À réserver à l'avance."
+          "time": "8h40",
+          "title": "Départ de Tolmin",
+          "desc": "~45 min en remontant la vallée jusqu'à la base Soča Rider, 150 m avant l'entrée de Bovec, derrière le restaurant Nono (parking gravier, clôture verte). À bord : 151 € en ESPÈCES, permis de rivière (QR sur la fiche rafting, dispo offline), maillots déjà enfilés sous les vêtements."
         },
         {
-          "time": "Après-midi",
-          "title": "Gorges de Tolmin",
-          "desc": "Plus calmes que Vintgar, plus sauvages. Pont du Diable suspendu au-dessus du gouffre, « tête d'ours » en pierre coincée entre les parois, sources thermales tièdes. Boucle de 1h30. Tarifs et infos : dolina-soce.com."
+          "time": "9h30",
+          "title": "Check-in à la base — impératif",
+          "desc": "Ils n'attendent pas les retardataires. Régler le solde de 151 € en espèces avant le départ (payé par Elsa). Dans le sac : sous-vêtements secs (exigés pour la navette), serviettes, cordon lunettes."
+        },
+        {
+          "time": "9h45",
+          "title": "Rafting demi-journée sur la Soča",
+          "desc": "3 h à 3 h 30 au total dont 1 h 30 sur l'eau, sur la section la plus fun : sauts de rochers, glissades sur le boudin, baignade. Équipement complet fourni par tous les temps, photos du tour offertes. Fin vers 13h."
+        },
+        {
+          "time": "13h00",
+          "title": "Déjeuner à Bovec + redescente tranquille",
+          "desc": "Pizzeria Nono littéralement à côté de la base, ou un burek dans Bovec. Redescente de la vallée, pause possible à l'appartement avant les gorges."
+        },
+        {
+          "time": "17h00",
+          "title": "Gorges de Tolmin (billets réservés, créneau 17h-18h)",
+          "desc": "Échanger la confirmation au guichet (Ticket office) contre le billet QR avant d'entrer. Boucle de 1h30 : pont du Diable suspendu au-dessus du gouffre, « tête d'ours » coincée entre les parois, confluence émeraude. Plus sauvage que Vintgar."
         }
       ],
       "tips": [
-        "Bovec Sport Center : +386 31 263 632 · bovec-sc.si",
-        "Soča Rafting : soca-rafting.si"
+        "Le tour est maintenu même sous la pluie — on est mouillés de toute façon",
+        "Après le rafting, pointer les 151 € dans le budget (bouton « Marquer comme payé » sur la fiche)"
       ]
     },
     {
