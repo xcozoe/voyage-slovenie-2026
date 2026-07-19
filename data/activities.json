@@ -236,7 +236,8 @@
         "remaining": 151,
         "paidDate": "2026-07-05",
         "paymentMethod": "CB en ligne (Bankart 3D Secure)",
-        "remainingDue": "en ESPÈCES uniquement, à régler avant le départ du tour",
+        "remainingPayer": "Elsa",
+        "remainingDue": "en ESPÈCES uniquement (payés par Elsa), à régler avant le départ du tour",
         "extras": "Permis de rivière ACHETÉS ✔ le 19/7 : 3 permis nominatifs journaliers secteurs 1+2 = 63 € (facture GO SOČA INT-1-24788, comptée au budget). Garder la facture/QR sur le téléphone pour le tour."
       },
       "bookedBy": "Rémi",

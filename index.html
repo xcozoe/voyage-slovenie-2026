@@ -5056,22 +5056,27 @@ const CATEGORIES = [
 ];
 const PAYERS = ['Rémi', 'Elsa'];
 
+// Payeur du solde : remainingPayer si précisé (paiements partagés), sinon bookedBy
+function remPayer(obj) {
+  return obj.paymentBreakdown?.remainingPayer || obj.bookedBy;
+}
+
 function paintBudget() {
-  // Avances : paiements stays + dépenses manuelles
+  // Avances : paiements stays + activités + dépenses manuelles
   const advances = { 'Rémi': 0, 'Elsa': 0 };
   for (const s of Object.values(STATE.staysById)) {
     const pb = s.paymentBreakdown || {};
-    if (!PAYERS.includes(s.bookedBy)) continue;
-    let paid = pb.paid || 0;
-    if ((pb.remaining || 0) > 0 && isPaidOverride('stay', s.id)) paid += pb.remaining; // « à venir » pointé
-    if (paid > 0) advances[s.bookedBy] += paid;
+    if ((pb.paid || 0) > 0 && PAYERS.includes(s.bookedBy)) advances[s.bookedBy] += pb.paid;
+    if ((pb.remaining || 0) > 0 && isPaidOverride('stay', s.id) && PAYERS.includes(remPayer(s))) {
+      advances[remPayer(s)] += pb.remaining; // « à venir » pointé
+    }
   }
   for (const a of Object.values(STATE.activitiesById)) {
     const pb = a.paymentBreakdown || {};
-    if (!PAYERS.includes(a.bookedBy)) continue;
-    let paid = pb.paid || 0;
-    if ((pb.remaining || 0) > 0 && isPaidOverride('act', a.id)) paid += pb.remaining;
-    if (paid > 0) advances[a.bookedBy] += paid;
+    if ((pb.paid || 0) > 0 && PAYERS.includes(a.bookedBy)) advances[a.bookedBy] += pb.paid;
+    if ((pb.remaining || 0) > 0 && isPaidOverride('act', a.id) && PAYERS.includes(remPayer(a))) {
+      advances[remPayer(a)] += pb.remaining;
+    }
   }
   for (const e of EXPENSES) {
     if (e.kind === 'settlement' || e.kind === 'paidmark') continue;
@@ -5081,18 +5086,18 @@ function paintBudget() {
   let remiBalance = advances['Rémi'] - total / 2;
   // Si remiBalance > 0 → Elsa doit ce montant à Rémi
 
-  // Paiements à venir par payeur (basés sur stays.bookedBy + remaining)
+  // Paiements à venir par payeur (remaining + remainingPayer/bookedBy)
   const upcomingByPayer = { 'Rémi': 0, 'Elsa': 0 };
   for (const s of Object.values(STATE.staysById)) {
     const r = s.paymentBreakdown?.remaining;
-    if (r && r > 0 && !isPaidOverride('stay', s.id) && PAYERS.includes(s.bookedBy)) {
-      upcomingByPayer[s.bookedBy] += r;
+    if (r && r > 0 && !isPaidOverride('stay', s.id) && PAYERS.includes(remPayer(s))) {
+      upcomingByPayer[remPayer(s)] += r;
     }
   }
   for (const a of Object.values(STATE.activitiesById)) {
     const r = a.paymentBreakdown?.remaining;
-    if (r && r > 0 && !isPaidOverride('act', a.id) && PAYERS.includes(a.bookedBy)) {
-      upcomingByPayer[a.bookedBy] += r;
+    if (r && r > 0 && !isPaidOverride('act', a.id) && PAYERS.includes(remPayer(a))) {
+      upcomingByPayer[remPayer(a)] += r;
     }
   }
   const upcomingTotal = upcomingByPayer['Rémi'] + upcomingByPayer['Elsa'];
@@ -5177,7 +5182,7 @@ function paintBudget() {
           amount: pb.remaining,
           label: s.name || s.city,
           category: 'hebergement',
-          payer: s.bookedBy,
+          payer: remPayer(s),
           date: pd || dueIso || s.arrival,
           _meta: 'pointé',
         });
@@ -5187,7 +5192,7 @@ function paintBudget() {
           amount: pb.remaining,
           label: s.name || s.city,
           category: 'hebergement',
-          payer: s.bookedBy,
+          payer: remPayer(s),
           date: dueIso || s.arrival,
           _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
         });
@@ -5218,7 +5223,7 @@ function paintBudget() {
           amount: pb.remaining,
           label: a.title || a.provider,
           category: 'activite',
-          payer: a.bookedBy,
+          payer: remPayer(a),
           date: pd || dueIso || a.date,
           _meta: 'pointé',
         });
@@ -5228,7 +5233,7 @@ function paintBudget() {
           amount: pb.remaining,
           label: a.title || a.provider,
           category: 'activite',
-          payer: a.bookedBy,
+          payer: remPayer(a),
           date: dueIso || a.date,
           _dueLabel: dueIso ? formatDueDate(dueIso) : (pb.remainingDue || 'à payer'),
         });
@@ -6316,18 +6321,19 @@ function buildExportBudget() {
 
   const collect = (type, obj, label, cat) => {
     const pb = obj.paymentBreakdown;
-    if (!pb || !PAYERS.includes(obj.bookedBy)) return;
-    if (pb.paid > 0) {
+    if (!pb) return;
+    const pRem = remPayer(obj);
+    if (pb.paid > 0 && PAYERS.includes(obj.bookedBy)) {
       advances[obj.bookedBy] += pb.paid;
       rows.push({ date: pb.paidDate || '', label, cat, payer: obj.bookedBy, amount: pb.paid, state: 'payé' });
     }
-    if (pb.remaining > 0) {
+    if (pb.remaining > 0 && PAYERS.includes(pRem)) {
       if (isPaidOverride(type, obj.id)) {
-        advances[obj.bookedBy] += pb.remaining;
-        rows.push({ date: paidOverrideDate(type, obj.id) || '', label, cat, payer: obj.bookedBy, amount: pb.remaining, state: 'payé (pointé)' });
+        advances[pRem] += pb.remaining;
+        rows.push({ date: paidOverrideDate(type, obj.id) || '', label, cat, payer: pRem, amount: pb.remaining, state: 'payé (pointé)' });
       } else {
-        upcomingByPayer[obj.bookedBy] += pb.remaining;
-        rows.push({ date: /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue || '') ? pb.remainingDue : '', label, cat, payer: obj.bookedBy, amount: pb.remaining, state: 'à venir' });
+        upcomingByPayer[pRem] += pb.remaining;
+        rows.push({ date: /^\d{4}-\d{2}-\d{2}$/.test(pb.remainingDue || '') ? pb.remainingDue : '', label, cat, payer: pRem, amount: pb.remaining, state: 'à venir' });
       }
     }
   };
