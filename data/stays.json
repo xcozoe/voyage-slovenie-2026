@@ -174,13 +174,13 @@
       "room": "Appartement Supérieur avec Balcon",
       "checkin": "arrivée anticipée confirmée : 14h00 – 15h00, sans supplément (demande validée par l'établissement le 13/7)",
       "checkout": "07h00 – 11h00",
-      "price": 920.56,
+      "price": 914.30,
       "currency": "EUR",
       "paymentBreakdown": {
         "paid": 0,
         "remaining": 883,
         "remainingDue": "Booking débitera automatiquement",
-        "extras": "+ taxe de séjour 37,56 € sur place"
+        "extras": "Taxe de séjour payée sur place : 31,30 € (demi-taxe ado appliquée, au lieu des 37,56 € annoncés par Booking)"
       },
       "cancellation": "gratuite jusqu'au 23 juin 2026 23:59",
       "bookedBy": "Rémi",
