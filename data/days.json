@@ -498,14 +498,19 @@
           "desc": "Pause au lac de Jasna à Kranjska Gora (lac alpin émeraude, statue du chamois Zlatorog). Montée du col : pause obligatoire à la chapelle russe (construite par des prisonniers russes en 1916) et au monument Julius Kugy."
         },
         {
-          "time": "Fin d'après-midi",
+          "time": "15h00",
           "title": "Arrivée à Tolmin",
-          "desc": "Installation. Tolmin est la base sud de la vallée de la Soča, plus calme que Bovec."
+          "desc": "Installation dans l'appartement. Tolmin est la base sud de la vallée de la Soča, plus calme que Bovec."
+        },
+        {
+          "time": "16h30",
+          "title": "Cascade Kozjak (avancée depuis le J15)",
+          "desc": "~25 min de route jusqu'au parking « Kozjak » à côté du pont de Napoléon (Kobarid). 20 min de marche en forêt jusqu'à la cathédrale d'eau cachée dans sa grotte — la plus belle est Veliki Kozjak. Bon créneau : la note conseille d'éviter 10h-16h. ~5 €/adulte, chaussures qui accrochent (passages humides)."
         },
         {
           "time": "Soirée (option)",
           "title": "Première baignade dans la Soča",
-          "desc": "Au pont de Napoleon à Kobarid, accès direct à la rivière depuis la rive. Eau fraîche (12-14°C même en été) mais clarté et couleur incomparables."
+          "desc": "Au retour de la cascade, rejoindre la Soča à pied depuis le sentier. Ou au pont de Napoleon, accès direct depuis la rive. Eau fraîche (12-14°C même en été) mais clarté et couleur incomparables."
         }
       ]
     },
@@ -541,23 +546,18 @@
       "n": 15,
       "date": "2026-07-21",
       "weekday": "Mardi",
-      "title": "Cascade Kozjak + Zelenci",
+      "title": "Soča + Zelenci",
       "subtitle": "Tolmin → Zelenci",
       "leg": "slovenia",
       "photo": "j15-canyoning",
       "drive": { "km": 75, "hours": "1h30", "from": "Tolmin", "to": "Zelenci" },
       "stay": "zelenci",
-      "intro": "Matin nature avec la cascade Kozjak puis baignade éventuelle, puis route en début d'après-midi vers la réserve de Zelenci, près de Kranjska Gora.",
+      "intro": "Matinée libre dans la vallée de la Soča (la cascade Kozjak a été avancée au J13), puis route en début d'après-midi vers la réserve de Zelenci, près de Kranjska Gora.",
       "schedule": [
         {
           "time": "Matin",
-          "title": "Cascade Kozjak (Kobarid)",
-          "desc": "Une cathédrale d'eau cachée dans une grotte naturelle. 1h aller-retour de marche facile depuis le pont Napoleon. 5€/adulte. Apporter de bonnes chaussures (passages humides)."
-        },
-        {
-          "time": "Fin de matinée",
-          "title": "Baignade rivière (option)",
-          "desc": "Spots secrets le long de la route Bovec-Kobarid. Plages naturelles de galets, eau émeraude. Suivre les voitures locales — elles savent où s'arrêter."
+          "title": "Baignade rivière ou flânerie",
+          "desc": "Kozjak déjà faite au J13 : matinée souple. Spots secrets le long de la route Bovec-Kobarid, plages naturelles de galets, eau émeraude. Suivre les voitures locales — elles savent où s'arrêter."
         },
         {
           "time": "Après-midi",
