@@ -283,6 +283,26 @@
     background: rgba(108, 182, 196, 0.08);
   }
 
+  /* QR embarqué sur une fiche (billet, permis) */
+  .stay-card__qr {
+    margin: 22px 0 6px;
+    padding: 18px;
+    background: #ffffff;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .stay-card__qr img {
+    display: block;
+    width: min(78%, 300px);
+    margin: 0 auto;
+  }
+  .stay-card__qr figcaption {
+    margin-top: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: var(--fz-small);
+    color: #4a5a5e;
+  }
+
   /* INTRO -------------------------------------------------- */
   .day__intro {
     font-family: 'Fraunces', serif;
@@ -4025,6 +4045,13 @@ function renderResaPageCard(act) {
 
   const notesHtml = act.notes ? `<p class="stay-card__notes">${escapeHtml(act.notes)}</p>` : '';
 
+  // QR embarqué (billet, permis…) — affiché en clair sur fond blanc, dispo offline
+  const qrHtml = act.qr?.src ? `
+    <figure class="stay-card__qr">
+      <img src="${escapeHtml(act.qr.src)}" alt="QR code" loading="lazy" decoding="async">
+      ${act.qr.label ? `<figcaption>${escapeHtml(act.qr.label)}</figcaption>` : ''}
+    </figure>` : '';
+
   return `
     <article class="stay-card ${cls}" id="resa-card-${act.id}" data-act-id="${act.id}">
       <a class="stay-card__back" href="#/" data-act="go-back" aria-label="Retour">←</a>
@@ -4033,6 +4060,7 @@ function renderResaPageCard(act) {
         ${head}
         ${metaHtml}
         ${notesHtml}
+        ${qrHtml}
         ${bookingBtnHtml}
       </div>
     </article>
