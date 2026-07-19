@@ -498,6 +498,11 @@
           "desc": "Pause au lac de Jasna à Kranjska Gora (lac alpin émeraude, statue du chamois Zlatorog). Montée du col : pause obligatoire à la chapelle russe (construite par des prisonniers russes en 1916) et au monument Julius Kugy."
         },
         {
+          "time": "Début d'après-midi",
+          "title": "Première baignade dans la Soča — pont de Napoléon",
+          "desc": "En descendant vers Tolmin, baignade sous le pont de Napoléon à Kobarid. Eau fraîche (12-14 °C)… mais superbe : la clarté et la couleur émeraude tiennent leurs promesses."
+        },
+        {
           "time": "15h00",
           "title": "Arrivée à Tolmin",
           "desc": "Installation dans l'appartement. Tolmin est la base sud de la vallée de la Soča, plus calme que Bovec."
@@ -505,12 +510,7 @@
         {
           "time": "16h30",
           "title": "Cascade Kozjak (avancée depuis le J15)",
-          "desc": "~25 min de route jusqu'au parking « Kozjak » à côté du pont de Napoléon (Kobarid). 20 min de marche en forêt jusqu'à la cathédrale d'eau cachée dans sa grotte — la plus belle est Veliki Kozjak. Bon créneau : la note conseille d'éviter 10h-16h. ~5 €/adulte, chaussures qui accrochent (passages humides)."
-        },
-        {
-          "time": "Soirée (option)",
-          "title": "Première baignade dans la Soča",
-          "desc": "Au retour de la cascade, rejoindre la Soča à pied depuis le sentier. Ou au pont de Napoleon, accès direct depuis la rive. Eau fraîche (12-14°C même en été) mais clarté et couleur incomparables."
+          "desc": "~25 min de route jusqu'au parking « Kozjak » à côté du pont de Napoléon (Kobarid). 20 min de marche en forêt jusqu'à la cathédrale d'eau cachée dans sa grotte — la plus belle est Veliki Kozjak. Bon créneau : la note conseille d'éviter 10h-16h. ~5 €/adulte, chaussures qui accrochent (passages humides). Au retour, la Soča se rejoint à pied depuis le sentier pour une re-baignade éventuelle."
         }
       ]
     },
